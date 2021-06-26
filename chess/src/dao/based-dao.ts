@@ -23,8 +23,8 @@ export default abstract class BaseDao<T> {
     let openRequest = window.indexedDB.open('Teleuzi', DATA_VERSION + 1);
     openRequest.onupgradeneeded = async () => {
       this.response = openRequest.result;
-      this.response.createObjectStore('users', {
-        keyPath: 'email',
+      this.response.createObjectStore('Users', {
+        keyPath: 'name',
         autoIncrement: true,
       });
       this.response.close();

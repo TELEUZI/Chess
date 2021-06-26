@@ -1,10 +1,9 @@
-import NumbersFabric from '../constants/numbers/number-utils/number-fabric';
 import UserDao from '../dao/user-dao';
 import GameConstants from '../enums/game-constants';
 import User from '../interfaces/user';
 
-const OBJECT_STORE_KEY = 'email';
-const OBJECT_STORE_NAME = 'users';
+const OBJECT_STORE_KEY = 'name';
+const OBJECT_STORE_NAME = 'Users';
 
 export default class UserDaoService {
   private static instance: UserDaoService;
@@ -48,7 +47,7 @@ export default class UserDaoService {
   }
 
   private async findCurrentByEmail(usertoFind: User): Promise<User> {
-    return (await this.dao.findAll()).find((user) => user.email === usertoFind.email);
+    return (await this.dao.findAll()).find((user) => user.name === usertoFind.name);
   }
 
   async getLast(): Promise<User> {
@@ -60,9 +59,6 @@ export default class UserDaoService {
     return (await this.dao.findAll())
       .sort((a, b) => a.score - b.score)
       .reverse()
-      .slice(
-        NumbersFabric('indexOfFirstElement').getNumber(),
-        GameConstants.NUMBER_OF_BEST_RESULTS,
-      );
+      .slice(0, GameConstants.NUMBER_OF_BEST_RESULTS);
   }
 }

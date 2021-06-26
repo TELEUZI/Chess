@@ -1,0 +1,14 @@
+@import "../../variables.scss";
+.menu__item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  flex-grow: 1;
+}
+
+.current {
+  filter: drop-shadow(2px 4px 5px $black);
+  -webkit-filter: drop-shadow(2px 4px 5px $black);
+}
