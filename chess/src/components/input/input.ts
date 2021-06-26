@@ -54,4 +54,8 @@ export default class Input extends BaseComponent {
   getValue(): string {
     return this.input.value;
   }
+
+  setValue(value: string): void {
+    this.input.value = value;
+  }
 }
