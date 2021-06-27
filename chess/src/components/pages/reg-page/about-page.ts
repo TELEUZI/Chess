@@ -1,15 +1,14 @@
 import PageController from '../../../interfaces/page';
+import StartPageView from './about-page-view';
 
-import AboutPageView from './about-page-view';
-
-export default class AboutPage implements PageController {
+export default class StartPage implements PageController {
   private root: HTMLElement;
 
-  private view: AboutPageView;
+  private view: StartPageView;
 
   constructor(root: HTMLElement) {
     this.root = root;
-    this.view = new AboutPageView();
+    this.view = new StartPageView();
   }
 
   createPage(): void {

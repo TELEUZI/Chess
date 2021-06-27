@@ -16,6 +16,11 @@
   justify-content: space-around;
 }
 
+.reg-page {
+  display: flex;
+  justify-content: center;
+}
+
 .game-about {
   display: flex;
   justify-content: space-between;
@@ -240,4 +245,76 @@
   width: 100%;
   cursor: pointer;
   transition: .2s all ease;
+}
+
+.chess-field__bp {
+  background-image: url('../assets/icons/black-pawn.svg');
+}
+
+.chess-field__bk {
+  background-image: url('../assets/icons/black-king.svg');
+}
+
+.chess-field__bn {
+  background-image: url('../assets/icons/black-knight.svg');
+}
+
+.chess-field__bb {
+  background-image: url('../assets/icons/black-bishop.svg');
+}
+
+.chess-field__bq {
+  background-image: url('../assets/icons/black-queen.svg');
+}
+
+.chess-field__br {
+  background-image: url('../assets/icons/black-rook.svg');
+}
+
+.chess-field__wq {
+  background-image: url('../assets/icons/white-queen.svg');
+}
+
+.chess-field__wr {
+  background-image: url('../assets/icons/white-rook.svg');
+}
+
+.chess-field__wb {
+  background-image: url('../assets/icons/white-bishop.svg');
+}
+
+.chess-field__wn {
+  background-image: url('../assets/icons/white-knight.svg');
+}
+
+.chess-field__wk {
+  background-image: url('../assets/icons/white-king.svg');
+}
+
+.chess-field__wp {
+  background-image: url('../assets/icons/white-pawn.svg');
+}
+
+.chess__figure {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+}
+
+.avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: #fcfcfc;
+  font-size: 35px;
+  color: rgb(0, 255, 128);
+  text-align: center;
+  line-height: 150px;
+  margin: 20px 0;
+}
+
+.player-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

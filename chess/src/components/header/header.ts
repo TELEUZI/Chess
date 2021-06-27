@@ -40,7 +40,7 @@ export default class Header extends BaseComponent {
 
   createAvatar(): void {
     this.avatar = new Image();
-    this.avatar.classList.add('avatar');
+    // this.avatar.classList.add('avatar');
     this.node.appendChild(this.avatar);
   }
 

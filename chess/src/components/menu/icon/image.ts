@@ -11,6 +11,7 @@ export default class CustomImage extends BaseComponent {
 
   setSrc(src: string): void {
     this.src = src;
+    (this.node as HTMLImageElement).src = src;
   }
 
   getSrc(): string {

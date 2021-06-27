@@ -1,6 +1,8 @@
 import BaseComponent from '../../../base-component';
 import Button from '../../../button/button';
 import PlayerView from './player';
+import BASE_LOGO from '../../../../assets/icons/ava.png';
+import CustomImage from '../../../menu/icon/image';
 
 export default class PlayerContainer extends BaseComponent {
   player: PlayerView;
@@ -9,12 +11,15 @@ export default class PlayerContainer extends BaseComponent {
 
   name: string;
 
+  image: BaseComponent;
+
   constructor(name: string) {
-    super();
+    super('div', ['player-wrapper']);
+    this.image = new CustomImage(BASE_LOGO, ['avatar']);
     this.name = name;
     this.player = new PlayerView(name);
     this.updateButton = new Button('Update', ['button_update'], this.edit.bind(this));
-    this.insertChilds([this.player, this.updateButton]);
+    this.insertChilds([this.image, this.player, this.updateButton]);
   }
 
   edit(): void {
@@ -25,8 +30,12 @@ export default class PlayerContainer extends BaseComponent {
   }
 
   submit(): void {
+    const updatedName = this.player.userNameUpdate.getValue();
     this.player.setUpdateMode();
-    this.player.setName(this.player.userNameUpdate.getValue());
+    this.image.destroy();
+    this.image = new BaseComponent('div', ['avatar'], updatedName[0].toUpperCase());
+    this.insertChildBefore(this.image);
+    this.player.setName(updatedName);
     this.updateButton.getNode().remove();
     this.updateButton = new Button('Update', ['button_update'], this.edit.bind(this));
     this.node.append(this.updateButton.getNode());
