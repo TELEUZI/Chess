@@ -15,7 +15,7 @@ export default class SettingsPage implements PageController {
 
   constructor(root: HTMLElement) {
     this.root = root;
-
+    // TODO: give advance, startGame
     this.selectWrapper = new BaseComponent('div', ['settings-wrapper']);
     this.selectDifficulty = new Select('Choose Difficulty', [
       GameDifficultyOptions.easy,

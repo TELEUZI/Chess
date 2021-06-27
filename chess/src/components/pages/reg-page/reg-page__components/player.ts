@@ -8,8 +8,6 @@ export default class PlayerView extends BaseComponent {
 
   userNameUpdate: Input;
 
-  carName: BaseComponent;
-
   constructor(name: string) {
     super('div', ['user']);
     const userInfoWrapper = new BaseComponent('div', ['user__info']);

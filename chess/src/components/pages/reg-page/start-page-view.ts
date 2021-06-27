@@ -1,5 +1,7 @@
 import BaseComponent from '../../base-component';
 import Button from '../../button/button';
+import { changeName } from '../game-page/chess-game/state/redux/reducer';
+import store from '../game-page/chess-game/state/redux/store';
 import PlayerContainer from './reg-page__components/player-control';
 
 export default class StartPageView extends BaseComponent {
@@ -28,6 +30,20 @@ export default class StartPageView extends BaseComponent {
     ]);
     this.playerOne = new PlayerContainer('Player 1');
     this.playerTwo = new PlayerContainer('Player 2');
+    this.playerOne.onSubmit = (name: string) =>
+      store.dispatch(
+        changeName({
+          playerOne: name,
+          playerTwo: this.playerTwo.getUserName(),
+        }),
+      );
+    this.playerTwo.onSubmit = (name: string) =>
+      store.dispatch(
+        changeName({
+          playerOne: this.playerOne.getUserName(),
+          playerTwo: name,
+        }),
+      );
     this.insertChilds([this.playerOne, this.gameControlButtons, this.playerTwo]);
   }
 }

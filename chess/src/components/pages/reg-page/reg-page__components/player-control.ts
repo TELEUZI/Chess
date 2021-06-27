@@ -13,6 +13,8 @@ export default class PlayerContainer extends BaseComponent {
 
   image: BaseComponent;
 
+  onSubmit: (name: string) => void;
+
   constructor(name: string) {
     super('div', ['player-wrapper']);
     this.image = new CustomImage(BASE_LOGO, ['avatar']);
@@ -31,6 +33,7 @@ export default class PlayerContainer extends BaseComponent {
 
   submit(): void {
     const updatedName = this.player.userNameUpdate.getValue();
+    this.onSubmit(updatedName);
     this.player.setUpdateMode();
     this.image.destroy();
     this.image = new BaseComponent('div', ['avatar'], updatedName[0].toUpperCase());
@@ -39,5 +42,9 @@ export default class PlayerContainer extends BaseComponent {
     this.updateButton.getNode().remove();
     this.updateButton = new Button('Update', ['button_update'], this.edit.bind(this));
     this.node.append(this.updateButton.getNode());
+  }
+
+  getUserName(): string {
+    return this.player.getName();
   }
 }

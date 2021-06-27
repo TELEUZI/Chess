@@ -1,5 +1,5 @@
 import PageController from '../../../interfaces/page';
-import StartPageView from './about-page-view';
+import StartPageView from './start-page-view';
 
 export default class StartPage implements PageController {
   private root: HTMLElement;

@@ -4,7 +4,7 @@ import UserDaoService from '../../models/user-dao-service';
 import BaseComponent from '../base-component';
 import BestScorePage from '../pages/best-score-page/best-score-page';
 import GamePage from '../pages/game-page/game-page';
-import AboutPage from '../pages/reg-page/about-page';
+import AboutPage from '../pages/reg-page/start-page';
 import RegFormModal from '../pages/reg-page/regform-window';
 import SettingsPage from '../pages/settings-page/settings-page';
 import Router from './router';

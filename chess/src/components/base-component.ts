@@ -7,10 +7,14 @@ export default class BaseComponent {
     tagName: keyof HTMLElementTagNameMap = 'div',
     classNames: Array<string> = [],
     textContent = '',
+    parentNode?: HTMLElement,
   ) {
     this.node = document.createElement(tagName);
     this.node.classList.add(...classNames);
     this.node.innerText = textContent;
+    if (parentNode) {
+      parentNode.append(this.node);
+    }
   }
 
   insertChild(child: BaseComponent): void {
@@ -49,6 +53,14 @@ export default class BaseComponent {
 
   toggleClass(className: string): void {
     this.node.classList.toggle(className);
+  }
+
+  setClass(className: string): void {
+    this.node.className = className;
+  }
+
+  removeClass(className: string): void {
+    this.node.classList.remove(className);
   }
 
   setBgImage(image: string): void {

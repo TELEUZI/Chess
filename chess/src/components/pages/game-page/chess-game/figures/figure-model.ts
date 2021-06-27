@@ -3,6 +3,8 @@ export default class FigureModel {
 
   private color: number;
 
+  protected weight: number;
+
   constructor(color: number) {
     this.color = color;
   }
@@ -13,5 +15,9 @@ export default class FigureModel {
 
   getType(): string {
     return this.type;
+  }
+
+  getWeight(): number {
+    return this.weight;
   }
 }
