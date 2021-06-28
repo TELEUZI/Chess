@@ -2,13 +2,14 @@
   "name": "chess",
   "version": "1.0.0",
   "description": "Chess game for RSS",
-  "main": "index.ts",
+  "main": "dist/src/app.js",
+  "type": "module",
   "scripts": {
     "build": "webpack",
     "dev": "webpack serve --env development",
     "lint": "eslint . --ext .ts",
     "lint-and-fix": "eslint . --ext .ts --fix",
-    "server": "npm run server"
+    "server": "tsc && node dist/src/app.js"
   },
   "keywords": [
     "typescript",
@@ -17,9 +18,9 @@
   "author": "TELEUZI",
   "license": "ISC",
   "devDependencies": {
+    "@types/ws": "^7.4.5",
     "@typescript-eslint/eslint-plugin": "^4.22.1",
     "@typescript-eslint/parser": "^4.22.1",
-    "css-loader": "^5.2.4",
     "eslint": "^7.26.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-airbnb-typescript": "^12.3.1",
@@ -28,9 +29,6 @@
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-webpack-plugin": "^2.5.4",
     "prettier": "^2.2.1",
-    "sass": "^1.26.10",
-    "sass-loader": "^9.0.2",
-    "style-loader": "^1.2.1",
     "ts-loader": "^9.1.1",
     "typescript": "^4.2.4",
     "webpack": "^5.36.0",
@@ -38,14 +36,18 @@
     "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
+    "@types/node": "^15.0.1",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
     "copy-webpack-plugin": "^9.0.1",
     "eslint-webpack-plugin": "^2.5.4",
     "html-webpack-plugin": "^5.3.1",
+    "http": "",
     "mini-css-extract-plugin": "^1.6.1",
+    "node-polyfill-webpack-plugin": "^1.1.3",
+    "nodemon": "^2.0.7",
     "path": "^0.12.7",
-    "redux": "^4.1.0",
-    "redux-devtools-extension": "^2.13.9",
+    "types": "^0.1.1",
+    "websocket": "^1.0.34",
     "ws": "^6.2.2"
   }
 }
