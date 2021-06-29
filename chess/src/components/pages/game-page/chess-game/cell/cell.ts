@@ -1,15 +1,10 @@
-import BaseComponent from '../../../../base-component';
 import FigureModel from '../figures/figure-model';
-import CellView from './cell-view';
 
-export default class Cell extends BaseComponent {
-  private view: CellView;
-
+export default class CellModel {
   private figure: FigureModel;
 
-  constructor() {
-    super('div', ['cell-wrapper']);
-    this.view = new CellView(this.getNode());
+  constructor(figure: FigureModel) {
+    this.figure = figure;
   }
 
   setFigure(figure: FigureModel): void {
@@ -24,10 +19,11 @@ export default class Cell extends BaseComponent {
     return this.figure.getColor();
   }
 
-  setViewClass(viewClasses: string): void {
-    const classes = viewClasses.split(' ');
-    classes.forEach((viewClass: string) => {
-      this.view.addClass(viewClass);
-    });
+  getFigureType(): string {
+    return this.figure.getType();
+  }
+
+  setFigureColor(color: number): void {
+    this.figure.setColor(color);
   }
 }

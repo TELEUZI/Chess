@@ -13,6 +13,10 @@ export default class FigureModel {
     return this.color;
   }
 
+  setColor(color: number): void {
+    this.color = color;
+  }
+
   getType(): string {
     return this.type;
   }
