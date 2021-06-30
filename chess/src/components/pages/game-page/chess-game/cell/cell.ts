@@ -16,11 +16,11 @@ export default class CellModel {
   }
 
   getFigureColor(): number {
-    return this.figure.getColor();
+    return this.figure?.getColor();
   }
 
   getFigureType(): string {
-    return this.figure.getType();
+    return this.figure?.getType();
   }
 
   setFigureColor(color: number): void {

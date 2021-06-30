@@ -60,7 +60,7 @@ export default class CellView extends BaseComponent {
       this.figure = new Figure(this.node, [`chess_fig`, `chess__${color ? 'b' : 'w'}${type}`]);
       this.figure.setAttribute('draggable', 'true');
     } else {
-      this.figure.setClass('');
+      this.figure.setClassname('');
     }
   }
 

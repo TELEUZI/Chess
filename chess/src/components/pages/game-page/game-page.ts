@@ -4,6 +4,7 @@ import PopUpWindow from '../../pop-up/pop-up';
 import ModalWindow from '../reg-page/modal-window';
 import BaseComponent from '../../base-component';
 import UserDaoService from '../../../models/user-dao-service';
+import Chess from './chess-game/chess';
 
 export default class GamePage implements PageController {
   private root: HTMLElement;
@@ -12,12 +13,15 @@ export default class GamePage implements PageController {
 
   private timer: Timer;
 
+  private game: Chess;
+
   private popUp: PopUpWindow;
 
   private modal: ModalWindow;
 
   constructor(root: HTMLElement) {
     this.root = root;
+    this.game = new Chess(root);
     this.userDao = UserDaoService.getInstance();
     this.popUp = new PopUpWindow('');
     this.popUp.onOkClick = this.toggleModal.bind(this);

@@ -19,6 +19,7 @@ export default class StartPageView extends BaseComponent {
 
   constructor() {
     super('div', ['reg-page']);
+    const socket = new WebSocket('ws://localhost:8000');
     this.gameControlButtons = new BaseComponent('div', ['game-control']);
     this.startButton = new Button('Play offline');
     this.gameModeButton = new Button('Play online');
@@ -37,13 +38,24 @@ export default class StartPageView extends BaseComponent {
           playerTwo: this.playerTwo.getUserName(),
         }),
       );
-    this.playerTwo.onSubmit = (name: string) =>
+    this.playerTwo.onSubmit = (name: string) => {
+      socket.send(JSON.stringify({ type: 'name', data: name }));
       store.dispatch(
         changeName({
           playerOne: this.playerOne.getUserName(),
           playerTwo: name,
         }),
       );
+    };
     this.insertChilds([this.playerOne, this.gameControlButtons, this.playerTwo]);
+
+    socket.onopen = (e) => {
+      socket.onmessage = (event: MessageEvent<string>) => {
+        console.log('message');
+        console.log(JSON.parse(event.data));
+        console.log(event.data);
+        this.playerTwo.setUserName(event.data);
+      };
+    };
   }
 }

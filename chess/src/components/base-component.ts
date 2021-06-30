@@ -59,6 +59,10 @@ export default class BaseComponent {
     className.split(' ').forEach((name) => this.addClass(name));
   }
 
+  setClassname(className: string): void {
+    this.node.className = className;
+  }
+
   removeClass(className: string): void {
     this.node.classList.remove(className);
   }

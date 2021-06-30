@@ -47,4 +47,8 @@ export default class PlayerContainer extends BaseComponent {
   getUserName(): string {
     return this.player.getName();
   }
+
+  setUserName(name: string): void {
+    this.player.setName(name);
+  }
 }

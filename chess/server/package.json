@@ -9,7 +9,9 @@
     "dev": "webpack serve --env development",
     "lint": "eslint . --ext .ts",
     "lint-and-fix": "eslint . --ext .ts --fix",
-    "server": "tsc && node dist/src/app.js"
+    "server": "tsc && nodemon dist/src/app.js",
+    "watch": "nodemon -e ts -w ./src -x npm run watch:serve",
+    "watch:serve": "ts-node  ./src/app.ts"
   },
   "keywords": [
     "typescript",
@@ -30,6 +32,7 @@
     "eslint-webpack-plugin": "^2.5.4",
     "prettier": "^2.2.1",
     "ts-loader": "^9.1.1",
+    "ts-node": "^10.0.0",
     "typescript": "^4.2.4",
     "webpack": "^5.36.0",
     "webpack-cli": "^4.6.0",
