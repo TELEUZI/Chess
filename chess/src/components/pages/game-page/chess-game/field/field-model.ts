@@ -1,5 +1,6 @@
 /* eslint-disable class-methods-use-this */
 
+import { socket } from '../../../reg-page/start-page-view';
 import CellModel from '../cell/cell';
 import Signal from '../components/signal';
 import Vector from '../components/vector';
@@ -71,6 +72,13 @@ export default class FieldModel {
       this.state.getCellAt(fromX, fromY).setFigure(null);
       this.setState(this.state);
       store.dispatch(makeMove(this.state));
+      socket.send(
+        JSON.stringify({
+          type: 'move',
+          color: this.currentColor,
+          state: store.getState().field,
+        }),
+      );
       this.currentColor = (this.currentColor + 1) % 2;
       this.onReverse?.();
       this.onNextTurn.emit(this.currentColor);

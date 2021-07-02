@@ -20,7 +20,8 @@ class SocketServer {
     });
 
     const wsServer = new WebSocketServer.Server({ server });
-
+    const players: WebSocketServer[]= [];
+    const currentPlayers: WebSocketServer[] = []
     wsServer.on(
       'connection',
       (
@@ -38,6 +39,23 @@ class SocketServer {
                 if(it.readyState === 1) it.send(JSON.stringify(parsed.data));
             });
             console.log(`Received Message: ${message}`, `clients -> ${this.clients.length}`);}
+            else if (parsed.type === 'start'){
+              players.push(connection);
+              console.log(players);
+              if (players.length === 2){
+                players.forEach(player => {
+                  currentPlayers.push(player);
+                  player.send(JSON.stringify({ type:'start'}))}
+                  );
+                players.pop();
+                players.pop()
+              }
+              else{
+                players.forEach(player => player.send(JSON.stringify({ type:'pending'})));
+              }
+            } else if (parsed.type === 'move'){
+              currentPlayers.forEach(player => player.send(JSON.stringify({ type:'move', state: parsed.state})))
+            }
 
             // parsed = JSON.parse(message)
           // } else if (message instanceof Buffer) {

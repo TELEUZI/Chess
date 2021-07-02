@@ -4,6 +4,7 @@ import { changeName } from '../game-page/chess-game/state/redux/reducer';
 import store from '../game-page/chess-game/state/redux/store';
 import PlayerContainer from './reg-page__components/player-control';
 
+export const socket = new WebSocket('ws://localhost:8000');
 export default class StartPageView extends BaseComponent {
   playerOne: PlayerContainer;
 
@@ -19,10 +20,33 @@ export default class StartPageView extends BaseComponent {
 
   constructor() {
     super('div', ['reg-page']);
-    const socket = new WebSocket('ws://localhost:8000');
+
     this.gameControlButtons = new BaseComponent('div', ['game-control']);
     this.startButton = new Button('Play offline');
-    this.gameModeButton = new Button('Play online');
+    this.gameModeButton = new Button('Play online', ['button'], () => {
+      console.log('click');
+      socket.send(JSON.stringify({ type: 'start', name: this.playerOne.getUserName() }));
+    });
+    socket.onopen = (e) => {
+      console.log('opened');
+      socket.onmessage = (event: MessageEvent<string>) => {
+        const info = JSON.parse(event.data);
+        console.log(info);
+        if (info.type === 'pending') {
+          console.log('Waiting for player');
+        }
+        if (info.type === 'start') {
+          window.location.hash = '#game';
+        }
+        // console.log('message');
+        // console.log(JSON.parse(event.data));
+        // console.log(event.data);
+        // this.playerTwo.setUserName(event.data);
+      };
+      socket.onclose = (event) => {
+        console.log('closed');
+      };
+    };
     this.startGameWithBot = new Button('Play with computer');
     this.gameControlButtons.insertChilds([
       this.startButton,
@@ -48,14 +72,5 @@ export default class StartPageView extends BaseComponent {
       );
     };
     this.insertChilds([this.playerOne, this.gameControlButtons, this.playerTwo]);
-
-    socket.onopen = (e) => {
-      socket.onmessage = (event: MessageEvent<string>) => {
-        console.log('message');
-        console.log(JSON.parse(event.data));
-        console.log(event.data);
-        this.playerTwo.setUserName(event.data);
-      };
-    };
   }
 }

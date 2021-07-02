@@ -21,7 +21,6 @@ export default class GamePage implements PageController {
 
   constructor(root: HTMLElement) {
     this.root = root;
-    this.game = new Chess(root);
     this.userDao = UserDaoService.getInstance();
     this.popUp = new PopUpWindow('');
     this.popUp.onOkClick = this.toggleModal.bind(this);
@@ -37,6 +36,7 @@ export default class GamePage implements PageController {
   }
 
   startGame(): void {
+    this.game = new Chess(this.root);
     this.timer = new Timer();
     this.timer.start(0);
   }

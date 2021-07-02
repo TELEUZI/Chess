@@ -1,8 +1,10 @@
 import BaseComponent from '../../../../base-component';
+import { socket } from '../../../reg-page/start-page-view';
 import CellModel from '../cell/cell';
 import CellView from '../cell/cell-view';
 import Vector from '../components/vector';
 import FieldState from '../state/field-state';
+import { makeMove } from '../state/redux/reducer';
 import store from '../state/redux/store';
 import FieldModel from './field-model';
 
@@ -25,7 +27,6 @@ export default class ChessField extends BaseComponent {
 
   constructor(parentNode: HTMLElement) {
     super('div', ['table'], '', parentNode);
-    this.testItem = new BaseComponent('div', ['cell', 'cell__light'], '', this.node);
     for (let i = 0; i < 8; i += 1) {
       const row = new BaseComponent('div', ['row'], '', this.node);
       for (let j = 0; j < 8; j += 1) {
@@ -62,63 +63,17 @@ export default class ChessField extends BaseComponent {
         this.cells.push(cell);
       }
     }
-    // this.node.style.display = 'none';
-    // this.testItem = null;
-    // this.node.onmousedown = (e) => {
-    //   e.preventDefault();
-    //   if (e.buttons === 1) {
-    //     const fieldBox = this.node.getBoundingClientRect();
-    //     const ratio = Math.floor(fieldBox.width / 8);
-    //     this.startChildPos = new Vector(
-    //       Math.floor((e.clientX - this.node.offsetLeft) / ratio),
-    //       Math.floor((e.clientY - this.node.offsetTop) / ratio),
-    //     );
-    //     this.startCellPos = new Vector(
-    //       Math.floor((e.clientX - this.node.offsetLeft) / ratio),
-    //       Math.floor((e.clientY - this.node.offsetTop) / ratio),
-    //     );
-    //     this.onFigureGrab(this.startCellPos);
-    //   }
-    // };
-
-    // // this.element.onmouseenter = (e: MouseEvent) => {
-    // //   if (e.buttons != 1) {
-    // //     this.dragableField.element.onmouseup(e);
-    // //   }
-    // // };
-
-    // this.node.onmousemove = (e: MouseEvent) => {
-    //   if (e.buttons === 1) {
-    //     if (this.testItem) {
-    //       const movePos = new Vector(
-    //         e.clientX - this.node.offsetLeft,
-    //         e.clientY - this.node.offsetTop,
-    //       ).sub(this.startChildPos);
-    //       this.testItem.element.style.left = `${movePos.x}px`;
-    //       this.testItem.element.style.top = `${movePos.y}px`;
-    //     }
-    //   }
-    // };
-
-    // this.node.onmouseup = (e) => {
-    //   this.node.style.display = 'none';
-    //   this.testItem = null;
-    // };
+    socket.onmessage = (msg) => {
+      const parsed = JSON.parse(msg.data);
+      console.log(parsed.state);
+      if (parsed.type === 'move') {
+        store.dispatch(makeMove(parsed.state));
+      }
+    };
     this.model.onChange.add((state: FieldState) => this.refresh());
     this.model.onCheck.add((vector: Vector) => this.setCheck(vector));
     this.model.setFromStrings(initialField);
   }
-  // addItem(): void {
-  //   const figPos = new Vector(i % 8, Math.floor(i / 8));
-  //   let testItem = instance;
-  //   testItem.element.style.left = figPos.x * parentNode.width + 'px';
-  //   testItem.element.style.top = figPos.y * parentNode.height + 'px';
-  //   testItem.onDragStart = (startPos: Vector) => {
-  //     this.dragableField.element.style.display = '';
-  //     this.startChildPos = startPos;
-  //     this.testItem = testItem;
-  //   };
-  // }
 
   refresh(): void {
     this.forEachCell((cell, pos) => {

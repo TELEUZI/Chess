@@ -57,7 +57,10 @@ export default class CellView extends BaseComponent {
   private setFigure(type: string, color: number): void {
     if (type && type && type !== ' ') {
       this.figure.destroy();
-      this.figure = new Figure(this.node, [`chess_fig`, `chess__${color ? 'b' : 'w'}${type}`]);
+      this.figure = new Figure(this.node, [
+        `chess__figure`,
+        `chess-field__${color ? 'b' : 'w'}${type}`,
+      ]);
       this.figure.setAttribute('draggable', 'true');
     } else {
       this.figure.setClassname('');
