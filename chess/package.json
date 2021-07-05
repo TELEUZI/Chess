@@ -46,6 +46,7 @@
     "path": "^0.12.7",
     "redux": "^4.1.0",
     "redux-devtools-extension": "^2.13.9",
+    "rxjs": "^7.1.0",
     "ws": "^6.2.2"
   }
 }
