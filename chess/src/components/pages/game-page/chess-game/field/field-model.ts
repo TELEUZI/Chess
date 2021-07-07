@@ -22,7 +22,7 @@ export default class FieldModel {
 
   public allowedMoves: Array<Vector>;
 
-  public currentColor = 1;
+  public currentColor = 0;
 
   public onChange: Signal<FieldState> = new Signal();
 
@@ -44,14 +44,15 @@ export default class FieldModel {
     // this.bot = new ChessBot(this);
     this.onReverse = reverse;
     this.turnManager = new TurnManager();
+    this.state = store.getState().field;
   }
 
-  autoMove() {
+  autoMove(): void {
     this.hist.forEach((vector) => this.move(vector[0].x, vector[0].y, vector[1].x, vector[1].y));
   }
 
   move(fromX: number, fromY: number, toX: number, toY: number): void {
-    const allowed = this.getAllowed(this.state, fromX, fromY);
+    const allowed = this.getAllowed(fromX, fromY);
     const isAllowed = allowed.findIndex((it) => {
       return it.x === toX && it.y === toY;
     });
@@ -59,8 +60,8 @@ export default class FieldModel {
       return;
     }
     if (
-      store.getState().field.getCellAt(fromX, fromY).getFigure() &&
-      store.getState().field.getFigureColor(fromX, fromY) === this.currentColor &&
+      this.state.getCellAt(fromX, fromY).getFigure() &&
+      this.state.getFigureColor(fromX, fromY) === this.currentColor &&
       this.turnManager.checkMove(fromX, fromY, toX, toY)
     ) {
       this.hist.push([new Vector(fromX, fromY), new Vector(toX, toY)]);
@@ -72,17 +73,17 @@ export default class FieldModel {
       this.state.getCellAt(fromX, fromY).setFigure(null);
       this.setState(this.state);
       store.dispatch(makeMove(this.state));
-      socket.send(
-        JSON.stringify({
-          type: 'move',
-          color: this.currentColor,
-          state: store.getState().field,
-        }),
-      );
+      // socket.send(
+      //   JSON.stringify({
+      //     type: 'move',
+      //     color: this.currentColor,
+      //     state: store.getState().field,
+      //   }),
+      // );
       this.currentColor = (this.currentColor + 1) % 2;
       this.onReverse?.();
       this.onNextTurn.emit(this.currentColor);
-      if (this.getCheckedKing(this.state)) {
+      if (this.getCheckedKing()) {
         console.log('check');
         this.onCheck.emit(this.hist[this.hist.length - 1][1]);
       } else {
@@ -91,14 +92,8 @@ export default class FieldModel {
     }
   }
 
-  getStateAfterMove(
-    state_: FieldState,
-    fromX: number,
-    fromY: number,
-    toX: number,
-    toY: number,
-  ): FieldState {
-    const state = this.cloneState(state_);
+  getStateAfterMove(fromX: number, fromY: number, toX: number, toY: number): FieldState {
+    const state = this.cloneState(this.state);
     this.exchangePositions(state, new Vector(fromX, fromY), new Vector(toX, toY));
     return state;
   }
@@ -125,12 +120,11 @@ export default class FieldModel {
   }
 
   getAllowedFroms(
-    state: FieldState,
     color: number,
     // type?: string,
   ): Array<{ x: number; y: number }> {
     const res: Array<{ x: number; y: number }> = [];
-    this.forEachPlayerFigure(state, color, (cell, pos) => {
+    this.forEachPlayerFigure(color, (cell, pos) => {
       if (this.getMovesAtPoint(pos.x, pos.y).length) {
         res.push(pos);
       }
@@ -139,12 +133,12 @@ export default class FieldModel {
   }
 
   exchangePositions(state: FieldState, from: Vector, to: Vector): void {
-    this.getCellAt(state, to).setFigure(this.getCellAt(state, from).getFigure());
-    this.getCellAt(state, from).setFigure(null);
+    state.getCellAt(to.x, to.y).setFigure(this.getFigureFromState(from.x, from.y));
+    state.getCellAt(from.x, from.y).setFigure(null);
   }
 
-  getCellAt(state: FieldState, to: Vector): CellModel {
-    return state.getCellAt(to.x, to.y);
+  getCellAt(to: Vector): CellModel {
+    return this.state.getCellAt(to.x, to.y);
   }
 
   forEachCell(state: FieldState, callback: (cell: CellModel, pos: Vector) => void): void {
@@ -155,29 +149,21 @@ export default class FieldModel {
     });
   }
 
-  forEachPlayerFigure(
-    state: FieldState,
-    playerColor: number,
-    callback: (cell: CellModel, pos: Vector) => void,
-  ): void {
-    this.forEachCell(state, (cell, pos) => {
+  forEachPlayerFigure(playerColor: number, callback: (cell: CellModel, pos: Vector) => void): void {
+    this.forEachCell(this.state, (cell, pos) => {
       if (cell.getFigure() && cell.getFigureColor() === playerColor) {
         callback(cell, pos);
       }
     });
   }
 
-  getAllowedFromsE(
-    state: FieldState,
-    color: number,
-    type?: string,
-  ): Array<{ x: number; y: number }> {
+  getAllowedFromsE(color: number, type?: string): Array<{ x: number; y: number }> {
     const res: Array<{ x: number; y: number }> = [];
-    state.state.forEach((it, i) => {
+    this.state.state.forEach((it, i) => {
       it.forEach((jt, j) => {
         if (jt.getFigure() && jt.getFigureColor() === color) {
           // if (jt.figure.getMoves(state, i, j).length){
-          if (this.getAllowed(state, i, j).length) {
+          if (this.getAllowed(i, j).length) {
             if (type) {
               if (type === jt.getFigureType().toLowerCase()) {
                 res.push({ x: i, y: j });
@@ -192,19 +178,18 @@ export default class FieldModel {
     return res;
   }
 
-  checked(state: FieldState, posX: number, posY: number) {
-    this.getCellAt(state, this.findCheckEnemy(this.state, posX, posY));
+  checked(posX: number, posY: number) {
+    this.getCellAt(this.findCheckEnemy(posX, posY));
   }
 
-  getCheckedKing(state: FieldState): boolean {
-    // console.log(this.getAllowedFroms(this.currentColor));
-    const kingPos = this.getKingPos(state, this.currentColor);
-    return this.getCheckedStatus(state, kingPos.x, kingPos.y);
+  getCheckedKing(): boolean {
+    const kingPos = this.getKingPos(this.currentColor);
+    return this.getCheckedStatus(kingPos.x, kingPos.y);
   }
 
-  private getKingPos(state: FieldState, color: number) {
+  private getKingPos(color: number) {
     let res: Vector;
-    this.forEachPlayerFigure(state, color, (cell, pos) => {
+    this.forEachPlayerFigure(color, (cell, pos) => {
       if (cell.getFigureType() === 'k') {
         res = pos;
       }
@@ -212,11 +197,11 @@ export default class FieldModel {
     return res || null;
   }
 
-  findCheckEnemy(state: FieldState, posX: number, posY: number): Vector {
-    const enemies = this.getAllowedFroms(state, (this.currentColor + 1) % 2);
+  findCheckEnemy(posX: number, posY: number): Vector {
+    const enemies = this.getAllowedFroms((this.currentColor + 1) % 2);
     let res;
     enemies.forEach((enemy) => {
-      const allowed = this.getAllowedForEnemy(state, enemy.x, enemy.y);
+      const allowed = this.getAllowedForEnemy(enemy.x, enemy.y);
       allowed.forEach((al) => {
         if (al.x === posX && al.y === posY) {
           res = enemy;
@@ -226,11 +211,11 @@ export default class FieldModel {
     return res;
   }
 
-  private getCheckedStatus(state: FieldState, posX: number, posY: number) {
+  private getCheckedStatus(posX: number, posY: number): boolean {
     let res = false;
-    const enemies = this.getAllowedFroms(state, (this.currentColor + 1) % 2);
+    const enemies = this.getAllowedFroms((this.currentColor + 1) % 2);
     enemies.forEach((enemy) => {
-      const allowed = this.getAllowedForEnemy(state, enemy.x, enemy.y);
+      const allowed = this.getAllowedForEnemy(enemy.x, enemy.y);
       allowed.forEach((al) => {
         if (al.x === posX && al.y === posY) {
           res = true;
@@ -240,36 +225,36 @@ export default class FieldModel {
     return res;
   }
 
-  getAllowed = (
-    state: FieldState,
-    fromX: number,
-    fromY: number,
-  ): Array<{ x: number; y: number }> => {
-    if (this.getCheckedKing(state)) {
-      this.findCheckEnemy(state, fromX, fromY);
+  getAllowed = (fromX: number, fromY: number): Array<{ x: number; y: number }> => {
+    if (this.getCheckedKing()) {
+      this.findCheckEnemy(fromX, fromY);
     }
+    console.log(
+      this.state.getFigure(fromX, fromY),
+      this.state.getFigureColor(fromX, fromY) === this.currentColor,
+    );
     if (
-      state.getCellAt(fromX, fromY).getFigure() &&
-      state.getFigureColor(fromX, fromY) === this.currentColor
+      this.state.getFigure(fromX, fromY) &&
+      this.state.getFigureColor(fromX, fromY) === this.currentColor
     ) {
       let moves: Array<{ x: number; y: number }> = this.turnManager.getMoves(
-        store.getState().field.getCellAt(fromX, fromY).getFigure(),
+        store.getState().field.getFigure(fromX, fromY),
         fromX,
         fromY,
       );
-      moves = moves.filter((it) => {
-        const nextState = this.getStateAfterMove(state, fromX, fromY, it.x, it.y);
-        return !this.getCheckedKing(nextState);
+      moves = moves.filter(() => {
+        // const nextState = this.getStateAfterMove(fromX, fromY, it.x, it.y);
+        return !this.getCheckedKing();
       });
       return moves;
     }
     return [];
   };
 
-  private getAllowedForEnemy(state: FieldState, fromX: number, fromY: number) {
+  private getAllowedForEnemy(fromX: number, fromY: number) {
     if (
-      state.getCellAt(fromX, fromY).getFigure() &&
-      state.getFigureColor(fromX, fromY) !== this.currentColor
+      this.state.getFigure(fromX, fromY) &&
+      this.state.getFigureColor(fromX, fromY) !== this.currentColor
     ) {
       return this.turnManager.getMoves(this.getFigureFromState(fromX, fromY), fromX, fromY);
     }
@@ -277,7 +262,7 @@ export default class FieldModel {
   }
 
   getFigureFromState(fromX: number, fromY: number): FigureModel {
-    return store.getState().field.getCellAt(fromX, fromY).getFigure();
+    return store.getState().field.getFigure(fromX, fromY);
   }
 
   getMovesAtPoint(fromX: number, fromY: number): { x: number; y: number }[] {

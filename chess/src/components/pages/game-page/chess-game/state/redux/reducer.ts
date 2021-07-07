@@ -4,7 +4,7 @@ import FieldState from '../field-state';
 
 import { CHANGE_USERNAME, MOVE } from './types';
 
-const initialField = [
+export const initialField = [
   'rnbqkbnr',
   'pppppppp',
   '        ',
