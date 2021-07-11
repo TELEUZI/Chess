@@ -178,11 +178,14 @@ export default class TurnManager {
     if (figure.getType() === 'n') {
       return this.knightTurnManager.getMoves(figure, fromX, fromY);
     }
-    if (figure.getType() === 'e') {
+    if (figure.getType() === 'b') {
       return this.bishopTurnManager.getMoves(figure, fromX, fromY);
     }
     if (figure.getType() === 'k') {
       return this.kingTurnManager.getMoves(figure, fromX, fromY);
+    }
+    if (figure.getType() === 'r') {
+      return this.rookTurnManager.getMoves(figure, fromX, fromY);
     }
     if (figure.getType() === 'q') {
       return this.queenTurnManager.getMoves(figure, fromX, fromY);

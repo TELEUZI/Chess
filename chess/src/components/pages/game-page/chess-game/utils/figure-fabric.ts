@@ -9,9 +9,9 @@ import Rook from '../figures/rook';
 export default function createFigure(type: string, color: number): FigureModel {
   const figures: Map<string, typeof FigureModel> = new Map([
     ['p', Pawn],
-    ['l', Rook],
+    ['r', Rook],
     ['n', Knight],
-    ['e', Bishop],
+    ['b', Bishop],
     ['q', Queen],
     ['k', King],
   ]);

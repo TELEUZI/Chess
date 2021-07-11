@@ -36,7 +36,7 @@ export default class FieldView extends BaseComponent {
         field.getCellAt(pos.x, pos.y).getFigureColor(),
       );
     });
-    this.rotate();
+    // this.rotate();
   }
 
   setSelection(selection: CellView): void {
@@ -85,19 +85,6 @@ export default class FieldView extends BaseComponent {
       callback(it, new Vector(x, y));
     });
   }
-
-  // getCellPosition(cell: CellModel): Vector {
-  //   let res = null;
-  //   if (cell === null) {
-  //     return null;
-  //   }
-  //   this.forEachCell((currentCell, pos) => {
-  //     if (this.model.getCellAt(this.model.state, pos) === cell) {
-  //       res = pos;
-  //     }
-  //   });
-  //   return res;
-  // }
 
   rotate(): void {
     this.node.classList.toggle('rotate');

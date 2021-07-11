@@ -5,16 +5,28 @@ import FieldState from '../state/field-state';
 import FieldModel from './field-model';
 import FieldView from './field-view';
 import { socket } from '../../../reg-page/start-page-view';
+import MoveMessage from '../../../../../interfaces/move-message';
+import store from '../state/redux/store';
 
-const initialField = [
-  'lneqkenl',
+const initialFieldBlack = [
+  'rnbqkbnr',
   'pppppppp',
   '        ',
   '        ',
   '        ',
   '        ',
   'PPPPPPPP',
-  'LNEQKENL',
+  'RNBQKBNR',
+];
+const initialFieldWhite = [
+  'RNBQKBNR',
+  'PPPPPPPP',
+  '        ',
+  '        ',
+  '        ',
+  '        ',
+  'pppppppp',
+  'rnbqkbnr',
 ];
 export default class ChessField {
   view: FieldView;
@@ -25,19 +37,43 @@ export default class ChessField {
 
   constructor(parentNode: HTMLElement) {
     this.view = new FieldView(parentNode);
-    this.model = new FieldModel(this.view.rotate);
+    this.model = new FieldModel(() => this.view.rotate);
     this.view.onCellClick = (cell: CellView, i: number, j: number) =>
       this.cellClickHandler(cell, i, j);
-    // socket.onmessage = (msg) => {
-    //   const parsed = JSON.parse(msg.data);
-    //   console.log(parsed.state);
-    //   if (parsed.type === 'move') {
-    //     store.dispatch(makeMove(parsed.state));
-    //   }
-    // };
+    socket.onopen = () => console.log('object');
+    socket.onmessage = (event: MessageEvent<string>) => {
+      const info = JSON.parse(event.data);
+      console.log(info);
+      if (info.type === 'pending') {
+        console.log('Waiting for player');
+      }
+      if (info.type === 'start') {
+        window.location.hash = '#game';
+        this.model.userColor = info.payload.color;
+        console.log(this.model.userColor);
+      }
+      // console.log('message');
+      // console.log(JSON.parse(event.data));
+      // console.log(event.data);
+      // this.playerTwo.setUserName(event.data);
+    };
+    socket.onclose = (event) => {
+      console.log('closed');
+    };
+    socket.onmessage = (msg: MessageEvent<string>) => {
+      const parsed: { type: string; payload: MoveMessage } = JSON.parse(msg.data);
+      if (parsed.type === 'move') {
+        this.model.oppentMove(
+          parsed.payload.from.x,
+          parsed.payload.from.y,
+          parsed.payload.to.x,
+          parsed.payload.to.y,
+        );
+      }
+    };
     this.model.onChange.add((state: FieldState) => this.view.refresh(state));
     this.model.onCheck.add((vector: Vector) => this.setCheck(vector));
-    this.model.setFromStrings(initialField);
+    this.model.setFromStrings(store.getState().color.color ? initialFieldWhite : initialFieldBlack);
   }
 
   cellClickHandler(cell: CellView, i: number, j: number): void {

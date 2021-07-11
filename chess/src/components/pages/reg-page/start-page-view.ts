@@ -1,6 +1,6 @@
 import BaseComponent from '../../base-component';
 import Button from '../../button/button';
-import { changeName } from '../game-page/chess-game/state/redux/reducer';
+import { changeName, setUserColor } from '../game-page/chess-game/state/redux/reducer';
 import store from '../game-page/chess-game/state/redux/store';
 import PlayerContainer from './reg-page__components/player-control';
 
@@ -27,25 +27,23 @@ export default class StartPageView extends BaseComponent {
       console.log('click');
       socket.send(JSON.stringify({ type: 'start', name: this.playerOne.getUserName() }));
     });
-    socket.onopen = (e) => {
-      console.log('opened');
-      socket.onmessage = (event: MessageEvent<string>) => {
-        const info = JSON.parse(event.data);
-        console.log(info);
-        if (info.type === 'pending') {
-          console.log('Waiting for player');
-        }
-        if (info.type === 'start') {
-          window.location.hash = '#game';
-        }
-        // console.log('message');
-        // console.log(JSON.parse(event.data));
-        // console.log(event.data);
-        // this.playerTwo.setUserName(event.data);
-      };
-      socket.onclose = (event) => {
-        console.log('closed');
-      };
+    socket.onmessage = (event: MessageEvent<string>) => {
+      const info = JSON.parse(event.data);
+      console.log(info);
+      if (info.type === 'pending') {
+        console.log('Waiting for player');
+      }
+      if (info.type === 'start') {
+        window.location.hash = '#game';
+        store.dispatch(setUserColor(info.payload.color));
+      }
+      // console.log('message');
+      // console.log(JSON.parse(event.data));
+      // console.log(event.data);
+      // this.playerTwo.setUserName(event.data);
+    };
+    socket.onclose = (event) => {
+      console.log('closed');
     };
     this.startGameWithBot = new Button('Play with computer');
     this.gameControlButtons.insertChilds([

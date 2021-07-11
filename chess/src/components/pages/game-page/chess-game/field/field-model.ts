@@ -40,6 +40,8 @@ export default class FieldModel {
 
   onReverse: () => void = () => {};
 
+  userColor: number;
+
   constructor(reverse: () => void) {
     // this.bot = new ChessBot(this);
     this.onReverse = reverse;
@@ -49,6 +51,14 @@ export default class FieldModel {
 
   autoMove(): void {
     this.hist.forEach((vector) => this.move(vector[0].x, vector[0].y, vector[1].x, vector[1].y));
+  }
+
+  oppentMove(fromX: number, fromY: number, toX: number, toY: number): void {
+    console.log('opponent move');
+    this.state.getCellAt(toX, toY).setFigure(this.state.getCellAt(fromX, fromY).getFigure());
+    this.state.getCellAt(fromX, fromY).setFigure(null);
+    this.setState(this.state);
+    store.dispatch(makeMove(this.state));
   }
 
   move(fromX: number, fromY: number, toX: number, toY: number): void {
@@ -73,16 +83,17 @@ export default class FieldModel {
       this.state.getCellAt(fromX, fromY).setFigure(null);
       this.setState(this.state);
       store.dispatch(makeMove(this.state));
-      // socket.send(
-      //   JSON.stringify({
-      //     type: 'move',
-      //     color: this.currentColor,
-      //     state: store.getState().field,
-      //   }),
-      // );
-      this.currentColor = (this.currentColor + 1) % 2;
-      this.onReverse?.();
-      this.onNextTurn.emit(this.currentColor);
+      socket.send(
+        JSON.stringify({
+          type: 'move',
+          payload: { from: { x: fromX, y: fromY }, to: { x: toX, y: toY } },
+        }),
+      );
+      if (!this.userColor) {
+        this.currentColor = (this.currentColor + 1) % 2;
+        this.onReverse?.();
+        this.onNextTurn.emit(this.currentColor);
+      }
       if (this.getCheckedKing()) {
         console.log('check');
         this.onCheck.emit(this.hist[this.hist.length - 1][1]);

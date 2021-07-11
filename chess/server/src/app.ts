@@ -30,22 +30,25 @@ class SocketServer {
       ) => {
         this.clients.push(connection);
         console.log(`${new Date()} Connection accepted.`);
-        let parsed: any;
+        let parsed: {
+          type: string,
+          payload: any
+        };
         connection.on('message', (message: string) => {
           parsed = JSON.parse(message);
-          console.log('type:', parsed.type, '\ndata:', parsed.data);
+          console.log('type:', parsed.type, '\ndata:', parsed.payload);
           if ( parsed.type === 'name') {
               this.clients.forEach((it: WebSocketServer) => {
-                if(it.readyState === 1) it.send(JSON.stringify(parsed.data));
+                if(it.readyState === 1) it.send(parsed.payload);
             });
             console.log(`Received Message: ${message}`, `clients -> ${this.clients.length}`);}
             else if (parsed.type === 'start'){
               players.push(connection);
               console.log(players);
               if (players.length === 2){
-                players.forEach(player => {
+                players.forEach((player, index) => {
                   currentPlayers.push(player);
-                  player.send(JSON.stringify({ type:'start'}))}
+                  player.send(JSON.stringify({ type:'start', payload: {color : index}}))}
                   );
                 players.pop();
                 players.pop()
@@ -54,7 +57,7 @@ class SocketServer {
                 players.forEach(player => player.send(JSON.stringify({ type:'pending'})));
               }
             } else if (parsed.type === 'move'){
-              currentPlayers.forEach(player => player.send(JSON.stringify({ type:'move', state: parsed.state})))
+              currentPlayers.forEach(player => player.send(JSON.stringify({ type: 'move', payload: parsed.payload})))
             }
 
             // parsed = JSON.parse(message)

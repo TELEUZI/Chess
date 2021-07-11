@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import createFieldFromStrings from '../../utils/field-fabric';
 import FieldState from '../field-state';
 
-import { CHANGE_USERNAME, MOVE } from './types';
+import { CHANGE_USERNAME, MOVE, SET_USER_COLOR } from './types';
 
 export const initialField = [
   'rnbqkbnr',
@@ -59,6 +59,31 @@ function playerReducer(
       return state;
   }
 }
+function playerColorReducer(
+  state = { color: 0 },
+  action: { type: string; payload: { color: number } },
+) {
+  switch (action.type) {
+    case SET_USER_COLOR:
+      return {
+        ...state,
+        color: action.payload.color,
+      };
+    default:
+      return state;
+  }
+}
+export function setUserColor(
+  color: number,
+): {
+  type: string;
+  payload: { color: number };
+} {
+  return {
+    type: SET_USER_COLOR,
+    payload: { color },
+  };
+}
 export function changeName(names: {
   playerOne: string;
   playerTwo: string;
@@ -74,5 +99,6 @@ export function changeName(names: {
 const rootReducer = combineReducers({
   field: fieldReducer,
   players: playerReducer,
+  color: playerColorReducer,
 });
 export default rootReducer;
