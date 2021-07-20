@@ -1,36 +1,47 @@
-import { join, resolve as _resolve } from 'path';
-import ESLintPlugin from 'eslint-webpack-plugin';
-import NodePolyfillPlugin from "node-polyfill-webpack-plugin";
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
+var path = require('path');
+var fs = require('fs');
+var webpack = require('webpack');
+const ESLintPlugin = require('eslint-webpack-plugin');
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
+var nodeModules = {};
+fs.readdirSync('node_modules')
+  .filter(function (x) {
+    return ['.bin'].indexOf(x) === -1;
+  })
+  .forEach(function (mod) {
+    nodeModules[mod] = 'commonjs ' + mod;
+  });
 
-const __dirname = dirname(fileURLToPath(
-  import.meta.url));
+const devServer = (isDev) =>
+  !isDev
+    ? {}
+    : {
+        devServer: {
+          open: true,
+          hot: true,
+          port: 8085,
+          contentBase: path.join(__dirname, 'public'),
+        },
+      };
 
-const devServer = (isDev) => !isDev ? {} : {
-  devServer: {
-    open: true,
-    hot: true,
-    port: 8080,
-    contentBase: join(__dirname, 'public'),
-  },
-};
+const esLintPlugin = (isDev) =>
+  isDev ? [] : [new ESLintPlugin({ extensions: ['ts', 'js', 'cjs'] })];
 
-const esLintPlugin = (isDev) => isDev ? [] : [new ESLintPlugin({ extensions: ['ts', 'js', 'cjs'] })];
-
-export default ({ development }) => ({
-  mode: development ? 'development' : 'production',
+module.exports = ({ development }) => ({
+  mode: 'production',
   devtool: development ? 'inline-source-map' : false,
   entry: {
-    main: './src/app.ts',
+    main: './src/index.ts',
   },
   output: {
     filename: 'index.js',
-    path: _resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'dist'),
     assetModuleFilename: 'assets/[hash][ext]',
   },
+  target: 'node',
   module: {
-    rules: [{
+    rules: [
+      {
         test: /\.[tj]s$/,
         use: 'ts-loader',
         exclude: /node_modules/,
@@ -47,10 +58,14 @@ export default ({ development }) => ({
   },
   plugins: [
     ...esLintPlugin(development),
-    new NodePolyfillPlugin()
+    new NodePolyfillPlugin(),
+    new webpack.EnvironmentPlugin({
+      JWT_SECRET: 'c8589464-0b84-4b6a-a849-4e8572324dc4',
+      JWT_EXPIRES_IN: '1d'
+    }),
   ],
   resolve: {
     extensions: ['.ts', '.js'],
   },
-  ...devServer(development)
+  ...devServer(development),
 });
