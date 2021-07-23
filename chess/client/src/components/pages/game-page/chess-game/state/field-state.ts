@@ -1,7 +1,7 @@
 import FigureColor from '../../../../../enums/figure-colors';
-import CellModel from '../cell/cell-model';
+import CellModel from '../models/cell-model';
 import FigureModel from '../models/figures/figure-model';
-import createFigure from '../utils/figure-fabric';
+import createFigure from '../fabrics/figure-fabric';
 
 export function createFigurefromString(figure: string): FigureModel {
   let color: number;

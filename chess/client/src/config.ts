@@ -5,6 +5,8 @@ export enum IndexedDBStores {
   GAME_CONFIG = 'GameConfig',
   REPLAY_STORE = 'ReplaysStore',
 }
+export const BLACK_ROW_INDEX = 0;
+export const WHITE_ROW_INDEX = 7;
 export const INDEXED_DB_VERSION = 1;
 export const INDEXED_DB_NAME = 'Teleuzi';
 export const TABLE_SIZE = 8;

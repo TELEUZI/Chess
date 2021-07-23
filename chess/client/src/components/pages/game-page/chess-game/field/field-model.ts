@@ -2,14 +2,14 @@ import FigureColor from '../../../../../enums/figure-colors';
 import GameMode from '../../../../../enums/game-mode';
 import { socketService } from '../../../../../services/websocket-service';
 import getNextFigureColor from '../../../../../utils/get-next-figure-color';
-import CellModel from '../cell/cell-model';
+import CellModel from '../models/cell-model';
 
 import Coordinate from '../../../../../models/coordinate';
 import FieldState from '../state/field-state';
 import store from '../state/redux/store';
-import createFieldFromStrings from '../utils/field-fabric';
+import createFieldFromStrings from '../fabrics/field-fabric';
 import TurnManager from '../services/figure-moves/turn-manager';
-import { createFigurefromString } from '../utils/figure-fabric';
+import { createFigurefromString } from '../fabrics/figure-fabric';
 import MoveMessage, { FigureTurn } from '../../../../../interfaces/move-message';
 import {
   getKingPosition,
@@ -49,6 +49,8 @@ export default class FieldModel {
 
   private gameMode: GameMode = GameMode.SINGLE;
 
+  private gameResult: GameResult;
+
   onChange: Observable<FieldState> = new Observable();
 
   onCheck: Observable<Coordinate> = new Observable();
@@ -68,8 +70,6 @@ export default class FieldModel {
   onReset: () => void;
 
   onCheckPromotion: (cell: CellModel) => void;
-
-  private gameResult: GameResult;
 
   constructor() {
     this.turnManager = new TurnManager();

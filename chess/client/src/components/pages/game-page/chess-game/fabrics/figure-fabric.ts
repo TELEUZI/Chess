@@ -19,6 +19,7 @@ export default function createFigure(type: string, color: FigureColor): FigureMo
   const FigureClass = figures.get(type);
   return FigureClass ? new FigureClass(color) : null;
 }
+
 export function createFigurefromString(figure: string): FigureModel {
   let color: FigureColor;
   if (figure.trim() !== '') {

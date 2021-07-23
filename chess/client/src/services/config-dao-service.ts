@@ -24,7 +24,7 @@ export default class ConfigDaoService {
     return ConfigDaoService.instance;
   }
 
-  setData(gameDifficulty: string): void {
+  setData(gameDifficulty: GameDifficultyOptions): void {
     this.dao.create({ GameDifficulty: gameDifficulty });
   }
 

@@ -1,5 +1,5 @@
 import BaseComponent from '../../../../base-component';
-import CellView from '../cell/cell-view';
+import CellView from './cell-view';
 import Coordinate from '../../../../../models/coordinate';
 import FieldState from '../state/field-state';
 import { TABLE_SIZE } from '../../../../../config';

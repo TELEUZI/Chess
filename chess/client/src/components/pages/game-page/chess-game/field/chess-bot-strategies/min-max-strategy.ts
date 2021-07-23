@@ -22,13 +22,14 @@ export default class MinMaxBotStrategy implements Strategy {
           moveTo.x,
           moveTo.y,
         );
-        const boardValue = this.minimax(2, newState, color, avaliableMoves, false);
+        const boardValue = this.minimax(2, newState, color, avaliableMoves, !!color);
         if (boardValue > bestValue) {
           bestValue = boardValue;
           bestMove = { from: newGameMove.from, to: moveTo };
         }
       });
     });
+    console.log(bestMove, bestValue);
     return bestMove;
   }
 
@@ -43,40 +44,44 @@ export default class MinMaxBotStrategy implements Strategy {
       return evaluateBoard(state);
     }
     if (isMaximizingPlayer) {
-      let bestMove = -9999;
-      avaliableMoves.forEach((newGameMove) => {
-        newGameMove.to.forEach((move) => {
-          const newState = getStateAfterMove(
-            state,
-            newGameMove.from.x,
-            newGameMove.from.y,
-            move.x,
-            move.y,
-          );
-          bestMove = Math.max(
-            bestMove,
-            this.minimax(depth - 1, newState, color, avaliableMoves, !isMaximizingPlayer),
-          );
-        });
-      });
-    } else {
-      let bestMove = 9999;
-      avaliableMoves.forEach((newGameMove) => {
-        newGameMove.to.forEach((move) => {
-          const newState = getStateAfterMove(
-            state,
-            newGameMove.from.x,
-            newGameMove.from.y,
-            move.x,
-            move.y,
-          );
-          bestMove = Math.min(
-            bestMove,
-            this.minimax(depth - 1, newState, color, avaliableMoves, !isMaximizingPlayer),
-          );
-        });
-      });
+      return this.findMinMax(
+        depth,
+        state,
+        color,
+        avaliableMoves,
+        isMaximizingPlayer,
+        Math.max,
+        -9999,
+      );
     }
-    return null;
+    return this.findMinMax(depth, state, color, avaliableMoves, isMaximizingPlayer, Math.min, 9999);
+  }
+
+  findMinMax(
+    depth: number,
+    state: FieldState,
+    color: FigureColor,
+    avaliableMoves: FigureTurn[],
+    isMaximizingPlayer: boolean,
+    extremumFunc: (...values: number[]) => number,
+    bestValue: number,
+  ): number {
+    let bestMove = bestValue;
+    avaliableMoves.forEach((newGameMove) => {
+      newGameMove.to.forEach((move) => {
+        const newState = getStateAfterMove(
+          state,
+          newGameMove.from.x,
+          newGameMove.from.y,
+          move.x,
+          move.y,
+        );
+        bestMove = extremumFunc(
+          bestMove,
+          this.minimax(depth - 1, newState, color, avaliableMoves, !isMaximizingPlayer),
+        );
+      });
+    });
+    return bestMove;
   }
 }

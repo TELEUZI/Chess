@@ -1,4 +1,4 @@
-import CellModel from '../cell/cell-model';
+import CellModel from '../models/cell-model';
 import FieldState from '../state/field-state';
 import { createFigurefromString } from './figure-fabric';
 

@@ -7,13 +7,13 @@ export default class StartPageView extends BaseComponent {
 
   playerTwo: PlayerContainer;
 
-  startGameWithBot: Button;
+  private startGameWithBot: Button;
 
-  startButton: Button;
+  private startButton: Button;
 
-  gameModeButton: Button;
+  private gameModeButton: Button;
 
-  gameControlButtons: BaseComponent;
+  private gameControlButtons: BaseComponent;
 
   onStartSingleGame: () => void;
 

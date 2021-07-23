@@ -48,11 +48,13 @@ export function startGame(token: PlayerTokenInfo): void {
     rooms.set(token.roomName, room);
     room.clients.forEach((client, i) => {
       const players = room.game.getPlayers();
+      console.log(players);
       players.forEach((player, j) => {
         if (i === j) {
+          console.log(player, client, i, j);
           client.send(
             JSON.stringify({
-              action: 'setUserColor',
+              action: GameAction.setUserColor,
               payload: { color: player.color },
             }),
           );

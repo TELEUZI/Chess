@@ -119,6 +119,7 @@ class SocketService {
           break;
         case GameAction.setUserColor:
           store.dispatch(setUserColor((response.payload as ColorMessage).color));
+          this.onStart();
           break;
         case GameAction.drawResponse:
           this.onPlayerDrawResponse((response.payload as DrawResult).isDraw);

@@ -6,6 +6,9 @@
   align-items: center;
   text-decoration: none;
   flex-grow: 1;
+  &:hover{
+    cursor: pointer;
+  }
 }
 
 .current {

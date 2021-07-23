@@ -1,6 +1,6 @@
 import FigureColor from '../../../../../../enums/figure-colors';
 import FigureType from '../../../../../../enums/figure-type';
-import CellModel from '../../cell/cell-model';
+import CellModel from '../../models/cell-model';
 import Coordinate from '../../../../../../models/coordinate';
 import FigureModel from '../../models/figures/figure-model';
 import FieldState from '../../state/field-state';

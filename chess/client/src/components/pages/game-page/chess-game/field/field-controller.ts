@@ -1,8 +1,8 @@
-import CellModel from '../cell/cell-model';
-import CellView from '../cell/cell-view';
+import CellModel from '../models/cell-model';
+import CellView from '../views/cell-view';
 import Coordinate from '../../../../../models/coordinate';
 import FieldState from '../state/field-state';
-import FieldView from './field-view';
+import FieldView from '../views/field-view';
 import store from '../state/redux/store';
 import FieldModel, { TurnInfo } from './field-model';
 import GameMode from '../../../../../enums/game-mode';
@@ -11,19 +11,22 @@ import forEachCell from '../utils/cells-iterator';
 import FigureType from '../../../../../enums/figure-type';
 import FigureColor from '../../../../../enums/figure-colors';
 import { socketService } from '../../../../../services/websocket-service';
-import RandomMoveStrategy from './chess-bot-strategies/random-move-strategy';
 import { setCurrentUserColor } from '../state/redux/action-creators';
+import ConfigDaoService from '../../../../../services/config-dao-service';
+import { BLACK_ROW_INDEX, WHITE_ROW_INDEX } from '../../../../../config';
+import createStrategy from '../fabrics/bot-strategy-fabric';
+import { Strategy } from '../../../../../interfaces/bot-strategy';
 
-const BLACK_ROW_INDEX = 0;
-const WHITE_ROW_INDEX = 7;
 export default class ChessField {
-  view: FieldView;
-
   model: FieldModel;
+
+  private view: FieldView;
 
   private selectedCell: CellModel = null;
 
   private bot: ChessBot;
+
+  private botConfigService: ConfigDaoService = ConfigDaoService.getInstance();
 
   onMate: () => void;
 
@@ -37,10 +40,34 @@ export default class ChessField {
 
   constructor(parentNode: HTMLElement) {
     this.model = new FieldModel();
-    this.bot = new ChessBot(this.model, new RandomMoveStrategy());
+    this.setBotAndStrategy();
     this.model.onNextTurn.subscribe(() => {
       this.onNextTurn();
     });
+    this.view = new FieldView(parentNode);
+    this.view.createField();
+    this.view.refresh(store.getState().field);
+    store.subscribe(() => this.view.refresh(store.getState().field));
+    socketService.onStart = () => {
+      if (store.getState().color.color === FigureColor.BLACK) {
+        this.view.rotate();
+        forEachCell(this.view.getCells(), (cell) => cell.rotate());
+      }
+    };
+    this.setUpModelListeners();
+    this.model.onChange.subscribe((state: FieldState) => {
+      this.view.refresh(state);
+    });
+    this.model.onCheck.subscribe((vector: Coordinate) => this.view.setCheck(vector));
+    this.model.onMate.subscribe((attackingFigureCell: Coordinate) => {
+      this.view.setMate(attackingFigureCell);
+      this.onMate();
+      this.onEnd();
+    });
+    this.setUpViewListeners();
+  }
+
+  setUpModelListeners(): void {
     this.model.onCheckPromotion = (cell: CellModel) => {
       if (this.checkPromotion(cell)) {
         const { x, y } = this.getCellPosition(cell);
@@ -56,37 +83,29 @@ export default class ChessField {
       forEachCell(this.view.getCells(), (cell) => cell.rotate());
     };
     this.model.onBotMove = () => {
-      this.bot.getLogicMove(this.model.state, FigureColor.BLACK);
-    };
-    socketService.onStart = () => {
-      if (store.getState().color.color === FigureColor.BLACK) {
-        this.view.rotate();
-      }
+      this.bot.makeBotMove(this.model.state, FigureColor.BLACK);
     };
     this.model.onReset = () => {
-      this.model = new FieldModel();
-      this.bot = new ChessBot(this.model, new RandomMoveStrategy());
       store.dispatch(setCurrentUserColor(1));
     };
-    this.view = new FieldView(parentNode);
-    this.view.createField();
-    this.view.refresh(store.getState().field);
-    store.subscribe(() => this.view.refresh(store.getState().field));
-    this.view.onCellClick = (cell: CellView, i: number, j: number) =>
-      this.cellClickHandler(cell, i, j);
-    this.model.onChange.subscribe((state: FieldState) => {
-      this.view.refresh(state);
-    });
-    this.model.onCheck.subscribe((vector: Coordinate) => this.view.setCheck(vector));
-    this.model.onMate.subscribe((attackingFigureCell: Coordinate) => {
-      this.view.setMate(attackingFigureCell);
-      this.onMate();
-      this.onEnd();
-    });
     this.model.onStalemate = () => {
       this.onStalemate();
       this.onEnd();
     };
+  }
+
+  setUpViewListeners(): void {
+    this.view.onCellClick = (cell: CellView, i: number, j: number) => {
+      this.cellClickHandler(cell, i, j);
+    };
+  }
+
+  async setBotAndStrategy(): Promise<void> {
+    this.bot = new ChessBot(this.model, await this.getBotStrategy());
+  }
+
+  async getBotStrategy(): Promise<Strategy> {
+    return createStrategy(await this.botConfigService.getData());
   }
 
   cellClickHandler(cell: CellView, i: number, j: number): void {
@@ -99,7 +118,6 @@ export default class ChessField {
     let cellPos = this.getCellPosition(this.selectedCell);
     if (cellPos) {
       this.model.move(cellPos.x, cellPos.y, i, j);
-
       forEachCell(this.view.getCells(), (currentCell) => {
         currentCell.highlightSelectedCell(false);
         currentCell.highlightAllowedMoves(false);
@@ -124,7 +142,7 @@ export default class ChessField {
   }
 
   getCellPosition(cell: CellModel): Coordinate {
-    let res = null;
+    let res: Coordinate;
     if (cell === null) {
       return null;
     }
@@ -133,7 +151,7 @@ export default class ChessField {
         res = pos;
       }
     });
-    return res;
+    return res || null;
   }
 
   checkPromotion(cell: CellModel): boolean {

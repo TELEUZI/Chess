@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import FigureColor from '../../../../../../enums/figure-colors';
 import GameMode from '../../../../../../enums/game-mode';
-import createFieldFromStrings from '../../utils/field-fabric';
+import createFieldFromStrings from '../../fabrics/field-fabric';
 import FieldState from '../field-state';
 
 import {

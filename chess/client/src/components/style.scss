@@ -614,9 +614,7 @@
   font-size: 18px;
   text-decoration: none;
   color: $white;
-  &:hover{
-    cursor: pointer;
-  }
+
 }
 .signup__form {
   padding: 2.5rem;
@@ -654,4 +652,12 @@
   color: $grey;
   &:focus,
   &:hover {color: darken($grey, 13%);}
+}
+.pop-up__header{
+  margin-bottom: 30px;
+  font-size: 36px;
+}
+.pop-up__header{
+  margin-bottom: 30px;
+  font-size: 36px;
 }

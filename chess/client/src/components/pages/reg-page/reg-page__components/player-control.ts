@@ -3,13 +3,13 @@ import Button from '../../../button/button';
 import PlayerView from './player';
 
 export default class PlayerContainer extends BaseComponent {
-  player: PlayerView;
+  private player: PlayerView;
 
-  updateButton: Button;
+  private updateButton: Button;
 
-  name: string;
+  private name: string;
 
-  image: BaseComponent;
+  private image: BaseComponent;
 
   onSubmit: (name: string) => void;
 

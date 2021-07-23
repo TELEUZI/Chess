@@ -1,3 +1,4 @@
+import FigureType from '../../../../../../enums/figure-type';
 import Coordinate from '../../../../../../models/coordinate';
 import FigureModel from '../../models/figures/figure-model';
 import FieldState from '../../state/field-state';
@@ -47,22 +48,22 @@ export default class TurnManager {
 
   getMoves(state: FieldState, figure: FigureModel, fromX: number, fromY: number): Coordinate[] {
     const res: Coordinate[] = [];
-    if (figure.getType() === 'p') {
+    if (figure.getType() === FigureType.PAWN) {
       return PawnTurnManager.getMoves(state, figure, fromX, fromY);
     }
-    if (figure.getType() === 'n') {
+    if (figure.getType() === FigureType.KNIGHT) {
       return KnightTurnManager.getMoves(state, figure, fromX, fromY);
     }
-    if (figure.getType() === 'b') {
+    if (figure.getType() === FigureType.BISHOP) {
       return this.bishopTurnManager.getMoves(state, figure, fromX, fromY);
     }
-    if (figure.getType() === 'k') {
+    if (figure.getType() === FigureType.KING) {
       return KingTurnManager.getMoves(state, figure, fromX, fromY);
     }
-    if (figure.getType() === 'r') {
+    if (figure.getType() === FigureType.ROOK) {
       return this.rookTurnManager.getMoves(state, figure, fromX, fromY);
     }
-    if (figure.getType() === 'q') {
+    if (figure.getType() === FigureType.QUEEN) {
       return this.queenTurnManager.getMoves(state, figure, fromX, fromY);
     }
     return res;

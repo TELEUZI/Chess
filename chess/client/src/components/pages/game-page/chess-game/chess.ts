@@ -19,9 +19,9 @@ import { TIMER_DELAY } from '../../../../config';
 
 const IS_UPDATABLE = false;
 class Chess extends BaseComponent {
-  public onCellClick: (coords: Coordinate) => void = () => {};
+  onCellClick: (coords: Coordinate) => void = () => {};
 
-  timer: Timer;
+  private timer: Timer;
 
   private playerOne: PlayerContainer;
 
@@ -29,15 +29,15 @@ class Chess extends BaseComponent {
 
   private chessBoard: ChessField;
 
-  replayModel: ReplayDaoService;
+  private replayModel: ReplayDaoService;
 
-  chessHistory: ChessHistory;
+  private chessHistory: ChessHistory;
 
-  isReplay: boolean;
+  private isReplay: boolean;
 
-  history: TimedMoveMessage[] = [];
+  private history: TimedMoveMessage[] = [];
 
-  replay: Replay;
+  private replay: Replay;
 
   constructor(parentNode: HTMLElement, isReplay: boolean) {
     super('div', ['chess-wrapper'], '', parentNode);
@@ -122,7 +122,6 @@ class Chess extends BaseComponent {
     };
     this.chessBoard.onNextTurn = () => this.nextTurnHandler();
     this.playerOne.toggleClass('current');
-
     chessHead.insertChilds([this.playerOne, this.playerTwo]);
   }
 
@@ -183,6 +182,10 @@ class Chess extends BaseComponent {
       result: null,
       moves: 0,
     };
+  }
+
+  stopTimer(): void {
+    this.timer.toggle();
   }
 
   nextTurnHandler(): void {

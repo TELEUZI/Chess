@@ -1,6 +1,6 @@
 import FigureColor from '../../../../../enums/figure-colors';
 import FigureType from '../../../../../enums/figure-type';
-import FigureModel, { FigureInfo } from '../models/figures/figure-model';
+import FigureModel, { FigureInfo } from './figures/figure-model';
 
 export default class CellModel {
   private figure: FigureModel;

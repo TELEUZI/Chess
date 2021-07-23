@@ -2,9 +2,9 @@ import BaseComponent from '../../../base-component';
 import Input from '../../../input/input';
 
 export default class PlayerView extends BaseComponent {
-  name: string;
+  private name: string;
 
-  userName: BaseComponent;
+  private userName: BaseComponent;
 
   userNameUpdate: Input;
 
