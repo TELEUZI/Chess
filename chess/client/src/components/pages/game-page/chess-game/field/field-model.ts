@@ -21,14 +21,8 @@ import Observable from '../../../../../services/observable';
 import { GameResult } from '../../../../../interfaces/replay';
 import { setCurrentUserColor, makeMove } from '../state/redux/action-creators';
 import { getBoardFromFen, getFenFromStringBoard } from '../utils/fen-processor';
-import { FigureInfo } from '../models/figures/figure-model';
 import getOpeningName from '../../../../../services/chess-openings-service';
-
-export interface TurnInfo {
-  figure: FigureInfo;
-  move: MoveMessage;
-  comment?: string;
-}
+import TurnInfo from '../../../../../interfaces/turn-info';
 
 const initialField = [
   ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
@@ -109,7 +103,6 @@ export default class FieldModel {
       i,
       j,
     );
-    console.log(this.state);
     store.dispatch(makeMove(this.state));
   }
 
@@ -148,7 +141,7 @@ export default class FieldModel {
         to: new Coordinate(toX, toY),
       });
     }
-    this.onCheckPromotion(this.getCellAt(new Coordinate(toY, toX)));
+    this.onCheckPromotion(this.getCellAt(new Coordinate(toX, toY)));
     this.setNextPlayerColor();
     this.checkGameSituation();
   }

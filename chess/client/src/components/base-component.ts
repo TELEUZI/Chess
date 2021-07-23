@@ -1,4 +1,5 @@
 import './style.scss';
+import './normalize.scss';
 
 export default class BaseComponent {
   protected node: HTMLElement;

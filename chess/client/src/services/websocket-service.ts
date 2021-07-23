@@ -125,7 +125,7 @@ class SocketService {
           this.onPlayerDrawResponse((response.payload as DrawResult).isDraw);
           break;
         default:
-          console.log('object');
+          break;
       }
     } catch (error) {
       console.error(error.message);
@@ -189,7 +189,6 @@ class SocketService {
     const ws = new WebSocket(`${wsProtocol}://${baseURL}/rooms?accessToken=${playerToken}`);
     let connected = false;
     ws.onopen = (): void => {
-      console.log('open');
       ws.send(
         JSON.stringify({
           action: GameAction.joinRoom,
@@ -201,7 +200,6 @@ class SocketService {
         connected = true;
         return;
       }
-      console.log(event.data);
       this.gameStateUpdater(event);
     };
     ws.onerror = (event: Event): void => {
@@ -214,9 +212,7 @@ class SocketService {
 export const socketService = new SocketService();
 
 export async function addUserToGame(userName: string): Promise<void> {
-  console.log('click');
   const freeRoom = await getFreeRoom();
-  console.log(freeRoom);
   if (!freeRoom) {
     socketService.createRoom(userName);
   } else {

@@ -26,14 +26,12 @@ export default class EvaluationStrategy implements Strategy {
           moveTo.y,
         );
         const boardValue = evaluateBoard(newState);
-        console.log(boardValue, bestValue);
         if (boardValue > bestValue) {
           bestValue = boardValue;
           bestMove = { from: newGameMove.from, to: moveTo };
         }
       });
     });
-    console.log(bestMove, bestValue);
     return bestMove;
   }
 }

@@ -111,7 +111,6 @@ export default class Controller extends BaseComponent {
     if (store.getState().gameMode.currentGameMode === GameMode.MULTIPLAYER) {
       socketService.suggestDraw();
     }
-    console.log(this);
     this.headerStateManager.transitionToRegisteredState(
       this.startGame.bind(this),
       await this.userModel.getAvatar(),

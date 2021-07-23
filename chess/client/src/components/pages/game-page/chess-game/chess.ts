@@ -5,7 +5,7 @@ import ChessField from './field/field-controller';
 import PlayerContainer from '../../reg-page/reg-page__components/player-control';
 import store from './state/redux/store';
 import ChessHistory from './chess-history';
-import { TurnInfo } from './field/field-model';
+
 import ModalWindow from '../../reg-page/modal-window';
 import ModalContent from '../../reg-page/modal-content';
 import getNextFigureColor from '../../../../utils/get-next-figure-color';
@@ -16,6 +16,7 @@ import FigureColor from '../../../../enums/figure-colors';
 import Replay, { GameResult } from '../../../../interfaces/replay';
 import { socketService } from '../../../../services/websocket-service';
 import { TIMER_DELAY } from '../../../../config';
+import TurnInfo from '../../../../interfaces/turn-info';
 
 const IS_UPDATABLE = false;
 class Chess extends BaseComponent {
@@ -49,40 +50,30 @@ class Chess extends BaseComponent {
     this.timer = new Timer();
     this.timer.start(TIMER_DELAY);
     this.node.appendChild(this.timer.getNode());
-    const chessBoardWrapper = new BaseComponent('div', ['chess'], '', this.node);
-    const chessHead = new BaseComponent('div', ['chess__head'], '', chessBoardWrapper.getNode());
-    this.playerOne = new PlayerContainer(store.getState().players.playerOne, IS_UPDATABLE);
-    this.playerTwo = new PlayerContainer(store.getState().players.playerTwo, IS_UPDATABLE);
-    const chessBody = new BaseComponent('div', ['chess__body'], '', chessBoardWrapper.getNode());
-    this.chessHistory = new ChessHistory(chessBody.getNode());
-    this.chessBoard = new ChessField(chessBody.getNode());
+    this.createUI();
     socketService.onPlayerLeave = () => {
       this.setPlayerLeave();
     };
     socketService.onPlayerDrawSuggest = () => {
-      const winContent = new ModalContent({
-        header: 'Are you ok with draw?',
-        text: `...`,
-        buttonText: 'Ok',
-      });
-      const win = new ModalWindow(
-        winContent,
-        () => {
-          socketService.answerDraw({ isDraw: true });
-        },
-        this.node,
-        () => {
-          socketService.answerDraw({ isDraw: false });
-        },
-      );
+      this.showDrawProposalModal();
     };
     socketService.onPlayerDrawResponse = (result: boolean) => {
       if (result) {
         this.setDraw();
-      } else {
-        this.declineDraw();
       }
     };
+    this.setUpChessBoardListeners(isReplay);
+  }
+
+  pushMoveToHistory(turnInfo: TurnInfo): void {
+    this.history.push({
+      from: turnInfo.move.from,
+      to: turnInfo.move.to,
+      time: this.timer.getSeconds(),
+    });
+  }
+
+  setUpChessBoardListeners(isReplay: boolean): void {
     this.chessBoard.onEnd = () => {
       this.timer.toggle();
     };
@@ -91,42 +82,69 @@ class Chess extends BaseComponent {
         setWinner(getNextFigureColor(store.getState().currentPlayer.currentUserColor)),
       );
       this.setWinner(store.getState().winner.winnerColor);
-      const winContent = new ModalContent({
-        header: 'Check and mate!',
-        text: `Player of ${
-          store.getState().winner.winnerColor === FigureColor.BLACK ? 'white' : 'black'
-        } has won!`,
-        buttonText: 'Ok',
-      });
-      const win = new ModalWindow(winContent, () => {}, this.node);
+      this.showMateModal();
     };
     this.chessBoard.onStalemate = () => {
-      const winContent = new ModalContent({
-        header: 'Stalemate!',
-        text: `It isn't win, just a draw, bro.`,
-        buttonText: "It's a pity!",
-      });
-      const win = new ModalWindow(winContent, () => {}, this.node);
+      this.showStalemateModal();
       this.setWinner(store.getState().winner.winnerColor);
     };
-
     this.chessBoard.onFieldUpdate = (turnInfo: TurnInfo) => {
       this.chessHistory.setHistoryMove(turnInfo, this.timer.getTime());
       if (!isReplay) {
-        this.history.push({
-          from: turnInfo.move.from,
-          to: turnInfo.move.to,
-          time: this.timer.getSeconds(),
-        });
+        this.pushMoveToHistory(turnInfo);
       }
     };
     this.chessBoard.onNextTurn = () => this.nextTurnHandler();
+  }
+
+  createUI(): void {
+    const chessBoardWrapper = new BaseComponent('div', ['chess'], '', this.node);
+    const chessHead = new BaseComponent('div', ['chess__head'], '', chessBoardWrapper.getNode());
+    this.playerOne = new PlayerContainer(store.getState().players.playerOne, IS_UPDATABLE);
+    this.playerTwo = new PlayerContainer(store.getState().players.playerTwo, IS_UPDATABLE);
+    const chessBody = new BaseComponent('div', ['chess__body'], '', chessBoardWrapper.getNode());
+    this.chessHistory = new ChessHistory(chessBody.getNode());
+    this.chessBoard = new ChessField(chessBody.getNode());
     this.playerOne.toggleClass('current');
     chessHead.insertChilds([this.playerOne, this.playerTwo]);
   }
 
-  declineDraw(): void {
-    console.log(this, 'declineDraw');
+  showDrawProposalModal(): void {
+    const winContent = new ModalContent({
+      header: 'Are you ok with draw?',
+      text: `...`,
+      buttonText: 'Ok',
+    });
+    const win = new ModalWindow(
+      winContent,
+      () => {
+        socketService.answerDraw({ isDraw: true });
+      },
+      this.node,
+      () => {
+        socketService.answerDraw({ isDraw: false });
+      },
+    );
+  }
+
+  showStalemateModal(): void {
+    const winContent = new ModalContent({
+      header: 'Stalemate!',
+      text: `It isn't win, just a draw, bro.`,
+      buttonText: "It's a pity!",
+    });
+    const win = new ModalWindow(winContent, () => {}, this.node);
+  }
+
+  showMateModal(): void {
+    const winContent = new ModalContent({
+      header: 'Check and mate!',
+      text: `Player of ${
+        store.getState().winner.winnerColor === FigureColor.BLACK ? 'white' : 'black'
+      } has won!`,
+      buttonText: 'Ok',
+    });
+    const win = new ModalWindow(winContent, () => {}, this.node);
   }
 
   setPlayerLeave(): void {

@@ -1,6 +1,7 @@
 import FigureColor from '../../../../enums/figure-colors';
+import TurnInfo from '../../../../interfaces/turn-info';
 import BaseComponent from '../../../base-component';
-import { TurnInfo } from './field/field-model';
+
 import FigureView from './views/figure-view';
 
 export const figures = new Map([

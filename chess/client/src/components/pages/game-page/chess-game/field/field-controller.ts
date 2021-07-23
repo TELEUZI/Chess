@@ -4,7 +4,7 @@ import Coordinate from '../../../../../models/coordinate';
 import FieldState from '../state/field-state';
 import FieldView from '../views/field-view';
 import store from '../state/redux/store';
-import FieldModel, { TurnInfo } from './field-model';
+import FieldModel from './field-model';
 import GameMode from '../../../../../enums/game-mode';
 import ChessBot from './chess-bot';
 import forEachCell from '../utils/cells-iterator';
@@ -16,6 +16,7 @@ import ConfigDaoService from '../../../../../services/config-dao-service';
 import { BLACK_ROW_INDEX, WHITE_ROW_INDEX } from '../../../../../config';
 import createStrategy from '../fabrics/bot-strategy-fabric';
 import { Strategy } from '../../../../../interfaces/bot-strategy';
+import TurnInfo from '../../../../../interfaces/turn-info';
 
 export default class ChessField {
   model: FieldModel;
@@ -71,7 +72,6 @@ export default class ChessField {
     this.model.onCheckPromotion = (cell: CellModel) => {
       if (this.checkPromotion(cell)) {
         const { x, y } = this.getCellPosition(cell);
-        console.log('promote');
         this.model.promote(x, y);
       }
     };
@@ -158,13 +158,13 @@ export default class ChessField {
     if (cell.getFigureType() === FigureType.PAWN) {
       if (
         cell.getFigureColor() === FigureColor.WHITE &&
-        this.getCellPosition(cell).y === BLACK_ROW_INDEX
+        this.getCellPosition(cell).x === BLACK_ROW_INDEX
       ) {
         return true;
       }
       if (
         cell.getFigureColor() === FigureColor.BLACK &&
-        this.getCellPosition(cell).y === WHITE_ROW_INDEX
+        this.getCellPosition(cell).x === WHITE_ROW_INDEX
       ) {
         return true;
       }

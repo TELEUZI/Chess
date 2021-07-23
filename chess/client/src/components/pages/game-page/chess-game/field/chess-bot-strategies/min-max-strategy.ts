@@ -29,7 +29,6 @@ export default class MinMaxBotStrategy implements Strategy {
         }
       });
     });
-    console.log(bestMove, bestValue);
     return bestMove;
   }
 
