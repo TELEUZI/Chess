@@ -1,4 +1,4 @@
-import Game from '../../entities/game/Game';
+import Game from '../../entities/game/game';
 import { RoomCreateResponse } from '../../entities/message/message-interfaces';
 import { rooms } from '../../entities/room/room';
 import { buildToken } from '../player/player-tokenify';

@@ -1,7 +1,7 @@
-import { Player } from '../components/pages/reg-page/start-page-view';
 import FigureColor from '../enums/figure-colors';
 import GameMode from '../enums/game-mode';
 import { TimedMoveMessage } from './move-message';
+import { Player } from './response';
 
 export default interface Replay {
   date: number;

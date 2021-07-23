@@ -1,5 +1,5 @@
 import WebSocket from 'ws';
-import Game from '../game/Game';
+import Game from '../game/game';
 
 export interface Room {
   game: Game;

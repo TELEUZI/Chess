@@ -1,4 +1,3 @@
-import GameConstants from '../enums/game-constants';
 import User from '../interfaces/user';
 import UserDao from '../models/user-dao';
 
@@ -53,12 +52,5 @@ export default class UserDaoService {
   async getLast(): Promise<User> {
     const usersArray: User[] = await this.dao.findAll();
     return usersArray[usersArray.length - 1];
-  }
-
-  async getSorted(): Promise<User[]> {
-    return (await this.dao.findAll())
-      .sort((a, b) => a.score - b.score)
-      .reverse()
-      .slice(0, GameConstants.NUMBER_OF_BEST_RESULTS);
   }
 }

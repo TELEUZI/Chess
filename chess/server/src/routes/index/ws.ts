@@ -16,16 +16,13 @@ export default function buildWsRouting(wss: WebSocket.Server): void {
     ws.on('error', (error) => {
       console.trace(error);
     });
-
     const { url } = req;
     if (url === null) {
       return;
     }
-
     const queryIndex = url.indexOf('?');
     const path = url.slice(0, queryIndex);
     const queryParams = qs.parse(url.slice(queryIndex + 1));
-    console.log(path);
     switch (path) {
       case '/rooms':
         buildRoomsRouting(ws, queryParams);
@@ -33,7 +30,6 @@ export default function buildWsRouting(wss: WebSocket.Server): void {
       default:
         break;
     }
-
     ws.send('Connected.');
   });
 

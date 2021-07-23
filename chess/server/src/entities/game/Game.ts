@@ -1,9 +1,10 @@
+import generateRandomString from '../../utils/postfix-generator';
 import shuffle from '../../utils/shuffle';
-import Player from '../player/Player';
+import Player from '../player/player';
 import { PlayerColor, PlayerState } from '../player/player-enums';
 import { PlayerSerializable } from '../player/player-interfaces';
 import { GameStatus } from './game-enums';
-import { GameExternalInfo, GameInfo } from './game-interfaces';
+import { GameExternalInfo, GameInfo, MoveMessage } from './game-interfaces';
 
 export default class Game {
   private state: string;
@@ -13,6 +14,8 @@ export default class Game {
   private players: Map<string, Player> = new Map();
 
   private currentPlayer: string | undefined;
+
+  private lastMove: MoveMessage;
 
   getPlayers(): Map<string, Player> {
     return this.players;
@@ -26,6 +29,7 @@ export default class Game {
       gameStatus: this.status,
       currentPlayerColor: this.findPlayerColor(this.currentPlayer),
       players: players,
+      lastMove: this.lastMove,
     };
   }
 
@@ -37,18 +41,15 @@ export default class Game {
     if (this.status !== GameStatus.waitingRoom) {
       throw new Error('Players cannot be added given game state.');
     }
-    if (this.players.has(name)) {
-      throw new Error(`Player name "${name}" already in game.`);
-    }
-
-    const player: Player = new Player(name);
-    this.players.set(name, player);
-
+    const userName = name;
+    const player: Player = new Player(userName);
+    this.players.set(userName, player);
     return player.getSafeToSerialize();
   }
 
-  move(fen: string): GameInfo {
+  move(fen: string, lastMove: MoveMessage): GameInfo {
     this.state = fen;
+    this.lastMove = lastMove;
     this.currentPlayer = this.setNextPlayer();
     return this.buildGameUpdateOutput();
   }
@@ -68,10 +69,6 @@ export default class Game {
     if (this.status === GameStatus.waitingRoom) {
       this.players.delete(name);
     } else if (this.status === GameStatus.running) {
-      player.state =
-        player.state !== PlayerState.eliminated
-          ? PlayerState.disconnected
-          : PlayerState.eliminatedDisconnected;
       player.disconnectionReason = reason;
       this.players.set(name, player);
       const remaining = this.getRemainingPlayers();
@@ -86,14 +83,10 @@ export default class Game {
   getGameStatus(): GameInfo {
     const players: PlayerSerializable[] = [];
     this.players.forEach((player: Player) => {
-      if (
-        this.status !== GameStatus.ended &&
-        (player.state === PlayerState.playing || player.state === PlayerState.joined)
-      ) {
+      if (player.state !== PlayerState.disconnected) {
         players.push(player.getSafeToSerialize());
       }
     });
-
     return this.buildGameUpdateOutput(players);
   }
 

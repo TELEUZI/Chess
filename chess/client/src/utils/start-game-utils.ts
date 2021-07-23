@@ -1,4 +1,4 @@
-import { setGameMode } from '../components/pages/game-page/chess-game/state/redux/reducer';
+import { setGameMode } from '../components/pages/game-page/chess-game/state/redux/action-creators';
 import store from '../components/pages/game-page/chess-game/state/redux/store';
 import GameMode from '../enums/game-mode';
 

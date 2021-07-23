@@ -1,11 +1,7 @@
 import WebSocket, { ErrorEvent } from 'ws';
-import { GameInfo } from '../../entities/game/game-interfaces';
+import { WsMessage } from '../../entities/message/message-interfaces';
 import { rooms } from '../../entities/room/room';
 
-export interface WsMessage {
-  action: string;
-  payload: GameInfo;
-}
 export default function broadcastToRoom(
   room: string,
   message: WsMessage | { error: ErrorEvent },

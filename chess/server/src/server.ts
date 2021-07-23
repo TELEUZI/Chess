@@ -35,7 +35,6 @@ export async function setUpServer(): Promise<ServerItems> {
   });
   const { sep } = path;
   const appBuildPath = path.join(__dirname, `..${sep}..${sep}client${sep}dist${sep}`);
-  console.log(appBuildPath);
   app.use(express.static(appBuildPath));
   app.get('*', (req, res) => {
     res.sendFile(path.join(appBuildPath), 'index.html');

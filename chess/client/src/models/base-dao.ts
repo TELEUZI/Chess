@@ -1,16 +1,13 @@
-const DATA_VERSION = 1;
+import { IndexedDBStores, INDEXED_DB_NAME, INDEXED_DB_VERSION } from '../config';
+
 export default abstract class BaseDao<T> {
-  openRequest: IDBOpenDBRequest;
+  private response: IDBDatabase;
 
-  response: IDBDatabase;
+  private objectStorename: string;
 
-  entity: T;
+  private keyPath: string;
 
-  objectStorename: string;
-
-  keyPath: string;
-
-  key: number;
+  private key: number;
 
   constructor(objectStorename: string, keyPath: string, key: number) {
     this.objectStorename = objectStorename;
@@ -20,17 +17,17 @@ export default abstract class BaseDao<T> {
   }
 
   createStores(): void {
-    const openRequest = window.indexedDB.open('Teleuzi', DATA_VERSION + 1);
+    const openRequest = window.indexedDB.open(INDEXED_DB_NAME, INDEXED_DB_VERSION + 1);
     openRequest.onupgradeneeded = async () => {
       this.response = openRequest.result;
-      this.response.createObjectStore('Users', {
+      this.response.createObjectStore(IndexedDBStores.USERS, {
         keyPath: 'name',
         autoIncrement: true,
       });
-      this.response.createObjectStore('GameConfig', {
+      this.response.createObjectStore(IndexedDBStores.GAME_CONFIG, {
         autoIncrement: true,
       });
-      this.response.createObjectStore('ReplaysStore', {
+      this.response.createObjectStore(IndexedDBStores.REPLAY_STORE, {
         keyPath: 'date',
         autoIncrement: true,
       });
@@ -39,7 +36,7 @@ export default abstract class BaseDao<T> {
   }
 
   create(entity: T): void {
-    const openRequest = window.indexedDB.open('Teleuzi', DATA_VERSION + 1);
+    const openRequest = window.indexedDB.open(INDEXED_DB_NAME, INDEXED_DB_VERSION + 1);
     openRequest.onupgradeneeded = () => {
       this.response = openRequest.result;
       this.response.createObjectStore(this.objectStorename, {
@@ -47,11 +44,8 @@ export default abstract class BaseDao<T> {
         autoIncrement: true,
       });
     };
-    openRequest.onblocked = () => console.log('block');
-    openRequest.onerror = () => console.log('error');
     openRequest.onsuccess = async () => {
       this.response = openRequest.result;
-      console.log(this.response);
       const item = this.response
         .transaction([this.objectStorename], 'readwrite')
         .objectStore(this.objectStorename)
@@ -63,11 +57,10 @@ export default abstract class BaseDao<T> {
   }
 
   public async findAll(): Promise<T[]> {
-    const openRequest = window.indexedDB.open('Teleuzi', DATA_VERSION + 1);
+    const openRequest = window.indexedDB.open(INDEXED_DB_NAME, INDEXED_DB_VERSION + 1);
     const list: Array<T> = [];
     let request: IDBRequest;
     return new Promise<T[]>((resolve, reject) => {
-      openRequest.onblocked = () => console.log('block');
       openRequest.onerror = () => reject();
       openRequest.onsuccess = () => {
         this.response = openRequest.result;
@@ -90,7 +83,7 @@ export default abstract class BaseDao<T> {
   }
 
   async get(): Promise<T> {
-    const openRequest = window.indexedDB.open('Teleuzi', DATA_VERSION + 1);
+    const openRequest = window.indexedDB.open('Teleuzi', INDEXED_DB_VERSION + 1);
     return new Promise<T>((resolve) => {
       openRequest.onsuccess = () => {
         this.response = openRequest.result;

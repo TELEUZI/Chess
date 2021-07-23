@@ -1,8 +1,12 @@
-import Coordinate from '../components/pages/game-page/chess-game/components/coordinate';
+import Coordinate from '../models/coordinate';
 
 export default interface MoveMessage {
   from: Coordinate;
   to: Coordinate;
+}
+export interface FigureTurn {
+  from: Coordinate;
+  to: Coordinate[];
 }
 export interface TimedMoveMessage {
   from: Coordinate;

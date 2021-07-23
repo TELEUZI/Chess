@@ -1,8 +1,7 @@
-import { Player } from '../components/pages/reg-page/start-page-view';
-
 import GameMode from '../enums/game-mode';
 import { TimedMoveMessage } from '../interfaces/move-message';
 import Replay, { GameResult } from '../interfaces/replay';
+import { Player } from '../interfaces/response';
 import ReplayDao from '../models/replay-dao';
 
 const OBJECT_STORE_KEY = 'date';
@@ -27,8 +26,11 @@ export default class ReplayDaoService {
     const history: TimedMoveMessage[] = [];
     const result: GameResult = null;
     const moves = 0;
-    console.log('created');
     this.dao.create({ date, mode, players, history, moves, result });
+  }
+
+  createReplayFromObject(replay: Replay): void {
+    this.dao.create(replay);
   }
 
   setData(replay: Replay): void {

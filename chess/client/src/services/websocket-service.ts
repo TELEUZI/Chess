@@ -1,80 +1,62 @@
-import axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
 import {
   changeName,
   setCurrentUserColor,
   setUserColor,
-} from '../components/pages/game-page/chess-game/state/redux/reducer';
+  setWinner,
+} from '../components/pages/game-page/chess-game/state/redux/action-creators';
 import store from '../components/pages/game-page/chess-game/state/redux/store';
-import {
-  GameAction,
-  Room,
-  GameStatus,
-  GameMessage,
-  PlayerSerializable,
-  GameInfo,
-  ColorMessage,
-} from '../components/pages/reg-page/start-page-view';
+import { api, SERVER_ENDPOINT, wsProtocol, baseURL } from '../config';
+
 import FigureColor from '../enums/figure-colors';
 import GameMode from '../enums/game-mode';
-import redirectToGameWithMode from '../shared/start-game-utils';
-
-export const baseURL =
-  process.env.NODE_ENV === 'production' ? 'teleuzi-chess.herokuapp.com' : 'localhost:5000';
-
-const httpProtocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
-
-export const wsProtocol = process.env.NODE_ENV === 'production' ? 'wss' : 'ws';
-
-export const api = axios.create({
-  baseURL: `${httpProtocol}://${baseURL}`,
-});
+import { GameStatus, GameAction } from '../enums/game-status-action';
+import MoveMessage from '../interfaces/move-message';
+import {
+  Room,
+  PlayerSerializable,
+  GameMessage,
+  GameInfo,
+  ColorMessage,
+  DrawResult,
+  PlayerAddResponse,
+  RoomCreateResponse,
+} from '../interfaces/response';
+import redirectToGameWithMode from '../utils/start-game-utils';
 
 export async function getFreeRoom(): Promise<[string, Room]> {
   const rooms = await api.get(`/rooms/`);
-  console.log(Object.entries(rooms.data) as [string, Room][]);
   return (Object.entries(rooms.data) as [string, Room][]).find(
-    async (room) =>
-      room[1].clients.size < 2 &&
-      room[1].game.gameStatus !== GameStatus.ended &&
-      room[1].game.gameStatus !== GameStatus.running,
+    async (room) => room[1].clients.size < 2 && room[1].game.gameStatus === GameStatus.waitingRoom,
   );
 }
-export interface PlayerAddResponse {
-  playerInfo: PlayerSerializable;
-  playerToken?: string;
-}
 
-export interface RoomCreateResponse {
-  roomCreated: boolean;
-  creator: PlayerAddResponse;
-  failureReason?: string;
-}
-export default class SocketService {
-  socket: WebSocket;
+class SocketService {
+  private socket: WebSocket;
 
-  roomName: string;
+  private roomName: string;
 
-  playerToken: string;
+  private playerToken: string;
 
-  playerInfo: PlayerSerializable;
+  private playerInfo: PlayerSerializable;
 
-  onMove: (fieldState: string, currentColor: FigureColor) => void;
+  onMove: (fieldState: string, currentColor: FigureColor, lastMove: MoveMessage) => void;
 
   onSetColor: (color: FigureColor) => void;
 
-  async startGame(): Promise<void> {
-    this.socket?.send(
-      JSON.stringify({
-        action: GameAction.startGame,
-      }),
-    );
-  }
+  onStart: () => void = () => {};
+
+  onPlayerLeave: () => void;
+
+  onPlayerDrawResponse: (result: boolean) => void;
+
+  onPlayerDrawSuggest: () => void;
 
   async createRoom(playerName: string): Promise<void> {
     this.roomName = 't'.repeat(Math.floor(Math.random() * 14));
     let resp: AxiosResponse<RoomCreateResponse> | undefined;
     try {
-      resp = await api.post(`/rooms/${this.roomName}?creatorName=${playerName}`);
+      resp = await api.post(`${SERVER_ENDPOINT}${this.roomName}?creatorName=${playerName}`);
     } catch (error) {
       if (error.response != null) {
         console.error(error.message);
@@ -89,14 +71,13 @@ export default class SocketService {
     const { playerToken, playerInfo } = resp.data.creator;
     this.playerToken = playerToken;
     this.playerInfo = playerInfo;
-    console.log('response', resp.data);
     this.socket = this.joinBuildWSClient(playerToken);
   }
 
   async joinRoom(room: string, playerName: string): Promise<void> {
     let resp: AxiosResponse<PlayerAddResponse> | undefined;
     try {
-      resp = await api.put(`/rooms/${room}/players?playerName=${playerName}`);
+      resp = await api.put(`${SERVER_ENDPOINT}${room}/players?playerName=${playerName}`);
     } catch (error) {
       console.error(error.message);
     }
@@ -106,11 +87,97 @@ export default class SocketService {
     this.socket = this.joinBuildWSClient(playerToken);
   }
 
-  move(fieldState: string): Promise<boolean> {
+  handleGameStart(payload: GameInfo) {
+    redirectToGameWithMode(GameMode.MULTIPLAYER);
+    const [playerOne, playerTwo] = payload.players.map((player) => player.name);
+    this.onStart();
+    store.dispatch(changeName({ playerOne, playerTwo }));
+    store.dispatch(setCurrentUserColor(payload.currentPlayerColor));
+  }
+
+  handleFigureMove(payload: GameInfo) {
+    this.onMove(payload.fieldState, payload.currentPlayerColor, payload.lastMove);
+    store.dispatch(setCurrentUserColor(payload.currentPlayerColor));
+  }
+
+  gameStateUpdater(event: MessageEvent): void {
+    try {
+      const response: GameMessage = JSON.parse(event.data);
+      switch (response.action) {
+        case GameAction.startGame:
+          this.handleGameStart(response.payload as GameInfo);
+          break;
+        case GameAction.moveFigure:
+          this.handleFigureMove(response.payload as GameInfo);
+          break;
+        case GameAction.disconnect:
+          store.dispatch(setWinner((response.payload as GameInfo).players[0].color));
+          this.onPlayerLeave();
+          break;
+        case GameAction.drawSuggest:
+          this.onPlayerDrawSuggest();
+          break;
+        case GameAction.setUserColor:
+          store.dispatch(setUserColor((response.payload as ColorMessage).color));
+          break;
+        case GameAction.drawResponse:
+          this.onPlayerDrawResponse((response.payload as DrawResult).isDraw);
+          break;
+        default:
+          console.log('object');
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
+  move(fieldState: string, moveMessage: MoveMessage): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       try {
-        this.socket.send(JSON.stringify({ action: GameAction.move, payload: { fieldState } }));
+        this.socket.send(
+          JSON.stringify({ action: GameAction.moveFigure, payload: { fieldState, moveMessage } }),
+        );
         resolve(true);
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+
+  suggestDraw(): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      try {
+        this.socket.send(JSON.stringify({ action: GameAction.drawSuggest }));
+        resolve(true);
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+
+  answerDraw(response: DrawResult): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      try {
+        this.socket.send(
+          JSON.stringify({ action: GameAction.drawResponse, payload: { isDraw: response.isDraw } }),
+        );
+        resolve(true);
+      } catch (err) {
+        reject(err);
+      }
+    });
+  }
+
+  endGame(reason: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      try {
+        this.socket.send(
+          JSON.stringify({
+            action: GameAction.disconnect,
+            payload: { gameEnd: true, reason },
+          }),
+        );
+        resolve();
       } catch (err) {
         reject(err);
       }
@@ -120,60 +187,31 @@ export default class SocketService {
   joinBuildWSClient(playerToken: string): WebSocket {
     const ws = new WebSocket(`${wsProtocol}://${baseURL}/rooms?accessToken=${playerToken}`);
     let connected = false;
-    const updateCurrentGameState = (event: MessageEvent): void => {
-      const response: GameMessage = JSON.parse(event.data);
-      console.log(response.action);
-      if (response.action === 'start') {
-        console.log('startGames');
-        redirectToGameWithMode(GameMode.MULTIPLAYER);
-        const [playerOne, playerTwo] = (response.payload as GameInfo).players.map(
-          (player) => player.name,
-        );
-        store.dispatch(changeName({ playerOne, playerTwo }));
-        store.dispatch(setCurrentUserColor((response.payload as GameInfo).currentPlayerColor));
-      }
-      if (response.action === 'join') {
-        console.log('Join successfully!');
-      }
-      if (response.action === 'move') {
-        this.onMove(
-          (response.payload as GameInfo).fieldState,
-          (response.payload as GameInfo).currentPlayerColor,
-        );
-        store.dispatch(setCurrentUserColor((response.payload as GameInfo).currentPlayerColor));
-      }
-      if (response.action === 'setUserColor') {
-        store.dispatch(setUserColor((response.payload as ColorMessage).color));
-      }
-    };
     ws.onopen = (): void => {
       console.log('open');
       ws.send(
         JSON.stringify({
-          action: GameAction.join,
+          action: GameAction.joinRoom,
         }),
       );
     };
     ws.onmessage = (event: MessageEvent): void => {
       if (!connected && event.data === 'Connected.') {
         connected = true;
-        // this.client = ws;
-        return;
-      }
-      if (!connected) {
         return;
       }
       console.log(event.data);
-      updateCurrentGameState(event);
+      this.gameStateUpdater(event);
     };
-    ws.onclose = (event: CloseEvent): void => {};
     ws.onerror = (event: Event): void => {
       console.error('ws connection error', event);
     };
     return ws;
   }
 }
+
 export const socketService = new SocketService();
+
 export async function addUserToGame(userName: string): Promise<void> {
   console.log('click');
   const freeRoom = await getFreeRoom();

@@ -10,7 +10,7 @@ export function getRooms(req: Request, res: Response): void {
 }
 export function getRoomInfo(roomName: string): null | GameExternalInfo {
   const room = rooms.get(roomName);
-  if (room == null) {
+  if (room === null) {
     return null;
   }
   return room.game.buildGameExternalInfo();
@@ -23,17 +23,20 @@ export function getRoom(req: Request, res: Response): void {
 export function createRoom(req: Request, res: Response, next: NextFunction): void {
   const { creatorName } = req.query;
   if (typeof creatorName !== 'string') {
-    return next(new Error('creatorName query item not provided or not type string.'));
+    return next(new Error('creatorName query was not provided'));
   }
   const result = createGameRoom(req.params.roomName, creatorName as string);
-  if (result.roomCreated) res.status(201).json(result);
-  else res.status(400).json(result);
+  if (result.roomCreated) {
+    res.status(201).json(result);
+  } else {
+    res.status(400).json(result);
+  }
 }
 
 export function addPlayer(req: Request, res: Response, next: NextFunction): void {
   const { playerName } = req.query;
   if (typeof playerName !== 'string') {
-    return next(new Error('playerName query item not provided or not type string.'));
+    return next(new Error('playerName query item not provided or is not type string.'));
   }
   const result = addNewPlayer(req.params.roomName, playerName);
   res.json(result);
