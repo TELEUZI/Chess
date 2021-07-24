@@ -8,36 +8,31 @@ export function getEmptyBoard(): string[][] {
 
 export function getBoardFromFen(fen: string): string[][] {
   const board: string[][] = getEmptyBoard();
-  let rank = 0;
-  let file = 0;
-  let fenIndex = 0;
-  let fenChar;
-  let count;
-
-  while (fenIndex < fen.length) {
-    fenChar = fen[fenIndex];
-    if (fenChar === ' ') {
-      break;
-    }
-    if (fenChar === '/') {
-      rank += 1;
-      file = 0;
-      fenIndex += 1;
-      // eslint-disable-next-line no-continue
-      continue;
-    }
-    if (Number.isNaN(parseInt(fenChar, 10))) {
-      board[rank][file] = fenChar;
-      file += 1;
-    } else {
-      count = parseInt(fenChar, 10);
-      for (let i = 0; i < count; i += 1) {
-        board[rank][file] = '';
-        file += 1;
-      }
-    }
-    fenIndex += 1;
+  const rows = fen.split('/');
+  if (rows.length !== 8) {
+    throw new Error(`Invalid FEN code: '${fen}'`);
   }
+  rows.forEach((row, index) => {
+    let column = 0;
+    let filled = 0;
+    row.split('').forEach((char) => {
+      if (/\d/.test(char)) {
+        const empties = Number(char);
+        for (let e = column; e < empties + column; e += 1) {
+          board[index][e] = '';
+          filled += 1;
+        }
+        column += empties;
+      } else {
+        board[index][column] = char;
+        filled += 1;
+        column += 1;
+      }
+    });
+    if (filled !== 8) {
+      throw new Error(`Invalid FEN code: '${fen}'`);
+    }
+  });
   return board;
 }
 

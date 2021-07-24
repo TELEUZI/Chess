@@ -23,7 +23,7 @@ export default class MinMaxBotStrategy implements Strategy {
           moveTo.y,
         );
         const boardValue = this.minimax(2, newState, color, avaliableMoves, !!color);
-        if (boardValue > bestValue) {
+        if (boardValue >= bestValue) {
           bestValue = boardValue;
           bestMove = { from: newGameMove.from, to: moveTo };
         }

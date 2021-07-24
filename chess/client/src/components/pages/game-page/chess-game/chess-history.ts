@@ -15,8 +15,14 @@ export const figures = new Map([
 export const boardCoordsY = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 export const boardCoordsX = ['8', '7', '6', '5', '4', '3', '2', '1'];
 
+function deepEqual<T>(object: T, value: T): boolean {
+  return JSON.stringify(object) === JSON.stringify(value);
+}
+
 export default class ChessHistory extends BaseComponent {
   private historyWrapper: BaseComponent;
+
+  private lastTurn: TurnInfo;
 
   constructor(parentNode: HTMLElement) {
     super('div', ['chess__history'], '', parentNode);
@@ -26,6 +32,11 @@ export default class ChessHistory extends BaseComponent {
   }
 
   setHistoryMove(coords: TurnInfo, time: string): void {
+    if (deepEqual(this.lastTurn, coords)) {
+      this.lastTurn = coords;
+      return;
+    }
+    this.lastTurn = coords;
     const { move } = coords;
     const { figure } = coords;
     const fig = new FigureView(this.node, [

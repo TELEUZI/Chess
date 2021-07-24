@@ -5,7 +5,6 @@ import ChessField from './field/field-controller';
 import PlayerContainer from '../../reg-page/reg-page__components/player-control';
 import store from './state/redux/store';
 import ChessHistory from './chess-history';
-
 import ModalWindow from '../../reg-page/modal-window';
 import ModalContent from '../../reg-page/modal-content';
 import getNextFigureColor from '../../../../utils/get-next-figure-color';

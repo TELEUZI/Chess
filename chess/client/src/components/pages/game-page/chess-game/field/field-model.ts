@@ -121,8 +121,8 @@ export default class FieldModel {
     }
   }
 
-  move(fromX: number, fromY: number, toX: number, toY: number): void {
-    const allowed = this.getAllowed(fromX, fromY);
+  moveFigure(fromX: number, fromY: number, toX: number, toY: number): void {
+    const allowed = this.getAllowedMovesFromPoint(fromX, fromY);
     const isAllowed = allowed.findIndex((it) => {
       return it.x === toX && it.y === toY;
     });
@@ -150,7 +150,6 @@ export default class FieldModel {
     this.state.getCellAt(toX, toY).setFigure(this.state.getCellAt(fromX, fromY).getFigure());
     this.state.getCellAt(fromX, fromY).setFigure(null);
     this.setState(this.state);
-    store.dispatch(makeMove(this.state));
     this.onNextTurn.notify();
     const fenState = getFenFromStringBoard(this.state.getPlainState());
     const isOpening = await getOpeningName(fenState);
@@ -215,7 +214,7 @@ export default class FieldModel {
     return { isChecked: res, attackingFigure: enemyCell };
   }
 
-  getAllowed = (fromX: number, fromY: number): Coordinate[] => {
+  getAllowedMovesFromPoint = (fromX: number, fromY: number): Coordinate[] => {
     if (
       this.state.getFigure(fromX, fromY) &&
       this.state.getFigureColor(fromX, fromY) === store.getState().currentPlayer.currentUserColor &&

@@ -36,9 +36,8 @@ export function disconnectFromGame(
   if (room.clients.size > 0) {
     rooms.set(token.roomName, room);
     broadcastToRoom(token.roomName, { action: GameAction.disconnect, payload: state });
-  } else {
-    rooms.delete(token.roomName);
   }
+  rooms.delete(token.roomName);
 }
 
 export function startGame(token: PlayerTokenInfo): void {
@@ -98,11 +97,7 @@ export function setMove(
   const room = rooms.get(token.roomName);
   try {
     const gameUpdate = room.game.move(message, moveMessage);
-    broadcastToRoom(
-      token.roomName,
-      { action: GameAction.moveFigure, payload: gameUpdate },
-      token.playerName,
-    );
+    broadcastToRoom(token.roomName, { action: GameAction.moveFigure, payload: gameUpdate });
   } catch (error) {
     ws.send(JSON.stringify({ error: error.message }));
   }

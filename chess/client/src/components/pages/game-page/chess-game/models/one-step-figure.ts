@@ -1,4 +1,3 @@
-import FigureType from '../../../../../enums/figure-type';
 import FieldState from '../state/field-state';
 import Pawn from './figures/pawn';
 
@@ -12,9 +11,6 @@ export default abstract class OneStepFigure {
   }
 
   static isRightMove(state: FieldState, posX: number, posY: number): boolean {
-    return (
-      state.getCellAt(posX, posY) && !state.getCellAt(posX, posY).getFigure()
-      // state.getCellAt(posX, posY).getFigureType() !== FigureType.KING
-    );
+    return state.getCellAt(posX, posY) && !state.getCellAt(posX, posY).getFigure();
   }
 }

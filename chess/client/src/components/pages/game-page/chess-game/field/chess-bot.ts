@@ -40,13 +40,6 @@ export default class ChessBot {
       color,
       this.model.getAllValidMoves(state, color),
     );
-    // const froms: Array<{ x: number; y: number }> = this.model.getEnemyFigures(
-    //   this.model.state,
-    //   this.currentColor,
-    // );
-    // if (!froms.length) {
-    //   return;
-    // }
     this.model.makeMove(bestMove.from.x, bestMove.from.y, bestMove.to.x, bestMove.to.y);
     this.model.checkGameSituation();
   }

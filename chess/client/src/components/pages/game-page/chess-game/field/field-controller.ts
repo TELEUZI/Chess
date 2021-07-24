@@ -117,7 +117,7 @@ export default class ChessField {
     }
     let cellPos = this.getCellPosition(this.selectedCell);
     if (cellPos) {
-      this.model.move(cellPos.x, cellPos.y, i, j);
+      this.model.moveFigure(cellPos.x, cellPos.y, i, j);
       forEachCell(this.view.getCells(), (currentCell) => {
         currentCell.highlightSelectedCell(false);
         currentCell.highlightAllowedMoves(false);
@@ -134,7 +134,7 @@ export default class ChessField {
     }
     if (this.selectedCell && this.selectedCell.getFigure()) {
       cellPos = this.getCellPosition(this.selectedCell);
-      const allowed: Coordinate[] = this.model.getAllowed(cellPos.x, cellPos.y);
+      const allowed: Coordinate[] = this.model.getAllowedMovesFromPoint(cellPos.x, cellPos.y);
       this.view.setAllowedMoves(allowed);
     } else {
       this.view.setAllowedMoves([]);

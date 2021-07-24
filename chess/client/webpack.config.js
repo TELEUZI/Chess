@@ -68,11 +68,6 @@ export default ({ development }) => ({
     ...esLintPlugin(development),
     new MiniCssExtractPlugin({ filename: '[name].[contenthash].css' }),
     new HtmlWebpackPlugin({ title: 'Chess' }),
-    // new webpack.EnvironmentPlugin({
-    //   // JWT_SECRET: 'c8589464-0b84-4b6a-a849-4e8572324dc4',
-    //   // // PORT: 35000,
-    //   NODE_ENV: 'development',
-    // }),
     new CopyPlugin({
       patterns: [
         {
