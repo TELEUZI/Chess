@@ -6,11 +6,10 @@
   "type": "module",
   "scripts": {
     "build": "webpack --env development",
-    "prepack": "webpack --env production",
+    "build prod": "webpack --env production",
     "dev": "webpack serve --env development",
     "lint": "eslint . --ext .ts",
-    "lint-and-fix": "eslint . --ext .ts --fix",
-    "server": "npm run server"
+    "lint-and-fix": "eslint . --ext .ts --fix"
   },
   "keywords": [
     "typescript",

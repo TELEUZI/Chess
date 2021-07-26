@@ -5,13 +5,12 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "node dist/index.js",
-    "run": "webpack && node dist/index.js",
+    "build and run": "webpack && node dist/index.js",
     "lint-and-fix": "eslint . --ext .ts --fix",
-    "server": "tsc && nodemon dist//index.js",
     "watch": "nodemon -e ts -w ./src",
     "lint": "eslint src/ --ext .ts",
     "build": "tsc",
-    "post": "webpack --mode production"
+    "build prod": "webpack --mode production"
   },
   "keywords": [
     "typescript",

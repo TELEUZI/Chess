@@ -4,14 +4,6 @@ import BaseComponent from '../../../base-component';
 
 import FigureView from './views/figure-view';
 
-export const figures = new Map([
-  ['p', 'Pawn'],
-  ['l', 'Rook'],
-  ['n', 'Knight'],
-  ['e', 'Bishop'],
-  ['q', 'Queen'],
-  ['k', 'King'],
-]);
 export const boardCoordsY = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 export const boardCoordsX = ['8', '7', '6', '5', '4', '3', '2', '1'];
 
@@ -39,7 +31,7 @@ export default class ChessHistory extends BaseComponent {
     this.lastTurn = coords;
     const { move } = coords;
     const { figure } = coords;
-    const fig = new FigureView(this.node, [
+    const figureView = new FigureView(this.node, [
       `chess__figure`,
       `chess-field__${figure.color === FigureColor.BLACK ? 'b' : 'w'}${figure.type}`,
     ]);
@@ -58,7 +50,7 @@ export default class ChessHistory extends BaseComponent {
       } ${time}`,
     );
     historyItem.insertChild(moveText);
-    historyItem.insertChildBefore(fig);
+    historyItem.insertChildBefore(figureView);
     if (comment) {
       const commentItem = new BaseComponent('div', ['chess__history_item'], comment);
       this.historyWrapper.insertChild(commentItem);
