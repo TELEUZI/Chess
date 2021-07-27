@@ -31,6 +31,6 @@ export default class StartPage implements PageController {
   }
 
   createPage(): void {
-    this.root.appendChild(this.view.getNode());
+    this.root.append(this.view.getNode());
   }
 }

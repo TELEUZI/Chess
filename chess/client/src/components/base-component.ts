@@ -12,22 +12,22 @@ export default class BaseComponent {
   ) {
     this.node = document.createElement(tagName);
     this.node.classList.add(...classNames);
-    this.node.innerText = textContent;
+    this.node.textContent = textContent;
     if (parentNode) {
       parentNode.append(this.node);
     }
   }
 
   insertChild(child: BaseComponent): void {
-    this.node.appendChild(child.getNode());
+    this.node.append(child.getNode());
   }
 
   insertChildBefore(child: BaseComponent): void {
     this.node.prepend(child.getNode());
   }
 
-  insertChilds(child: BaseComponent[]): void {
-    child.forEach((el) => {
+  insertChilds(childs: BaseComponent[]): void {
+    childs.forEach((el) => {
       this.insertChild(el);
     });
   }
@@ -41,7 +41,7 @@ export default class BaseComponent {
   }
 
   setContent(content: string): void {
-    this.node.innerText = content;
+    this.node.textContent = content;
   }
 
   setInnerHTML(html: string): void {

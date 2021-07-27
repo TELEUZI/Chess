@@ -7,6 +7,7 @@ import ReplayDaoService from '../../../services/replay-dao-service';
 import Card from '../../card/card';
 import FigureColor from '../../../enums/figure-colors';
 import { Winner } from '../../../interfaces/winner';
+import AppRoutes from '../../../enums/app-routes';
 
 export default class BestScorePage implements PageController {
   private root: HTMLElement;
@@ -23,12 +24,16 @@ export default class BestScorePage implements PageController {
     const cardContainer = new BaseComponent('div', ['card-container']);
     cards.forEach((card) => {
       let gameResult: Winner;
-      if (card.result === FigureColor.WHITE) {
-        gameResult = 'White';
-      } else if (card.result === FigureColor.BLACK) {
-        gameResult = 'Black';
-      } else {
-        gameResult = 'No one';
+      switch (card.result) {
+        case FigureColor.WHITE:
+          gameResult = 'White';
+          break;
+        case FigureColor.BLACK:
+          gameResult = 'Black';
+          break;
+        default:
+          gameResult = 'No one';
+          break;
       }
       const cardView = new Card(
         card.players[0].name,
@@ -39,11 +44,11 @@ export default class BestScorePage implements PageController {
         () => {
           store.dispatch(setGameMode(GameMode.REPLAY));
           store.dispatch(setReplayState(card.date));
-          window.location.hash = 'watch';
+          window.location.hash = AppRoutes.WATCH;
         },
       );
       cardContainer.insertChild(cardView);
     });
-    this.root.appendChild(cardContainer.getNode());
+    this.root.append(cardContainer.getNode());
   }
 }

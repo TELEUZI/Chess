@@ -26,7 +26,7 @@ export default class SettingsPage implements PageController {
   }
 
   async createPage(): Promise<void> {
-    this.root.appendChild(this.selectWrapper.getNode());
+    this.root.append(this.selectWrapper.getNode());
   }
 
   onChangeHandler(): void {

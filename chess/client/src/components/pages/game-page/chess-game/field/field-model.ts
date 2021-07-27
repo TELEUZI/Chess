@@ -23,21 +23,13 @@ import { setCurrentUserColor, makeMove } from '../state/redux/action-creators';
 import { getBoardFromFen, getFenFromStringBoard } from '../utils/fen-processor';
 import getOpeningName from '../../../../../services/chess-openings-service';
 import TurnInfo from '../../../../../interfaces/turn-info';
+import FigureType from '../../../../../enums/figure-type';
+import { INIT_FIELD_STATE } from '../../../../../config';
 
-const initialField = [
-  ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
-  ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
-  ['', '', '', '', '', '', '', ''],
-  ['', '', '', '', '', '', '', ''],
-  ['', '', '', '', '', '', '', ''],
-  ['', '', '', '', '', '', '', ''],
-  ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-  ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'],
-];
 export default class FieldModel {
   public state: FieldState;
 
-  private currentColor = 1;
+  private currentColor = FigureColor.WHITE;
 
   private turnManager: TurnManager;
 
@@ -67,7 +59,7 @@ export default class FieldModel {
 
   constructor() {
     this.turnManager = new TurnManager();
-    const initState = createFieldFromStrings(initialField);
+    const initState = createFieldFromStrings(INIT_FIELD_STATE);
     this.state = store.getState().field;
     this.setState(initState);
     this.gameMode = store.getState().gameMode.currentGameMode;
@@ -98,7 +90,9 @@ export default class FieldModel {
   promote(i: number, j: number): void {
     this.state.setFigureAtCell(
       createFigurefromString(
-        this.getCellAt(new Coordinate(i, j)).getFigureColor() === FigureColor.WHITE ? 'Q' : 'q',
+        this.getCellAt(new Coordinate(i, j)).getFigureColor() === FigureColor.WHITE
+          ? FigureType.QUEEN.toUpperCase()
+          : FigureType.QUEEN,
       ),
       i,
       j,
@@ -235,8 +229,8 @@ export default class FieldModel {
   };
 
   setEndGame(): void {
-    this.setState(createFieldFromStrings(initialField));
-    store.dispatch(setCurrentUserColor(1));
+    this.setState(createFieldFromStrings(INIT_FIELD_STATE));
+    store.dispatch(setCurrentUserColor(FigureColor.WHITE));
   }
 
   getMovesAtPoint(fromX: number, fromY: number, state?: FieldState): Coordinate[] {

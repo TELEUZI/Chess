@@ -1,6 +1,8 @@
+import { TABLE_SIZE } from '../../../../../config';
+
 export function getEmptyBoard(): string[][] {
   const board = [];
-  for (let i = 0; i < 8; i += 1) {
+  for (let i = 0; i < TABLE_SIZE; i += 1) {
     board[i] = [];
   }
   return board;
@@ -9,7 +11,7 @@ export function getEmptyBoard(): string[][] {
 export function getBoardFromFen(fen: string): string[][] {
   const board: string[][] = getEmptyBoard();
   const rows = fen.split('/');
-  if (rows.length !== 8) {
+  if (rows.length !== TABLE_SIZE) {
     throw new Error(`Invalid FEN code: '${fen}'`);
   }
   rows.forEach((row, index) => {
@@ -29,7 +31,7 @@ export function getBoardFromFen(fen: string): string[][] {
         column += 1;
       }
     });
-    if (filled !== 8) {
+    if (filled !== TABLE_SIZE) {
       throw new Error(`Invalid FEN code: '${fen}'`);
     }
   });
@@ -38,9 +40,9 @@ export function getBoardFromFen(fen: string): string[][] {
 
 export function getFenFromStringBoard(board: string[][]): string {
   const fen = [];
-  for (let i = 0; i < 8; i += 1) {
+  for (let i = 0; i < TABLE_SIZE; i += 1) {
     let empty = 0;
-    for (let j = 0; j < 8; j += 1) {
+    for (let j = 0; j < TABLE_SIZE; j += 1) {
       const piece = board[i][j];
       if (piece) {
         if (empty > 0) {

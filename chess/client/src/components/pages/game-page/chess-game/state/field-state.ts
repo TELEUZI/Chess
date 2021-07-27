@@ -2,6 +2,7 @@ import FigureColor from '../../../../../enums/figure-colors';
 import CellModel from '../models/cell-model';
 import FigureModel from '../models/figures/figure-model';
 import createFigure from '../fabrics/figure-fabric';
+import { TABLE_SIZE } from '../../../../../config';
 
 export function createFigurefromString(figure: string): FigureModel {
   let color: number;
@@ -12,11 +13,11 @@ export function createFigurefromString(figure: string): FigureModel {
 }
 
 export function isInField(x: number, y: number): boolean {
-  return x >= 0 && x < 8 && y >= 0 && y < 8;
+  return x >= 0 && x < TABLE_SIZE && y >= 0 && y < TABLE_SIZE;
 }
 export function emptyBoard(): string[][] {
   const board = [];
-  for (let i = 0; i < 8; i += 1) {
+  for (let i = 0; i < TABLE_SIZE; i += 1) {
     board[i] = [];
   }
   return board;
@@ -58,8 +59,8 @@ export default class FieldState {
 
   getPlainState(): string[][] {
     const state = emptyBoard();
-    for (let i = 0; i < 8; i += 1) {
-      for (let j = 0; j < 8; j += 1) {
+    for (let i = 0; i < TABLE_SIZE; i += 1) {
+      for (let j = 0; j < TABLE_SIZE; j += 1) {
         state[i][j] = this.state[i][j]?.getFigureType();
         if (state[i][j])
           state[i][j] =

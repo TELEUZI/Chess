@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { INIT_FIELD_STATE } from '../../../../../../config';
 import FigureColor from '../../../../../../enums/figure-colors';
 import GameMode from '../../../../../../enums/game-mode';
 import createFieldFromStrings from '../../fabrics/field-fabric';
@@ -13,17 +14,6 @@ import {
   SET_USER_COLOR,
   SET_WINNER,
 } from './types';
-
-const INIT_FIELD_STATE = [
-  ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
-  ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
-  ['', '', '', '', '', '', '', ''],
-  ['', '', '', '', '', '', '', ''],
-  ['', '', '', '', '', '', '', ''],
-  ['', '', '', '', '', '', '', ''],
-  ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-  ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'],
-];
 
 function fieldReducer(
   state: FieldState = createFieldFromStrings(INIT_FIELD_STATE),

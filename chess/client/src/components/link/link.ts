@@ -8,7 +8,6 @@ export default class Link extends BaseComponent implements ClickElement {
   constructor(textContent: string, href: string, onClick?: () => void) {
     super('a', ['link'], textContent);
     this.setAttribute('href', href);
-    this.onClick = onClick;
-    this.node.onclick = () => this.onClick?.();
+    this.node.onclick = () => onClick?.();
   }
 }

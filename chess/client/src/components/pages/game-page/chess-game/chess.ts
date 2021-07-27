@@ -16,6 +16,7 @@ import Replay, { GameResult } from '../../../../interfaces/replay';
 import { socketService } from '../../../../services/websocket-service';
 import { TIMER_DELAY } from '../../../../config';
 import TurnInfo from '../../../../interfaces/turn-info';
+import FigureColorText from '../../../../enums/figure-color-text';
 
 const IS_UPDATABLE = false;
 class Chess extends BaseComponent {
@@ -48,7 +49,7 @@ class Chess extends BaseComponent {
     }
     this.timer = new Timer();
     this.timer.start(TIMER_DELAY);
-    this.node.appendChild(this.timer.getNode());
+    this.node.append(this.timer.getNode());
     this.createUI();
     socketService.onPlayerLeave = () => {
       this.setPlayerLeave();
@@ -139,7 +140,9 @@ class Chess extends BaseComponent {
     const winContent = new ModalContent({
       header: 'Check and mate!',
       text: `Player of ${
-        store.getState().winner.winnerColor === FigureColor.BLACK ? 'white' : 'black'
+        store.getState().winner.winnerColor === FigureColor.BLACK
+          ? FigureColorText.WHITE
+          : FigureColorText.BLACK
       } has won!`,
       buttonText: 'Ok',
     });
@@ -151,7 +154,9 @@ class Chess extends BaseComponent {
     this.setWinner(result);
     const winContent = new ModalContent({
       header: 'User leaves!',
-      text: `Player of ${result === FigureColor.WHITE ? 'white' : 'black'} has won!`,
+      text: `Player of ${
+        result === FigureColor.WHITE ? FigureColorText.WHITE : FigureColorText.BLACK
+      } has won!`,
       buttonText: 'Ok',
     });
     const modalWindow = new ModalWindow(winContent, () => {}, this.node);

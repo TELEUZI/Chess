@@ -35,7 +35,7 @@ export default class ModalWindow extends BaseComponent {
       this.onDeclineClick();
     };
     if (parentNode) {
-      parentNode.appendChild(this.node);
+      parentNode.append(this.node);
     }
     this.insertChilds([this.modalContent, this.modalWrapper]);
   }

@@ -39,7 +39,7 @@ export default class FieldView extends BaseComponent {
       }
     }
     const numbers = document.createElement('svg') as SvgInHtml;
-    this.node.appendChild(numbers);
+    this.node.append(numbers);
     numbers.outerHTML = TABLE_COORDINATES;
   }
 

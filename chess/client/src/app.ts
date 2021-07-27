@@ -11,7 +11,7 @@ class App {
   }
 
   start(): void {
-    this.root.appendChild(this.controller.getNode());
+    this.root.append(this.controller.getNode());
   }
 }
 const app: App = new App(new Controller(), document.body);

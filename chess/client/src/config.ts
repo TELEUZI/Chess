@@ -7,9 +7,20 @@ export enum IndexedDBStores {
 }
 export const BLACK_ROW_INDEX = 0;
 export const WHITE_ROW_INDEX = 7;
+export const INIT_FIELD_STATE = [
+  ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+  ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+  ['', '', '', '', '', '', '', ''],
+  ['', '', '', '', '', '', '', ''],
+  ['', '', '', '', '', '', '', ''],
+  ['', '', '', '', '', '', '', ''],
+  ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+  ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'],
+];
 export const INDEXED_DB_VERSION = 1;
 export const INDEXED_DB_NAME = 'Teleuzi';
 export const TABLE_SIZE = 8;
+export const BEST_VALUE_MOVE_FOR_BLACK = -9999;
 export const TIMER_DELAY = 0;
 export const SERVER_ENDPOINT = `/rooms/`;
 export const baseURL =

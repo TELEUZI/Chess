@@ -16,8 +16,6 @@ export default class Header extends BaseComponent {
 
   private avatar: HTMLImageElement;
 
-  onButtonClick: () => void;
-
   constructor(state: State<Header>, onButtonClick?: () => void) {
     super('header', ['header']);
     this.state = state;
@@ -46,7 +44,7 @@ export default class Header extends BaseComponent {
     this.avatar = new Image();
     this.avatar.src = BASE_LOGO;
     this.avatar.classList.add('avatar');
-    this.node.appendChild(this.avatar);
+    this.node.append(this.avatar);
   }
 
   setAvatarSrc(src: string): void {

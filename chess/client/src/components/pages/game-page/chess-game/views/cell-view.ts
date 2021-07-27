@@ -1,3 +1,4 @@
+import FigureColorLetter from '../../../../../enums/figure-color-letter';
 import FigureColor from '../../../../../enums/figure-colors';
 import BaseComponent from '../../../../base-component';
 import Figure from './figure-view';
@@ -66,7 +67,9 @@ export default class CellView extends BaseComponent {
       this.figure.destroy();
       this.figure = new Figure(this.node, [
         `chess__figure`,
-        `chess-field__${color === FigureColor.BLACK ? 'b' : 'w'}${type}`,
+        `chess-field__${
+          color === FigureColor.BLACK ? FigureColorLetter.BLACK : FigureColorLetter.WHITE
+        }${type}`,
       ]);
       this.figure.setAttribute('draggable', 'true');
     } else {

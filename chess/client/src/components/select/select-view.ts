@@ -14,10 +14,10 @@ export default class SelectView extends BaseComponent {
       const opt = document.createElement('option');
       opt.classList.add('option');
       opt.value = option;
-      opt.innerText = option;
+      opt.textContent = option;
       return opt;
     });
-    this.options.forEach((option) => this.select.appendChild(option));
+    this.options.forEach((option) => this.select.append(option));
     this.select.addEventListener('change', () => this.onChange());
     this.setAttribute('multiple', 'true');
   }

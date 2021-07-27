@@ -1,3 +1,4 @@
+import FigureColorLetter from '../../../../enums/figure-color-letter';
 import FigureColor from '../../../../enums/figure-colors';
 import TurnInfo from '../../../../interfaces/turn-info';
 import BaseComponent from '../../../base-component';
@@ -33,7 +34,9 @@ export default class ChessHistory extends BaseComponent {
     const { figure } = coords;
     const figureView = new FigureView(this.node, [
       `chess__figure`,
-      `chess-field__${figure.color === FigureColor.BLACK ? 'b' : 'w'}${figure.type}`,
+      `chess-field__${
+        figure.color === FigureColor.BLACK ? FigureColorLetter.BLACK : FigureColorLetter.WHITE
+      }${figure.type}`,
     ]);
     const { comment } = coords;
     const historyItem = new BaseComponent(

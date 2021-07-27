@@ -1,3 +1,4 @@
+import { BEST_VALUE_MOVE_FOR_BLACK } from '../../../../../../config';
 import FigureColor from '../../../../../../enums/figure-colors';
 import { Strategy } from '../../../../../../interfaces/bot-strategy';
 import MoveMessage, { FigureTurn } from '../../../../../../interfaces/move-message';
@@ -15,7 +16,7 @@ export default class EvaluationStrategy implements Strategy {
   ): MoveMessage {
     this.avaliableMoves = avaliableMoves;
     let bestMove: MoveMessage = null;
-    let bestValue = -9999;
+    let bestValue = BEST_VALUE_MOVE_FOR_BLACK;
     avaliableMoves.forEach((newGameMove) => {
       newGameMove.to.forEach((moveTo) => {
         const newState = getStateAfterMove(

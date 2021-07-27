@@ -14,6 +14,7 @@ import UserDaoService from '../../services/user-dao-service';
 import store from '../pages/game-page/chess-game/state/redux/store';
 import GameMode from '../../enums/game-mode';
 import { socketService } from '../../services/websocket-service';
+import AppRoutes from '../../enums/app-routes';
 
 export default class Controller extends BaseComponent {
   private appRoot: BaseComponent;
@@ -40,22 +41,22 @@ export default class Controller extends BaseComponent {
     this.router = new Router(
       [
         {
-          name: 'default',
+          name: AppRoutes.DEFAULT,
           controller: new AboutPage(this.getAppRoot()),
         },
         {
-          name: 'settings',
+          name: AppRoutes.SETTINGS,
           controller: new SettingsPage(this.getAppRoot()),
         },
         {
-          name: 'replay',
+          name: AppRoutes.REPLAY,
           controller: new BestScorePage(this.getAppRoot()),
         },
         {
-          name: 'game',
+          name: AppRoutes.GAME,
           controller: this.gamePage,
         },
-        { name: 'watch', controller: new ReplayPage(this.getAppRoot()) },
+        { name: AppRoutes.WATCH, controller: new ReplayPage(this.getAppRoot()) },
       ],
       this.moveToPage.bind(this),
     );
