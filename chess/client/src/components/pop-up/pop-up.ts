@@ -9,13 +9,13 @@ export default class PopUpWindow extends BaseComponent {
 
   constructor(popUpText: string) {
     super('div', [], popUpText);
-    this.node.innerText = popUpText;
+    this.node.textContent = popUpText;
     this.okButton = new Link('ok', '#bestscore', this.okButtonHandler.bind(this));
     this.insertChild(this.okButton);
   }
 
   okButtonHandler = (): void => {
-    this.node.innerText = '';
+    this.node.textContent = '';
     this.okButton = new Link('ok', '#bestscore', this.okButtonHandler.bind(this));
     this.insertChild(this.okButton);
     this.onOkClick?.();
