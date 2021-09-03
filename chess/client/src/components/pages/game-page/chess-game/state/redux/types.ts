@@ -1,0 +1,7 @@
+export const MOVE = 'MOVE';
+export const CHANGE_USERNAME = 'CHANGE_USERNAME';
+export const SET_USER_COLOR = 'SET_USER_COLOR';
+export const SET_CURRENT_USER_COLOR = 'SET_CURRENT_USER_COLOR';
+export const SET_GAME_MODE = 'SET_GAME_MODE';
+export const SET_REPLAY_STATE = 'SET_REPLAY_STATE';
+export const SET_WINNER = 'SET_WINNER';
