@@ -66,7 +66,6 @@
   height: 50vh;
   background-color: $white;
   border: solid 4px $black;
-  border-color: $black;
   z-index: 22;
 }
 
@@ -84,7 +83,7 @@
   border-radius: 50%;
   background-color: $green-valid;
   text-align: center;
-  font-family: "Roboto", "Helvetica Neue";
+  font-family: "Roboto", "Helvetica Neue", serif;
   color: $black;
 }
 
@@ -113,7 +112,7 @@
 .chess__head {
   display: flex;
   justify-content: space-between;
-  padding: 0px 50px;
+  padding: 0 50px;
   margin-bottom: 20px;
 }
 
@@ -214,7 +213,6 @@
   background-position: center;
   background-repeat: no-repeat;
   cursor: pointer;
-  position: absolute;
   pointer-events: none;
   border: 3px solid transparent;
   transition: border .1s, left .7s, right .7s, top .7s, bottom .7s, opacity .3s;
@@ -484,7 +482,6 @@
   position: absolute;
   transform: translate(-7%, 5%);
   left: 0;
-  position: absolute;
   top: 0;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -493,11 +490,6 @@
   font-weight: 600;
   height: 72vh;
   line-height: 1;
-  top: 0;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
   width: 75vh;
   z-index: -1;
 }
@@ -566,13 +558,13 @@
     color: $perfect-white;
     position: relative;
     z-index: 1;
-    text-shadow: 1px 1px 0px $grey;
+    text-shadow: 1px 1px 0 $grey;
     font-family: 'Roboto', sans-serif;
     text-align: center;
     padding: 20px;
     border-radius: 5px 5px 0 0;
     font-size: 48px;
-    font-weight: thin;
+    font-weight: 300;
     display: block;
     background: $green;
 
@@ -642,7 +634,7 @@
   text-transform: uppercase;
   color: $white;
   background: $black;
-  border-radius: remy(35px);
+  border-radius: 35px;
   &:focus,
   &:hover {background: lighten($black, 13%);}
 }
