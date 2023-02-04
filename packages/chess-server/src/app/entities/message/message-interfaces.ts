@@ -21,7 +21,7 @@ export interface PlayerAddResponse {
 }
 
 export interface UserSuggest {
-  isDraw: boolean;
+  isDraw: boolean | null;
 }
 export interface WsMessage {
   action: GameAction;

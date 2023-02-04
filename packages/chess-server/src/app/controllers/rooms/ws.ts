@@ -37,7 +37,9 @@ export function disconnectFromGame(
     rooms.delete(token.roomName);
   } catch (error) {
     if (!isReadyWS(ws)) {
-      ws.send(JSON.stringify({ error: error.message }));
+      if (error instanceof Error) {
+        ws.send(JSON.stringify({ error: error.message }));
+      }
     }
   }
 }
@@ -67,7 +69,9 @@ export function startGame(token: PlayerTokenInfo): void {
     });
     broadcastToRoom(token.roomName, { action: GameAction.startGame, payload: result });
   } catch (error) {
-    broadcastToRoom(token.roomName, { error: error.message });
+    if (error instanceof Error) {
+      broadcastToRoom(token.roomName, { error: error.message });
+    }
   }
 }
 
@@ -112,7 +116,9 @@ export function setMove(
     const gameUpdate = room.game.move(message, moveMessage);
     broadcastToRoom(token.roomName, { action: GameAction.moveFigure, payload: gameUpdate });
   } catch (error) {
-    ws.send(JSON.stringify({ error: error.message }));
+    if (error instanceof Error) {
+      ws.send(JSON.stringify({ error: error.message }));
+    }
   }
 }
 
@@ -124,14 +130,18 @@ export function suggestDraw(token: PlayerTokenInfo): void {
       token.playerName,
     );
   } catch (error) {
-    broadcastToRoom(token.roomName, { error: error.message });
+    if (error instanceof Error) {
+      broadcastToRoom(token.roomName, { error: error.message });
+    }
   }
 }
 export function submitDraw(token: PlayerTokenInfo): void {
   try {
     broadcastToRoom(token.roomName, { action: GameAction.drawResponse, payload: { isDraw: true } });
   } catch (error: unknown) {
-    broadcastToRoom(token.roomName, { error: error?.message });
+    if (error instanceof Error) {
+      broadcastToRoom(token.roomName, { error: error.message });
+    }
   }
 }
 export function declineDraw(token: PlayerTokenInfo): void {
@@ -142,6 +152,8 @@ export function declineDraw(token: PlayerTokenInfo): void {
       token.playerName,
     );
   } catch (error) {
-    broadcastToRoom(token.roomName, { error: error.message });
+    if (error instanceof Error) {
+      broadcastToRoom(token.roomName, { error: error.message });
+    }
   }
 }

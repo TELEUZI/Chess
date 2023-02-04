@@ -26,9 +26,13 @@ function handleSocketAction(ws: WebSocket, token: PlayerTokenInfo, data: RoomsMe
     case GameAction.joinRoom:
       joinGame(ws, token);
       break;
-    case GameAction.moveFigure:
+    case GameAction.moveFigure: {
+      if (data.payload == null) {
+        throw new Error('Payload must be defined.');
+      }
       setMove(ws, token, data.payload.fieldState, data.payload.moveMessage);
       break;
+    }
     case GameAction.disconnect:
       disconnectFromGame(ws, token);
       break;
@@ -67,7 +71,9 @@ export default function buildRouting(ws: WebSocket, queryParams: ParsedQs): void
       try {
         checkData(data);
       } catch (error) {
-        ws.send(JSON.stringify({ error: error.message }));
+        if (error instanceof Error) {
+          ws.send(JSON.stringify({ error: error.message }));
+        }
         return;
       }
       if (!rooms.has(token.roomName)) {
@@ -77,6 +83,8 @@ export default function buildRouting(ws: WebSocket, queryParams: ParsedQs): void
       handleSocketAction(ws, token, data);
     });
   } catch (error) {
-    ws.send(JSON.stringify({ error: error.message }));
+    if (error instanceof Error) {
+      ws.send(JSON.stringify({ error: error.message }));
+    }
   }
 }

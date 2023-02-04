@@ -37,6 +37,9 @@ export default class Game {
         playersNotReadied.push(player.name);
       }
     });
+    if (playersNotReadied.length < 2) {
+      throw new Error('Game requires 2 ready players.');
+    }
     this.status = GameStatus.running;
     const shuffledPlayersList = shuffle([...this.players.keys()]);
     const newShuffledPlayers = new Map<string, Player>();
