@@ -1,11 +1,10 @@
-import type { ErrorEvent } from 'ws';
 import WebSocket from 'ws';
 import type { WsMessage } from '../../entities/message/message-interfaces';
 import { rooms } from '../../entities/room/room';
 
 export default function broadcastToRoom(
   room: string,
-  message: WsMessage | { error: ErrorEvent },
+  message: WsMessage | { error: string },
   excludePlayer?: string[] | string,
 ): void {
   const roomObj = rooms.get(room);
