@@ -19,15 +19,13 @@ import AppRoutes from '../../enums/app-routes';
 export default class Controller extends BaseComponent {
   private readonly appRoot: BaseComponent;
 
-  private readonly router: Router;
-
   private readonly modal: RegFormModal;
 
   private readonly userModel: UserDaoService;
 
   private readonly headerStateManager: HeaderStateManager;
 
-  gamePage: GamePage;
+  private readonly gamePage: GamePage;
 
   constructor() {
     super('div', ['app']);
@@ -38,7 +36,7 @@ export default class Controller extends BaseComponent {
     this.modal = new RegFormModal(this.onRegister.bind(this));
     this.insertChild(this.modal);
     this.gamePage = new GamePage(this.getAppRoot());
-    this.router = new Router(
+    const router = new Router(
       [
         {
           name: AppRoutes.DEFAULT,
@@ -60,6 +58,7 @@ export default class Controller extends BaseComponent {
       ],
       this.moveToPage.bind(this),
     );
+    router.hashChanged();
   }
 
   async moveToRegisteredState(): Promise<void> {

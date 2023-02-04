@@ -6,7 +6,7 @@ export interface ExtentedWebsocket extends WebSocket {
   isAlive: boolean;
 }
 
-export default function buildWsRouting(wss: WebSocket.Server): void {
+export default function buildWsRouting(wss: WebSocket.Server<ExtentedWebsocket>): void {
   wss.on('connection', (ws: ExtentedWebsocket, req) => {
     console.log('connection');
     ws.isAlive = true;
@@ -17,7 +17,7 @@ export default function buildWsRouting(wss: WebSocket.Server): void {
       console.trace(error);
     });
     const { url } = req;
-    if (url === null) {
+    if (url == null) {
       return;
     }
     const queryIndex = url.indexOf('?');

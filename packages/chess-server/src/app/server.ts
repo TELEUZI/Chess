@@ -6,7 +6,7 @@ import helmet from 'helmet';
 import * as path from 'path';
 
 import express from 'express';
-import buildWsRouting from './routes/index/ws';
+import buildWsRouting, { ExtentedWebsocket } from "./routes/index/ws";
 import { router } from './routes/index/http';
 
 const host = '0.0.0.0';
@@ -24,7 +24,7 @@ export async function setUpServer(): Promise<ServerItems> {
   app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
   const server = http.createServer(app);
-  const wss = new WebSocket.Server({ server });
+  const wss = new WebSocket.Server<ExtentedWebsocket>({ server });
   app.use(cors());
   app.use(helmet());
   app.use(router);

@@ -10,8 +10,7 @@ export function buildToken(info: PlayerTokenInfo): string {
   if (typeof secret !== 'string') {
     throw new Error('Could not find a secret to sign a jwt.');
   }
-  const resp = jwt.sign(info, secret, { noTimestamp: true, expiresIn: process.env.JWT_EXPIRES_IN });
-  return resp;
+  return jwt.sign(info, secret, { noTimestamp: true, expiresIn: process.env.JWT_EXPIRES_IN });
 }
 
 export function verifyDecodeToken(token: string): PlayerTokenInfo {
@@ -19,6 +18,5 @@ export function verifyDecodeToken(token: string): PlayerTokenInfo {
   if (typeof secret !== 'string') {
     throw new Error('Could not find a secret to verify/decode a jwt.');
   }
-  const decoded = jwt.verify(token, secret) as PlayerTokenInfo;
-  return decoded;
+  return jwt.verify(token, secret) as PlayerTokenInfo;
 }

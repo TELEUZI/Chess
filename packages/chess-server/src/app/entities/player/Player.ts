@@ -5,7 +5,7 @@ import type { PlayerSerializable } from './player-interfaces';
 export default class Player {
   name: string;
 
-  color: PlayerColor;
+  color: PlayerColor | null;
 
   state: PlayerState;
 

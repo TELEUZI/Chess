@@ -35,15 +35,6 @@ export interface Player {
 }
 
 export type PlayerSerializable = Record<string, FigureColor | string[] | boolean | string | null>;
-
-export enum PlayerState {
-  joined,
-  ready,
-  playing,
-  disconnected,
-  victor,
-}
-
 export interface Room {
   clients: Map<string, WebSocket>;
   game: GameExternalInfo;
