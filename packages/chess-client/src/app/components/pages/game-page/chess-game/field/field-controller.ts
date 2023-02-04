@@ -1,6 +1,6 @@
+import type { Coordinate } from '@coordinate';
 import type CellModel from '../models/cell-model';
 import type CellView from '../views/cell-view';
-import type Coordinate from '../../../../../models/coordinate';
 import type FieldState from '../state/field-state';
 import FieldView from '../views/field-view';
 import store from '../state/redux/store';

@@ -1,4 +1,4 @@
-import type Coordinate from '../../../../../../../models/coordinate';
+import type { Coordinate } from '@coordinate';
 import MOVES from '../../../models/figure-actions';
 import MultipleStepsPerTurnFigure from '../../../models/multiple-step-figure-pen-turn';
 

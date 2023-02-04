@@ -1,7 +1,7 @@
-import { coordinate } from './coordinate';
+import { Coordinate } from './coordinate';
 
 describe('coordinate', () => {
   it('should work', () => {
-    expect(coordinate()).toEqual('coordinate');
+    expect(new Coordinate(1, 2).x).toEqual(1);
   });
 });

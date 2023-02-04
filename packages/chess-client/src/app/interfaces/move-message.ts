@@ -1,4 +1,4 @@
-import type Coordinate from '../models/coordinate';
+import type { Coordinate } from '@coordinate';
 
 export default interface MoveMessage {
   from: Coordinate;

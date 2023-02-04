@@ -1,6 +1,6 @@
+import type { Coordinate } from '@coordinate';
 import BaseComponent from '../../../../base-component';
 import CellView from './cell-view';
-import type Coordinate from '../../../../../models/coordinate';
 import type FieldState from '../state/field-state';
 import { TABLE_SIZE } from '../../../../../config';
 import forEachCell from '../utils/cells-iterator';

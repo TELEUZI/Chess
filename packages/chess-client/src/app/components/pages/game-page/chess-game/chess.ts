@@ -1,4 +1,4 @@
-import type Coordinate from '../../../../models/coordinate';
+import type { Coordinate } from '@coordinate';
 import BaseComponent from '../../../base-component';
 import Timer from '../../../timer/timer';
 import ChessField from './field/field-controller';
@@ -21,8 +21,6 @@ import FigureColorText from '../../../../enums/figure-color-text';
 
 const IS_UPDATABLE = false;
 class Chess extends BaseComponent {
-  onCellClick: (coords: Coordinate) => void = () => {};
-
   private readonly timer: Timer;
 
   private playerOne: PlayerContainer;
@@ -40,6 +38,8 @@ class Chess extends BaseComponent {
   private readonly history: TimedMoveMessage[] = [];
 
   private replay: Replay;
+
+  onCellClick: (coords: Coordinate) => void = () => {};
 
   constructor(parentNode: HTMLElement, isReplay: boolean) {
     super('div', ['chess-wrapper'], '', parentNode);
