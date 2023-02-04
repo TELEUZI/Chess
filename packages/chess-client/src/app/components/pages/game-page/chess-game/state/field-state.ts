@@ -4,11 +4,11 @@ import type FigureModel from '../models/figures/figure-model';
 import createFigure from '../fabrics/figure-fabric';
 import { TABLE_SIZE } from '../../../../../config';
 
-export function createFigurefromString(figure: string): FigureModel {
-  let color: number;
-  if (figure.trim() !== '') {
-    color = figure.toLowerCase() === figure ? FigureColor.BLACK : FigureColor.WHITE;
+export function createFigurefromString(figure: string): FigureModel | null {
+  if (figure.trim() === '') {
+    return null;
   }
+  const color = figure.toLowerCase() === figure ? FigureColor.BLACK : FigureColor.WHITE;
   return createFigure(figure.toLowerCase(), color);
 }
 
@@ -52,7 +52,7 @@ export default class FieldState {
 
   getFigureColor(x: number, y: number): number | null {
     if (isInField(x, y)) {
-      return this.getCellAt(x, y).getFigureColor();
+      return this.getCellAt(x, y)?.getFigureColor() ?? null;
     }
     return null;
   }

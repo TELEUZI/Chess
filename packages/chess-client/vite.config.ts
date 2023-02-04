@@ -2,6 +2,7 @@
 import { defineConfig } from 'vite';
 
 import viteTsConfigPaths from 'vite-tsconfig-paths';
+import eslint from 'vite-plugin-eslint'
 
 export default defineConfig({
   cacheDir: '../../node_modules/.vite/chess-client',
@@ -20,6 +21,9 @@ export default defineConfig({
     viteTsConfigPaths({
       root: '../../',
     }),
+    eslint({
+      fix: true,
+    })
   ],
 
   // Uncomment this if you are using workers.

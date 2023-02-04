@@ -91,7 +91,7 @@ export default class FieldModel {
   promote(i: number, j: number): void {
     this.state.setFigureAtCell(
       createFigurefromString(
-        this.getCellAt(new Coordinate(i, j)).getFigureColor() === FigureColor.WHITE
+        this.getCellAt(new Coordinate(i, j))?.getFigureColor() === FigureColor.WHITE
           ? FigureType.QUEEN.toUpperCase()
           : FigureType.QUEEN,
       ),
@@ -142,14 +142,19 @@ export default class FieldModel {
   }
 
   async makeMove(fromX: number, fromY: number, toX: number, toY: number): Promise<void> {
-    this.state.getCellAt(toX, toY).setFigure(this.state.getCellAt(fromX, fromY).getFigure());
-    this.state.getCellAt(fromX, fromY).setFigure(null);
+    const fromCell = this.state.getCellAt(fromX, fromY);
+    const toCell = this.state.getCellAt(toX, toY);
+    if (fromCell === null || toCell === null) {
+      return;
+    }
+    toCell.setFigure(fromCell.getFigure());
+    fromCell.setFigure(null);
     this.setState(this.state);
     this.onNextTurn.notify();
     const fenState = getFenFromStringBoard(this.state.getPlainState());
-    const isOpening = await getOpeningName(fenState);
+    const isOpening = getOpeningName(fenState);
     const move: TurnInfo = {
-      figure: this.state.getCellAt(toX, toY).getFigureExternalInfo(),
+      figure: this.state.getCellAt(toX, toY)?.getFigureExternalInfo(),
       move: { from: new Coordinate(fromX, fromY), to: new Coordinate(toX, toY) },
       ...(isOpening && { comment: isOpening }),
     };
@@ -167,7 +172,7 @@ export default class FieldModel {
     return res;
   }
 
-  getCellAt(to: Coordinate): CellModel {
+  getCellAt(to: Coordinate): CellModel | null {
     return this.state.getCellAt(to.x, to.y);
   }
 

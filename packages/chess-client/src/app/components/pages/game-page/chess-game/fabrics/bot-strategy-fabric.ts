@@ -5,8 +5,8 @@ import EvaluationStrategy from '../field/chess-bot-strategies/eval-strategy';
 import MinMaxBotStrategy from '../field/chess-bot-strategies/min-max-strategy';
 import RandomMoveStrategy from '../field/chess-bot-strategies/random-move-strategy';
 
-export default function createStrategy(config: GameConfig): Strategy {
-  let strategy: Strategy;
+export default function createStrategy(config: GameConfig): Strategy | null {
+  let strategy: Strategy | null = null;
   switch (config.GameDifficulty) {
     case GameDifficultyOptions.easy:
       strategy = new RandomMoveStrategy();
@@ -20,5 +20,5 @@ export default function createStrategy(config: GameConfig): Strategy {
     default:
       break;
   }
-  return strategy || null;
+  return strategy;
 }

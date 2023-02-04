@@ -1,9 +1,8 @@
 import type WebSocket from 'ws';
-import type { Room } from '../../entities/room/room';
 import { rooms } from '../../entities/room/room';
 import broadcastToRoom from '../../services/room/broadcast-to-room';
 import type { PlayerTokenInfo } from '../../services/player/player-tokenify';
-import type { GameInfo, MoveMessage } from '../../entities/game/game-interfaces';
+import type { MoveMessage } from '../../entities/game/game-interfaces';
 import isReadyWS from '../../utils/ws-alive-check';
 import { GameAction } from '../../entities/game/game-enums';
 
@@ -12,38 +11,43 @@ export function disconnectFromGame(
   token: PlayerTokenInfo,
   closeClient?: boolean,
 ): void {
-  const room = rooms.get(token.roomName)!;
-  let state: GameInfo;
+  const room = rooms.get(token.roomName);
   try {
-    state = room.game.disconnectPlayer(token.playerName);
+    if (room == null) {
+      throw new Error('Requested room does not exist.');
+    }
+    const state = room.game.disconnectPlayer(token.playerName);
+
+    if (!room.clients.has(token.playerName)) {
+      if (!isReadyWS(ws)) {
+        ws.send(JSON.stringify({ error: 'Client connection could not be found.' }));
+      }
+      return;
+    }
+
+    if (closeClient) {
+      const client = room.clients.get(token.playerName);
+      client?.close();
+    }
+    room.clients.delete(token.playerName);
+    if (room.clients.size > 0) {
+      rooms.set(token.roomName, room);
+      broadcastToRoom(token.roomName, { action: GameAction.disconnect, payload: state });
+    }
+    rooms.delete(token.roomName);
   } catch (error) {
     if (!isReadyWS(ws)) {
       ws.send(JSON.stringify({ error: error.message }));
     }
-    return;
   }
-  if (!room.clients.has(token.playerName)) {
-    if (!isReadyWS(ws)) {
-      ws.send(JSON.stringify({ error: 'Client connection could not be found.' }));
-    }
-    return;
-  }
-
-  if (closeClient) {
-    const client = room.clients.get(token.playerName);
-    client?.close();
-  }
-  room.clients.delete(token.playerName);
-  if (room.clients.size > 0) {
-    rooms.set(token.roomName, room);
-    broadcastToRoom(token.roomName, { action: GameAction.disconnect, payload: state });
-  }
-  rooms.delete(token.roomName);
 }
 
 export function startGame(token: PlayerTokenInfo): void {
   const room = rooms.get(token.roomName);
   try {
+    if (room == null) {
+      throw new Error('Requested room does not exist.');
+    }
     const result = room.game.start();
     rooms.set(token.roomName, room);
     room.clients.forEach((client, i) => {
@@ -69,6 +73,10 @@ export function startGame(token: PlayerTokenInfo): void {
 
 export function joinGame(ws: WebSocket, token: PlayerTokenInfo): void {
   const room = rooms.get(token.roomName);
+  if (room == null) {
+    ws.send(JSON.stringify({ error: 'Requested room does not exist.' }));
+    return;
+  }
   if (room.clients.has(token.playerName)) {
     ws.send(
       JSON.stringify({
@@ -97,6 +105,10 @@ export function setMove(
 ): void {
   const room = rooms.get(token.roomName);
   try {
+    if (room == null) {
+      ws.send(JSON.stringify({ error: 'Requested room does not exist.' }));
+      return;
+    }
     const gameUpdate = room.game.move(message, moveMessage);
     broadcastToRoom(token.roomName, { action: GameAction.moveFigure, payload: gameUpdate });
   } catch (error) {
@@ -118,8 +130,8 @@ export function suggestDraw(token: PlayerTokenInfo): void {
 export function submitDraw(token: PlayerTokenInfo): void {
   try {
     broadcastToRoom(token.roomName, { action: GameAction.drawResponse, payload: { isDraw: true } });
-  } catch (error) {
-    broadcastToRoom(token.roomName, { error: error.message });
+  } catch (error: unknown) {
+    broadcastToRoom(token.roomName, { error: error?.message });
   }
 }
 export function declineDraw(token: PlayerTokenInfo): void {

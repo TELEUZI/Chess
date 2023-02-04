@@ -3,7 +3,7 @@ import type { GameInfo, MoveMessage } from '../game/game-interfaces';
 import type { PlayerSerializable } from '../player/player-interfaces';
 
 export interface RoomsMessageData {
-  action: GameAction;
+  action: GameAction | null;
   payload?: {
     fieldState: string;
     isDraw: boolean;

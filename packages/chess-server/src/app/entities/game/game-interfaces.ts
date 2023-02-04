@@ -6,9 +6,9 @@ import type { GameStatus } from './game-enums';
 export interface GameInfo {
   gameStatus: GameStatus;
   currentPlayerColor: PlayerColor;
-  fieldState: string;
+  fieldState?: string;
   players: PlayerSerializable[];
-  lastMove: MoveMessage;
+  lastMove?: MoveMessage;
 }
 export interface GameExternalInfo {
   gameStatus: GameStatus;

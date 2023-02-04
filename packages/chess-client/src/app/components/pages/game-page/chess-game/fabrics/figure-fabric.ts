@@ -7,7 +7,7 @@ import Pawn from '../models/figures/pawn';
 import Queen from '../models/figures/queen';
 import Rook from '../models/figures/rook';
 
-export default function createFigure(type: string, color: FigureColor): FigureModel {
+export default function createFigure(type: string, color: FigureColor): FigureModel | null {
   const figures = new Map<string, typeof FigureModel>([
     ['p', Pawn],
     ['r', Rook],
