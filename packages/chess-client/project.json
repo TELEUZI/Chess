@@ -1,0 +1,73 @@
+{
+  "name": "chess-client",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "packages/chess-client/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nrwl/vite:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/packages/chess-client"
+      },
+      "configurations": {
+        "development": {
+          "mode": "development"
+        },
+        "production": {
+          "mode": "production"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/vite:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "chess-client:build",
+        "proxyConfig": "packages/chess-client/proxy.conf.json"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "chess-client:build:development",
+          "hmr": true
+        },
+        "production": {
+          "buildTarget": "chess-client:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "preview": {
+      "executor": "@nrwl/vite:preview-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "chess-client:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "chess-client:build:development"
+        },
+        "production": {
+          "buildTarget": "chess-client:build:production"
+        }
+      }
+    },
+    "test": {
+      "executor": "@nrwl/vite:test",
+      "outputs": ["coverage/packages/chess-client"],
+      "options": {
+        "passWithNoTests": true,
+        "reportsDirectory": "../../coverage/packages/chess-client"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/chess-client/**/*.ts"]
+      }
+    }
+  }
+}
