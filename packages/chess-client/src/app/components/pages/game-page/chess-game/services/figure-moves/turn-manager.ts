@@ -1,5 +1,5 @@
+import type { Coordinate } from '@coordinate';
 import FigureType from '../../../../../../enums/figure-type';
-import type Coordinate from '../../../../../../models/coordinate';
 import type FigureModel from '../../models/figures/figure-model';
 import type FieldState from '../../state/field-state';
 import store from '../../state/redux/store';

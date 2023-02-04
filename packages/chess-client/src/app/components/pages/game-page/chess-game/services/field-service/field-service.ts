@@ -1,7 +1,7 @@
+import { Coordinate } from '@coordinate';
 import type FigureColor from '../../../../../../enums/figure-colors';
 import FigureType from '../../../../../../enums/figure-type';
 import type CellModel from '../../models/cell-model';
-import Coordinate from '../../../../../../models/coordinate';
 import type FigureModel from '../../models/figures/figure-model';
 import type FieldState from '../../state/field-state';
 import store from '../../state/redux/store';

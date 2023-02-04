@@ -1,5 +1,5 @@
+import { Coordinate } from '@coordinate';
 import FigureColor from '../../../../../../../enums/figure-colors';
-import Coordinate from '../../../../../../../models/coordinate';
 import type Pawn from '../../../models/figures/pawn';
 import OneStepFigure from '../../../models/one-step-figure';
 import type FieldState from '../../../state/field-state';

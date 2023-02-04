@@ -1,4 +1,4 @@
-import Coordinate from '../../../../../models/coordinate';
+import { Coordinate } from '@coordinate';
 import { TABLE_SIZE } from '../../../../../config';
 
 export default function forEachCell<T>(

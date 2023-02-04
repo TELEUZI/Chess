@@ -1,3 +1,4 @@
+import type { Coordinate } from '@coordinate';
 import type { PlayerColor } from '../player/player-enums';
 import type { PlayerSerializable } from '../player/player-interfaces';
 import type { GameStatus } from './game-enums';
@@ -24,23 +25,3 @@ export interface FigureTurn {
   from: Coordinate;
   to: Coordinate[];
 }
-class Coordinate {
-  x: number;
-
-  y: number;
-
-  constructor(x: number, y: number) {
-    this.x = x;
-    this.y = y;
-  }
-
-  clone(): Coordinate {
-    return new Coordinate(this.x, this.y);
-  }
-
-  equals(coordinate: Coordinate): boolean {
-    return this.x === coordinate.x && this.y === coordinate.y;
-  }
-}
-
-export default Coordinate;

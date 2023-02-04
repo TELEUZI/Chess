@@ -1,4 +1,4 @@
-import Coordinate from '../../../../../../../models/coordinate';
+import { Coordinate } from '@coordinate';
 import type FigureModel from '../../../models/figures/figure-model';
 import MultipleStepFigure from '../../../models/multiple-step-figure';
 import type FieldState from '../../../state/field-state';

@@ -1,4 +1,4 @@
-import Coordinate from '../../../../../models/coordinate';
+import type { Coordinate } from '@coordinate';
 import type FigureModel from './figures/figure-model';
 import type FieldState from '../state/field-state';
 import store from '../state/redux/store';

@@ -1,10 +1,10 @@
+import { Coordinate } from '@coordinate';
 import FigureColor from '../../../../../enums/figure-colors';
 import GameMode from '../../../../../enums/game-mode';
 import { socketService } from '../../../../../services/websocket-service';
 import getNextFigureColor from '../../../../../utils/get-next-figure-color';
 import type CellModel from '../models/cell-model';
 
-import Coordinate from '../../../../../models/coordinate';
 import type FieldState from '../state/field-state';
 import store from '../state/redux/store';
 import createFieldFromStrings from '../fabrics/field-fabric';
