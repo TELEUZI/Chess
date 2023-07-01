@@ -19,10 +19,18 @@ export default class RegForm extends BaseComponent {
   constructor(classlist: string[]) {
     super('form', ['form', 'container__child', 'signup__form', ...classlist], '');
     this.setAttribute('action', '');
-    this.createFormComponents();
+    const formGroup = new BaseComponent('div', ['form-group']);
+    const label = new BaseComponent('label', ['label'], 'Username');
+    this.nameInput = new Input('text', [], 'Name');
+    formGroup.insertChilds([label, this.nameInput]);
+    this.insertChild(formGroup);
+    this.submit = new Input('submit', ['btn--form'], '', 'Submit');
+    this.reset = new Input('reset', ['btn--form'], '', 'Reset');
+    this.image = new FileInput('file', [], 'Avatar');
+    this.image.setAttribute('accept', 'image/*');
     this.inputs.push(this.nameInput);
-    this.createUI();
-    this.setUpInputHandlers();
+    this.insertChilds([...this.inputs, this.submit, this.reset, this.image]);
+    this.nameInput.setHandler(Validator.validateFirstName);
     this.submit.setAttribute('disabled', 'true');
     this.addUserInputListeners();
   }
@@ -44,25 +52,5 @@ export default class RegForm extends BaseComponent {
     if (this.inputs.every((el) => el.isValid)) {
       this.submit.removeAttribute('disabled');
     }
-  }
-
-  setUpInputHandlers(): void {
-    this.nameInput.setHandler(Validator.validateFirstName);
-  }
-
-  private createFormComponents(): void {
-    const formGroup = new BaseComponent('div', ['form-group']);
-    const label = new BaseComponent('label', ['label'], 'Username');
-    this.nameInput = new Input('text', [], 'Name');
-    formGroup.insertChilds([label, this.nameInput]);
-    this.insertChild(formGroup);
-    this.submit = new Input('submit', ['btn--form'], '', 'Submit');
-    this.reset = new Input('reset', ['btn--form'], '', 'Reset');
-    this.image = new FileInput('file', [], 'Avatar');
-    this.image.setAttribute('accept', 'image/*');
-  }
-
-  private createUI(): void {
-    this.insertChilds([...this.inputs, this.submit, this.reset, this.image]);
   }
 }

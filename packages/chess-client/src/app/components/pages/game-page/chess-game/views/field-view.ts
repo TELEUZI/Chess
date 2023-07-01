@@ -16,17 +16,15 @@ type SvgInHtml = HTMLElement & SVGElement;
 export default class FieldView extends BaseComponent {
   private readonly cells: CellView[] = [];
 
-  onCellClick: (cell: CellView, i: number, j: number) => void;
-
   getCells(): CellView[] {
     return this.cells;
   }
 
-  constructor(parentNode: HTMLElement) {
+  constructor(
+    parentNode: HTMLElement,
+    private readonly onCellClick: (cell: CellView, i: number, j: number) => void,
+  ) {
     super('div', ['table'], '', parentNode);
-  }
-
-  createField(): void {
     for (let i = 0; i < TABLE_SIZE; i += 1) {
       const row = new BaseComponent('div', ['row'], '', this.node);
       for (let j = 0; j < TABLE_SIZE; j += 1) {
@@ -45,21 +43,21 @@ export default class FieldView extends BaseComponent {
 
   refresh(field: FieldState): void {
     forEachCell<CellView>(this.cells, (cell, pos) => {
-      cell.refresh(
-        field.getCellAt(pos.x, pos.y).getFigureType(),
-        field.getCellAt(pos.x, pos.y).getFigureColor(),
-      );
+      const cellTo = field.getCellAt(pos.x, pos.y);
+      if (cellTo) {
+        cell.refresh(cellTo.getFigureType(), cellTo.getFigureColor());
+      }
     });
   }
 
-  setSelection(selection: CellView): void {
+  setSelection(selection: CellView | null): void {
     forEachCell(this.cells, (cell) => {
       const isSameCell = selection && selection === cell;
-      cell.highlightSelectedCell(isSameCell);
+      cell.highlightSelectedCell(!!isSameCell);
     });
   }
 
-  setCheck(selection: Coordinate): void {
+  setCheck(selection: Coordinate | null): void {
     if (!selection) {
       forEachCell<CellView>(this.cells, (cell) => {
         cell.highlightCheck(false);
@@ -72,7 +70,7 @@ export default class FieldView extends BaseComponent {
     });
   }
 
-  setMate(selection: Coordinate): void {
+  setMate(selection: Coordinate | null): void {
     if (!selection) {
       forEachCell<CellView>(this.cells, (cell) => {
         cell.highlightMate(false);

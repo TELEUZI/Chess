@@ -6,7 +6,8 @@ import helmet from 'helmet';
 import * as path from 'path';
 
 import express from 'express';
-import buildWsRouting, { ExtentedWebsocket } from "./routes/index/ws";
+import type { ExtentedWebsocket } from './routes/index/ws';
+import buildWsRouting from './routes/index/ws';
 import { router } from './routes/index/http';
 
 const host = '0.0.0.0';

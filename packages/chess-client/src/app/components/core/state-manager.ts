@@ -10,7 +10,7 @@ export default class HeaderStateManager {
     this.header = new Header(new RegisterState(), onRegisterUser);
   }
 
-  async transitionToRegisteredState(onStartGame: () => void, avatarImage: string): Promise<void> {
+  transitionToRegisteredState(onStartGame: () => void, avatarImage: string): Promise<void> {
     this.header.transitionTo(new StartGameState());
     this.header.createButton(onStartGame, () => {}, avatarImage);
   }

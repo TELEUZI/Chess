@@ -21,8 +21,6 @@ class ModalContent extends BaseComponent {
 
   onDeclineClick: () => void = () => {};
 
-  declineButton: Button;
-
   constructor(config: IModalPopup) {
     super('div', ['modal-content'], '');
     this.messageHead = new BaseComponent('div', ['popup-header'], config.header, this.node);
@@ -31,10 +29,10 @@ class ModalContent extends BaseComponent {
       this.onModalClick();
     });
     if (config.secondButtonText) {
-      this.declineButton = new Button(config.secondButtonText, () => {
+      const declineButton = new Button(config.secondButtonText, () => {
         this.onDeclineClick();
       });
-      this.insertChild(this.declineButton);
+      this.insertChild(declineButton);
     }
 
     this.insertChilds([this.submitButton]);

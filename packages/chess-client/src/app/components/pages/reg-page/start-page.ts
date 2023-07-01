@@ -7,11 +7,11 @@ import store from '../game-page/chess-game/state/redux/store';
 
 import StartPageView from './start-page-view';
 
-export function onUserNameChanged(firstUserName: string, secondtUserName: string): void {
+export function onUserNameChanged(firstUserName: string, secondUserName: string): void {
   store.dispatch(
     changeName({
       playerOne: firstUserName,
-      playerTwo: secondtUserName,
+      playerTwo: secondUserName,
     }),
   );
 }
@@ -22,13 +22,14 @@ export default class StartPage implements PageController {
 
   constructor(root: HTMLElement) {
     this.root = root;
-    this.view = new StartPageView();
-    this.view.onStartMultiplayerGame = async () => addUserToGame(this.view.playerOne.getUserName());
-    this.view.onStartSingleGame = redirectToGameWithMode.bind(null, GameMode.SINGLE);
-    this.view.onStartGameWithBot = redirectToGameWithMode.bind(null, GameMode.BOT);
-    this.view.onUserNameChanged = (firstUserName: string, secondtUserName: string) => {
-      onUserNameChanged(firstUserName, secondtUserName);
-    };
+    this.view = new StartPageView(
+      redirectToGameWithMode.bind(null, GameMode.SINGLE),
+      redirectToGameWithMode.bind(null, GameMode.BOT),
+      async () => addUserToGame(this.view.playerOne.getUserName()),
+      (firstUserName: string, secondUserName: string) => {
+        onUserNameChanged(firstUserName, secondUserName);
+      },
+    );
   }
 
   createPage(): void {
