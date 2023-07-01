@@ -23,7 +23,7 @@ export default class ChessField {
 
   private readonly view: FieldView;
 
-  private selectedCell: CellModel = null;
+  private selectedCell: CellModel | null = null;
 
   private bot: ChessBot;
 
@@ -41,12 +41,15 @@ export default class ChessField {
 
   constructor(parentNode: HTMLElement) {
     this.model = new FieldModel();
-    this.setBotAndStrategy();
+    this.getBotStrategy().then((strategy) => {
+      this.bot = new ChessBot(this.model, strategy);
+    });
     this.model.onNextTurn.subscribe(() => {
       this.onNextTurn();
     });
-    this.view = new FieldView(parentNode);
-    this.view.createField();
+    this.view = new FieldView(parentNode, (cell: CellView, i: number, j: number) => {
+      this.cellClickHandler(cell, i, j);
+    });
     this.view.refresh(store.getState().field);
     store.subscribe(() => {
       this.view.refresh(store.getState().field);
@@ -71,7 +74,6 @@ export default class ChessField {
       this.onMate();
       this.onEnd();
     });
-    this.setUpViewListeners();
   }
 
   setUpModelListeners(): void {
@@ -102,17 +104,7 @@ export default class ChessField {
     };
   }
 
-  setUpViewListeners(): void {
-    this.view.onCellClick = (cell: CellView, i: number, j: number) => {
-      this.cellClickHandler(cell, i, j);
-    };
-  }
-
-  async setBotAndStrategy(): Promise<void> {
-    this.bot = new ChessBot(this.model, await this.getBotStrategy());
-  }
-
-  async getBotStrategy(): Promise<Strategy> {
+  async getBotStrategy(): Promise<Strategy | null> {
     return createStrategy(await this.botConfigService.getData());
   }
 
@@ -140,7 +132,7 @@ export default class ChessField {
       this.view.setSelection(cell);
       this.selectedCell = this.model.state.getCellAt(i, j);
     }
-    if (this.selectedCell && this.selectedCell.getFigure()) {
+    if (this.selectedCell?.getFigure()) {
       cellPos = this.getCellPosition(this.selectedCell);
       const allowed: Coordinate[] = this.model.getAllowedMovesFromPoint(cellPos.x, cellPos.y);
       this.view.setAllowedMoves(allowed);

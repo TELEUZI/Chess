@@ -7,15 +7,9 @@ import ModalWindow from './modal-window';
 export default class RegFormModal extends BaseComponent {
   private readonly form: RegForm;
 
-  private currentUser: User;
-
   private readonly modal: ModalWindow;
 
-  onGetData: (user: User) => void;
-
-  onHeaderClick: () => void;
-
-  constructor(onGetData: (user: User) => void) {
+  constructor(private readonly onGetData: (user: User) => void) {
     super('div', ['reg-form']);
     this.form = new RegForm(['modal-content', 'signup__container']);
     this.modal = new ModalWindow(this.form);
@@ -23,7 +17,6 @@ export default class RegFormModal extends BaseComponent {
     this.modal.getModalWrapper().addListener('click', () => {
       this.toggleModal();
     });
-    this.onGetData = onGetData;
     this.form.onSubmit = this.getFormData.bind(this);
     this.toggleModal();
   }
@@ -33,11 +26,12 @@ export default class RegFormModal extends BaseComponent {
   }
 
   async getFormData(str: string[], avatar: File): Promise<void> {
-    this.currentUser = {
+    const avatarBase64 = await toBase64(avatar);
+    const currentUser = {
       name: str[0],
       score: 0,
-      avatar: (await toBase64(avatar)).toString(),
+      avatar: avatarBase64,
     };
-    this.onGetData(this.currentUser);
+    this.onGetData(currentUser);
   }
 }

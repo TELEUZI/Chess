@@ -15,15 +15,15 @@ export default class StartPageView extends BaseComponent {
 
   private readonly gameControlButtons: BaseComponent;
 
-  onStartSingleGame: () => void;
+  constructor(
+    private readonly onStartSingleGame: () => void,
 
-  onStartGameWithBot: () => void;
+    private readonly onStartGameWithBot: () => void,
 
-  onStartMultiplayerGame: () => void;
+    private readonly onStartMultiplayerGame: () => void,
 
-  onUserNameChanged: (firstUserName: string, secondtUserName: string) => void;
-
-  constructor() {
+    private readonly onUserNameChanged: (firstUserName: string, secondtUserName: string) => void,
+  ) {
     super('div', ['reg-page']);
     this.gameControlButtons = new BaseComponent('div', ['game-control']);
     this.startButton = new Button('Play offline', () => {
@@ -40,18 +40,12 @@ export default class StartPageView extends BaseComponent {
       this.gameModeButton,
       this.startGameWithBot,
     ]);
-    this.playerOne = new PlayerContainer('Player 1', true);
-    this.playerTwo = new PlayerContainer('Player 2', true);
-    this.setUpListeners();
-    this.insertChilds([this.playerOne, this.gameControlButtons, this.playerTwo]);
-  }
-
-  setUpListeners(): void {
-    this.playerOne.onSubmit = (name: string) => {
+    this.playerOne = new PlayerContainer('Player 1', true, (name: string) => {
       this.onUserNameChanged(name, this.playerOne.getUserName());
-    };
-    this.playerTwo.onSubmit = (name: string) => {
+    });
+    this.playerTwo = new PlayerContainer('Player 2', true, (name: string) => {
       this.onUserNameChanged(this.playerTwo.getUserName(), name);
-    };
+    });
+    this.insertChilds([this.playerOne, this.gameControlButtons, this.playerTwo]);
   }
 }

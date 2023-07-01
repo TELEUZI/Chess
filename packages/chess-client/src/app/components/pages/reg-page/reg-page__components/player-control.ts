@@ -11,9 +11,11 @@ export default class PlayerContainer extends BaseComponent {
 
   private image: BaseComponent;
 
-  onSubmit: (name: string) => void;
-
-  constructor(name: string, isUpdatable: boolean) {
+  constructor(
+    name: string,
+    isUpdatable: boolean,
+    private readonly onSubmit?: (name: string) => void,
+  ) {
     super('div', ['player-wrapper']);
     this.name = name;
     this.player = new PlayerView(name);

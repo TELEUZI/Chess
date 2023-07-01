@@ -120,10 +120,10 @@ class Chess extends BaseComponent {
     });
     const modalWindow = new ModalWindow(
       winContent,
+      this.node,
       () => {
         socketService.answerDraw({ isDraw: true });
       },
-      this.node,
       () => {
         socketService.answerDraw({ isDraw: false });
       },
@@ -136,7 +136,7 @@ class Chess extends BaseComponent {
       text: `It isn't win, just a draw, bro.`,
       buttonText: "It's a pity!",
     });
-    const modalWindow = new ModalWindow(winContent, () => {}, this.node);
+    const modalWindow = new ModalWindow(winContent, this.node);
   }
 
   showMateModal(): void {
@@ -149,7 +149,7 @@ class Chess extends BaseComponent {
       } has won!`,
       buttonText: 'Ok',
     });
-    const modalWindow = new ModalWindow(winContent, () => {}, this.node);
+    const modalWindow = new ModalWindow(winContent, this.node);
   }
 
   setPlayerLeave(): void {
@@ -162,7 +162,7 @@ class Chess extends BaseComponent {
       } has won!`,
       buttonText: 'Ok',
     });
-    const modalWindow = new ModalWindow(winContent, () => {}, this.node);
+    const modalWindow = new ModalWindow(winContent, this.node);
   }
 
   setDraw(): void {
@@ -171,7 +171,7 @@ class Chess extends BaseComponent {
       text: `It isn't win, just a draw, bro.`,
       buttonText: "It's a pity!",
     });
-    const modalWindow = new ModalWindow(winContent, () => {}, this.node);
+    const modalWindow = new ModalWindow(winContent, this.node);
     this.setWinner('draw');
   }
 

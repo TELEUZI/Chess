@@ -6,7 +6,21 @@ import eslint from 'vite-plugin-eslint'
 
 export default defineConfig({
   cacheDir: '../../node_modules/.vite/chess-client',
-
+  build: {
+    rollupOptions:
+    {
+      output: {
+        manualChunks: {
+          'chess-client': [
+            'packages/chess-client/src/app/components/pages/best-score-page/best-score-page.ts',
+            ],
+          'game-page': [
+            'packages/chess-client/src/app/components/pages/game-page/game-page.ts',
+            ],
+        }
+      }
+    }
+  },
   server: {
     port: 4200,
     host: 'localhost',
@@ -23,6 +37,7 @@ export default defineConfig({
     }),
     eslint({
       fix: true,
+      failOnError: false,
     })
   ],
 

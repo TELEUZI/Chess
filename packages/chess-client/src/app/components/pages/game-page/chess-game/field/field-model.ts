@@ -152,7 +152,7 @@ export default class FieldModel {
     this.setState(this.state);
     this.onNextTurn.notify();
     const fenState = getFenFromStringBoard(this.state.getPlainState());
-    const isOpening = getOpeningName(fenState);
+    const isOpening = await getOpeningName(fenState);
     const move: TurnInfo = {
       figure: this.state.getCellAt(toX, toY)?.getFigureExternalInfo(),
       move: { from: new Coordinate(fromX, fromY), to: new Coordinate(toX, toY) },

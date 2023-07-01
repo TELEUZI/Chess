@@ -14,7 +14,7 @@ export default class CellModel {
     this.figure = figure;
   }
 
-  public getFigure(): FigureModel {
+  public getFigure(): FigureModel | null {
     return this.figure;
   }
 

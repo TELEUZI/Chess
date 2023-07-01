@@ -1,5 +1,4 @@
 import BaseComponent from '../../base-component';
-import type Button from '../../button/button';
 import type RegForm from '../../reg-form/reg-form';
 import ModalContent from './modal-content';
 
@@ -8,31 +7,23 @@ export default class ModalWindow extends BaseComponent {
 
   private readonly modalWrapper: BaseComponent;
 
-  submitButton: Button;
-
-  onModalClick: () => void = () => {};
-
-  onDeclineClick: () => void = () => {};
-
   constructor(
     modalContent: ModalContent | RegForm,
-    onModalClick?: () => void,
     parentNode?: HTMLElement,
-    onDeclineClick: () => void = () => {},
+    private readonly onModalClick?: () => void,
+    private readonly onDeclineClick?: () => void,
   ) {
     super('div', ['modal']);
-    this.onModalClick = onModalClick;
-    this.onDeclineClick = onDeclineClick;
     this.modalWrapper = new BaseComponent('div', ['grey-modal']);
     this.modalContent = modalContent;
     if (modalContent instanceof ModalContent)
       (this.modalContent as ModalContent).onModalClick = () => {
         this.toggleModal();
-        this.onModalClick();
+        this.onModalClick?.();
       };
     (this.modalContent as ModalContent).onDeclineClick = () => {
       this.toggleModal();
-      this.onDeclineClick();
+      this.onDeclineClick?.();
     };
     if (parentNode) {
       parentNode.append(this.node);
