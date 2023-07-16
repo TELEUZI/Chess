@@ -8,15 +8,15 @@ import type FieldState from '../../state/field-state';
 import { evaluateBoard } from '../chess-bot';
 
 export default class EvaluationStrategy implements Strategy {
-  avaliableMoves: FigureTurn[];
+  avaliableMoves: FigureTurn[] = [];
 
   public getBestMove(
     state: FieldState,
     color: FigureColor,
     avaliableMoves: FigureTurn[],
-  ): MoveMessage {
+  ): MoveMessage | null {
     this.avaliableMoves = avaliableMoves;
-    let bestMove: MoveMessage = null;
+    let bestMove: MoveMessage | null = null;
     let bestValue = BEST_VALUE_MOVE_FOR_BLACK;
     avaliableMoves.forEach((newGameMove) => {
       newGameMove.to.forEach((moveTo) => {

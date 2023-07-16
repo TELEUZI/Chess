@@ -4,12 +4,10 @@ import BaseComponent from '../../../../base-component';
 import Figure from './figure-view';
 
 export default class CellView extends BaseComponent {
-  onClick: () => void;
-
   private figure: Figure;
 
-  constructor(parentNode: HTMLElement) {
-    super('div', ['cell'], '', parentNode);
+  constructor(parentNode: HTMLElement, className: string, private readonly onClick: () => void) {
+    super('div', ['cell', className], '', parentNode);
     this.figure = new Figure(this.node, []);
     this.node.onclick = () => {
       this.onClick();

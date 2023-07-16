@@ -13,8 +13,8 @@ export default class MinMaxBotStrategy implements Strategy {
     state: FieldState,
     color: FigureColor,
     avaliableMoves: FigureTurn[],
-  ): MoveMessage {
-    let bestMove: MoveMessage = null;
+  ): MoveMessage | null {
+    let bestMove: MoveMessage | null = null;
     let bestValue = BEST_VALUE_MOVE_FOR_BLACK;
     avaliableMoves.forEach((newGameMove) => {
       newGameMove.to.forEach((moveTo) => {

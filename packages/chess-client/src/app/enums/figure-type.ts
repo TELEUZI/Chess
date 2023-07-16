@@ -1,4 +1,4 @@
-const enum FigureType {
+enum FigureType {
   PAWN = 'p',
   ROOK = 'r',
   KNIGHT = 'n',

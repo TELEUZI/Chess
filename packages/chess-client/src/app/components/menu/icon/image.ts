@@ -4,7 +4,7 @@ export default class CustomImage extends BaseComponent {
   private src: string;
 
   constructor(src: string, imageClass?: string[]) {
-    super('img', ['icon', ...(imageClass || [])], '');
+    super('img', ['icon', ...(imageClass ?? [])], '');
     this.src = src;
     (this.node as HTMLImageElement).src = this.src;
   }

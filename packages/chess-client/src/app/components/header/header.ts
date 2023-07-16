@@ -10,11 +10,11 @@ export default class Header extends BaseComponent {
 
   private readonly menu: Menu;
 
-  firstControlButton: Button;
+  firstControlButton?: Button;
 
   secondControlButton: Button;
 
-  private avatar: HTMLImageElement;
+  private readonly avatar: HTMLImageElement;
 
   constructor(state: State<Header>, onButtonClick?: () => void) {
     super('header', ['header']);
@@ -22,7 +22,8 @@ export default class Header extends BaseComponent {
     this.transitionTo(this.state);
     this.createButton(onButtonClick);
     this.menu = new Menu();
-    this.createAvatar();
+    this.avatar = this.createAvatar();
+    this.node.append(this.avatar);
     this.insertChilds([this.menu, this.firstControlButton]);
     this.secondControlButton = new Button('', onButtonClick);
   }
@@ -35,16 +36,16 @@ export default class Header extends BaseComponent {
   createButton(
     onFirstButtonClick?: () => void,
     onSecondButtonClick?: () => void,
-    avatar?: string,
+    avatar?: ArrayBuffer | string,
   ): void {
-    this.state.createButton(onFirstButtonClick, onSecondButtonClick, avatar);
+    this.state.createButton({ onFirstButtonClick, onSecondButtonClick, avatar });
   }
 
-  createAvatar(): void {
-    this.avatar = new Image();
-    this.avatar.src = BASE_LOGO;
-    this.avatar.classList.add('avatar');
-    this.node.append(this.avatar);
+  createAvatar(): HTMLImageElement {
+    const avatar = new Image();
+    avatar.src = BASE_LOGO;
+    avatar.classList.add('avatar');
+    return avatar;
   }
 
   setAvatarSrc(src: string): void {
@@ -52,7 +53,7 @@ export default class Header extends BaseComponent {
   }
 
   removeButtons(): void {
-    this.firstControlButton.destroy();
+    this.firstControlButton?.destroy();
     this.secondControlButton.destroy();
   }
 }

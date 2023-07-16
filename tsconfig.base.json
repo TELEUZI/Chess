@@ -18,7 +18,7 @@
     "baseUrl": ".",
     "paths": {
       "@coordinate": ["packages/coordinate/src/index.ts"],
-      "@client": ["packages/chess-client/src"]
+      "@client/*": ["packages/chess-client/src/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

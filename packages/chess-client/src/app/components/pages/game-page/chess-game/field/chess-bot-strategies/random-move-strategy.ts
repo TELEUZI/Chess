@@ -6,13 +6,13 @@ import getRandomIntegerInRange from '../../../../../../utils/random-generator';
 import type FieldState from '../../state/field-state';
 
 export default class RandomMoveStrategy implements Strategy {
-  avaliableMoves: FigureTurn[];
+  avaliableMoves: FigureTurn[] = [];
 
   public getBestMove(
     state: FieldState,
     color: FigureColor,
     avaliableMoves: FigureTurn[],
-  ): MoveMessage {
+  ): MoveMessage | null {
     this.avaliableMoves = avaliableMoves;
     if (!avaliableMoves.length) return null;
     const randMove = avaliableMoves[getRandomIntegerInRange(avaliableMoves.length)];

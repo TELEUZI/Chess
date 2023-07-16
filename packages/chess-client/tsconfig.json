@@ -17,9 +17,10 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "skipLibCheck": true,
-    "types": ["vite/client", "vitest"]
+    "types": ["vite/client", "vitest"],
+    "useUnknownInCatchVariables": false
   },
-  "include": ["src"],
+  "include": ["src", "./vite.config.ts"],
   "references": [
     {
       "path": "./tsconfig.app.json"
@@ -27,5 +28,8 @@
     {
       "path": "./tsconfig.spec.json"
     }
-  ]
+  ],
+  "paths": {
+    "@client/*": ["packages/chess-client/src/*"]
+  }
 }

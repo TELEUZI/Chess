@@ -4,5 +4,9 @@ import type { FigureTurn } from './move-message';
 import type MoveMessage from './move-message';
 
 export interface Strategy {
-  getBestMove: (state: FieldState, color: FigureColor, avaliableMoves: FigureTurn[]) => MoveMessage;
+  getBestMove: (
+    state: FieldState,
+    color: FigureColor,
+    avaliableMoves: FigureTurn[],
+  ) => MoveMessage | null;
 }

@@ -1,15 +1,13 @@
 export default abstract class State<T> {
-  protected context: T;
+  protected context: T | undefined;
 
   public setContext(context: T): void {
     this.context = context;
   }
 
-  clickHandler: () => void;
-
-  public abstract createButton(
-    onFirstButtonClick?: () => void,
-    onSecondButtonClick?: () => void,
-    avatar?: string,
-  ): void;
+  public abstract createButton(config: {
+    onFirstButtonClick?: () => void;
+    onSecondButtonClick?: () => void;
+    avatar?: ArrayBuffer | string;
+  }): void;
 }

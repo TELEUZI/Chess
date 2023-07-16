@@ -7,22 +7,20 @@ const FIRST_DIGIT_IN_ARABIC_NUMERAL_SYSTEM = 0;
 export default class TimerModel {
   private currentTimeInSeconds: number;
 
-  onTick: (value: Time) => void;
-
-  private interval: NodeJS.Timeout;
+  private interval = 0;
 
   private minutes: number;
 
   private seconds: number;
 
-  constructor() {
+  constructor(private readonly onTick: (value: Time) => void) {
     this.minutes = FIRST_DIGIT_IN_ARABIC_NUMERAL_SYSTEM;
     this.seconds = FIRST_DIGIT_IN_ARABIC_NUMERAL_SYSTEM;
     this.currentTimeInSeconds = FIRST_DIGIT_IN_ARABIC_NUMERAL_SYSTEM;
   }
 
   start = (): void => {
-    this.interval = setInterval(this.tick, MILLISECONDS_IN_ONE_SECOND);
+    this.interval = window.setInterval(this.tick, MILLISECONDS_IN_ONE_SECOND);
   };
 
   stop = (): void => {
@@ -31,9 +29,7 @@ export default class TimerModel {
 
   private readonly tick = (): void => {
     this.currentTimeInSeconds += MILLISECONDS_IN_ONE_SECOND / MILLISECONDS_IN_ONE_SECOND;
-    if (this.onTick) {
-      this.onTick(this.getTime());
-    }
+    this.onTick(this.getTime());
   };
 
   getTime(): Time {

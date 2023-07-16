@@ -8,13 +8,22 @@ import Card from '../../card/card';
 import FigureColor from '../../../enums/figure-colors';
 import type { Winner } from '../../../interfaces/winner';
 import AppRoutes from '../../../enums/app-routes';
+import type { GameResult } from '../../../interfaces/replay';
 
+const getWinner = (result: GameResult | null): Winner => {
+  switch (result) {
+    case FigureColor.WHITE:
+      return 'White';
+    case FigureColor.BLACK:
+      return 'Black';
+    default:
+      return 'No one';
+  }
+};
 export default class BestScorePage implements PageController {
-  private readonly root: HTMLElement;
-
   private readonly replayModel: ReplayDaoService;
 
-  constructor(root: HTMLElement) {
+  constructor(private readonly root: HTMLElement) {
     this.root = root;
     this.replayModel = ReplayDaoService.getInstance();
   }
@@ -23,18 +32,7 @@ export default class BestScorePage implements PageController {
     const cards = await this.replayModel.getAll();
     const cardContainer = new BaseComponent('div', ['card-container']);
     cards.forEach((card) => {
-      let gameResult: Winner;
-      switch (card.result) {
-        case FigureColor.WHITE:
-          gameResult = 'White';
-          break;
-        case FigureColor.BLACK:
-          gameResult = 'Black';
-          break;
-        default:
-          gameResult = 'No one';
-          break;
-      }
+      const gameResult = getWinner(card.result);
       const cardView = new Card(
         card.players[0].name,
         card.players[1].name,

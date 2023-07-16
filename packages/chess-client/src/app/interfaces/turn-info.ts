@@ -2,7 +2,7 @@ import type { FigureInfo } from '../components/pages/game-page/chess-game/models
 import type MoveMessage from './move-message';
 
 export default interface TurnInfo {
-  figure: FigureInfo;
+  figure?: FigureInfo;
   move: MoveMessage;
   comment?: string;
 }

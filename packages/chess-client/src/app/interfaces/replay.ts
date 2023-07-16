@@ -8,7 +8,7 @@ export default interface Replay {
   history: TimedMoveMessage[];
   mode: GameMode;
   players: Player[];
-  result: GameResult;
+  result: GameResult | null;
   moves: number;
 }
 export type GameResult = FigureColor | 'draw';

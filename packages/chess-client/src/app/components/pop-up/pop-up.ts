@@ -3,7 +3,7 @@ import BaseComponent from '../base-component';
 import Link from '../link/link';
 
 export default class PopUpWindow extends BaseComponent {
-  onOkClick: () => void;
+  onOkClick?: () => void;
 
   okButton: ClickElement;
 
@@ -18,7 +18,7 @@ export default class PopUpWindow extends BaseComponent {
     this.node.textContent = '';
     this.okButton = new Link('ok', '#bestscore', this.okButtonHandler.bind(this));
     this.insertChild(this.okButton);
-    this.onOkClick();
+    this.onOkClick?.();
   };
 
   close(): void {

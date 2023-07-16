@@ -1,21 +1,17 @@
 import type FigureColor from '../../../../../../enums/figure-colors';
 import type FigureType from '../../../../../../enums/figure-type';
-import type FigureWeight from '../../../../../../enums/figure-weight';
+import type { FigureWeightValues } from '../../../../../../enums/figure-weight';
+import FigureWeight from '../../../../../../enums/figure-weight';
 
 export interface FigureInfo {
-  readonly type: FigureType;
-  readonly color: FigureColor;
+  readonly type: FigureType | null;
+  readonly color: FigureColor | null;
 }
+
 export default class FigureModel {
-  protected type: FigureType;
+  protected weight: FigureWeightValues = FigureWeight.PAWN;
 
-  private color: FigureColor;
-
-  protected weight = 0;
-
-  constructor(color: FigureColor) {
-    this.color = color;
-  }
+  constructor(private color: FigureColor, protected type: FigureType) {}
 
   getColor(): FigureColor {
     return this.color;
@@ -29,7 +25,7 @@ export default class FigureModel {
     return this.type;
   }
 
-  getWeight(): FigureWeight {
+  getWeight(): FigureWeightValues {
     return this.weight;
   }
 }

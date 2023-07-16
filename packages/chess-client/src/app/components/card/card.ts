@@ -1,4 +1,3 @@
-import type ReplayDaoService from '../../services/replay-dao-service';
 import BaseComponent from '../base-component';
 import Button from '../button/button';
 import PlayerContainer from '../pages/reg-page/reg-page__components/player-control';
@@ -6,19 +5,13 @@ import PlayerContainer from '../pages/reg-page/reg-page__components/player-contr
 export default class Card extends BaseComponent {
   private readonly cardButtonView: Button;
 
-  private readonly cardButtonDelete: Button;
-
   private readonly playerOne: PlayerContainer;
 
   private readonly playerTwo: PlayerContainer;
 
-  private readonly replayModel: ReplayDaoService;
-
   private readonly gameDescription: BaseComponent;
 
   onViewClick: () => void;
-
-  onDeleteClick: () => void;
 
   constructor(
     firstPlayerName: string,

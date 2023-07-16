@@ -10,7 +10,7 @@ const OBJECT_STORE_NAME = 'GameConfig';
 export default class ConfigDaoService {
   private readonly dao: ConfigDao;
 
-  private static instance: ConfigDaoService;
+  private static instance: ConfigDaoService | null = null;
 
   private constructor() {
     this.dao = new ConfigDao(OBJECT_STORE_NAME, undefined, OBJECT_STORE_KEY);

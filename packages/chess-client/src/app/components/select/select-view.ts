@@ -1,15 +1,13 @@
 import BaseComponent from '../base-component';
 
 export default class SelectView extends BaseComponent {
-  options: HTMLOptionElement[];
-
-  onChange: () => void;
+  private readonly options: HTMLOptionElement[];
 
   private readonly select: HTMLSelectElement;
 
-  constructor(options: string[]) {
+  constructor(options: string[], private readonly onChange: () => void) {
     super('select', ['select', 'select-multiple'], '');
-    this.select = <HTMLSelectElement>this.node;
+    this.select = this.node as HTMLSelectElement;
     this.options = options.map((option) => {
       const opt = document.createElement('option');
       opt.classList.add('option');

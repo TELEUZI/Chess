@@ -17,13 +17,13 @@ export function forEachCell(
   });
 }
 
-export function getFigureFromState(fromX: number, fromY: number): FigureModel {
+export function getFigureFromState(fromX: number, fromY: number): FigureModel | null {
   return store.getState().field.getFigure(fromX, fromY);
 }
 
 export function exchangePositions(state: FieldState, from: Coordinate, to: Coordinate): void {
-  state.getCellAt(to.x, to.y).setFigure(state.getFigure(from.x, from.y));
-  state.getCellAt(from.x, from.y).setFigure(null);
+  state.getCellAt(to.x, to.y)?.setFigure(state.getFigure(from.x, from.y));
+  state.getCellAt(from.x, from.y)?.setFigure(null);
 }
 export function forEachPlayerFigure(
   state: FieldState,

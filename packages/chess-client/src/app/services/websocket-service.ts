@@ -1,4 +1,5 @@
 import type { AxiosResponse } from 'axios';
+import { AxiosError } from 'axios';
 import {
   changeName,
   setCurrentUserColor,
@@ -14,7 +15,6 @@ import { GameStatus, GameAction } from '../enums/game-status-action';
 import type MoveMessage from '../interfaces/move-message';
 import type {
   Room,
-  PlayerSerializable,
   GameMessage,
   GameInfo,
   ColorMessage,
@@ -24,67 +24,72 @@ import type {
 } from '../interfaces/response';
 import redirectToGameWithMode from '../utils/start-game-utils';
 
-export async function getFreeRoom(): Promise<[string, Room]> {
-  const rooms = await api.get(`/rooms/`);
+export async function getFreeRoom(): Promise<[string, Room] | undefined> {
+  const rooms = await api.get<Record<string, Room>>(`/rooms/`);
   return Object.entries(rooms.data).find(
-    async (room) => room[1].clients.size < 2 && room[1].game.gameStatus === GameStatus.waitingRoom,
+    (room) => room[1].clients.size < 2 && room[1].game.gameStatus === GameStatus.waitingRoom,
   );
 }
 
 class SocketService {
-  private socket: WebSocket;
+  private socket?: WebSocket;
 
-  private roomName: string;
+  private roomName?: string;
 
-  private playerToken: string;
+  // private playerToken?: string;
 
-  private playerInfo: PlayerSerializable;
+  // private playerInfo?: PlayerSerializable;
 
-  onMove: (fieldState: string, currentColor: FigureColor, lastMove: MoveMessage) => void;
+  onMove: (fieldState: string, currentColor: FigureColor, lastMove: MoveMessage) => void = () => {};
 
-  onSetColor: (color: FigureColor) => void;
+  // onSetColor: (color: FigureColor) => void;
 
   onStart: () => void = () => {};
 
-  onPlayerLeave: () => void;
+  onPlayerLeave: () => void = () => {};
 
-  onPlayerDrawResponse: (result: boolean) => void;
+  onPlayerDrawResponse: (result: boolean) => void = () => {};
 
-  onPlayerDrawSuggest: () => void;
+  onPlayerDrawSuggest: () => void = () => {};
 
   async createRoom(playerName: string): Promise<void> {
     this.roomName = 't'.repeat(Math.floor(Math.random() * 14));
-    let resp: AxiosResponse<RoomCreateResponse> | undefined;
+    let resp: AxiosResponse<RoomCreateResponse> | null = null;
     try {
       resp = await api.post(`${SERVER_ENDPOINT}${this.roomName}?creatorName=${playerName}`);
     } catch (error) {
-      if (error.response != null) {
-        console.error(error.message);
-      } else if (error.request != null) {
-        console.error(error.request);
-      } else {
-        console.error(error.message);
+      if (error instanceof AxiosError) {
+        if (error.response != null) {
+          console.error(error.message);
+        } else if (error.request != null) {
+          console.error(error.request);
+        } else {
+          console.error(error.message);
+        }
       }
       return;
     }
-
+    if (resp == null) {
+      return;
+    }
     const { playerToken, playerInfo } = resp.data.creator;
-    this.playerToken = playerToken;
-    this.playerInfo = playerInfo;
-    this.socket = this.joinBuildWSClient(playerToken);
+    console.log(playerInfo);
+    this.socket = this.joinBuildWSClient(playerToken ?? '');
   }
 
   async joinRoom(room: string, playerName: string): Promise<void> {
-    let resp: AxiosResponse<PlayerAddResponse> | undefined;
+    let resp: AxiosResponse<PlayerAddResponse> | null = null;
     try {
       resp = await api.put(`${SERVER_ENDPOINT}${room}/players?playerName=${playerName}`);
     } catch (error) {
       console.error(error.message);
     }
+    if (resp == null) {
+      return;
+    }
     const { playerToken, playerInfo } = resp.data;
-    this.playerToken = playerToken;
-    this.playerInfo = playerInfo;
-    this.socket = this.joinBuildWSClient(playerToken);
+    console.log(playerInfo);
+    this.socket = this.joinBuildWSClient(playerToken ?? '');
   }
 
   handleGameStart(payload: GameInfo) {
@@ -100,7 +105,7 @@ class SocketService {
     store.dispatch(setCurrentUserColor(payload.currentPlayerColor));
   }
 
-  gameStateUpdater(event: MessageEvent): void {
+  gameStateUpdater(event: MessageEvent<string>): void {
     try {
       const response: GameMessage = JSON.parse(event.data);
       switch (response.action) {
@@ -135,7 +140,7 @@ class SocketService {
   async move(fieldState: string, moveMessage: MoveMessage): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       try {
-        this.socket.send(
+        this.socket?.send(
           JSON.stringify({ action: GameAction.moveFigure, payload: { fieldState, moveMessage } }),
         );
         resolve(true);
@@ -148,7 +153,7 @@ class SocketService {
   async suggestDraw(): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       try {
-        this.socket.send(JSON.stringify({ action: GameAction.drawSuggest }));
+        this.socket?.send(JSON.stringify({ action: GameAction.drawSuggest }));
         resolve(true);
       } catch (err) {
         reject(err);
@@ -159,7 +164,7 @@ class SocketService {
   async answerDraw(response: DrawResult): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       try {
-        this.socket.send(
+        this.socket?.send(
           JSON.stringify({ action: GameAction.drawResponse, payload: { isDraw: response.isDraw } }),
         );
         resolve(true);
@@ -172,7 +177,7 @@ class SocketService {
   async endGame(reason: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       try {
-        this.socket.send(
+        this.socket?.send(
           JSON.stringify({
             action: GameAction.disconnect,
             payload: { gameEnd: true, reason },
@@ -195,7 +200,7 @@ class SocketService {
         }),
       );
     };
-    ws.onmessage = (event: MessageEvent): void => {
+    ws.onmessage = (event: MessageEvent<string>): void => {
       if (!connected && event.data === 'Connected.') {
         connected = true;
         return;
@@ -214,8 +219,8 @@ export const socketService = new SocketService();
 export async function addUserToGame(userName: string): Promise<void> {
   const freeRoom = await getFreeRoom();
   if (!freeRoom) {
-    socketService.createRoom(userName);
+    await socketService.createRoom(userName);
   } else {
-    socketService.joinRoom(freeRoom[0], userName);
+    await socketService.joinRoom(freeRoom[0], userName);
   }
 }

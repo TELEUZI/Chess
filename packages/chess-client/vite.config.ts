@@ -2,24 +2,21 @@
 import { defineConfig } from 'vite';
 
 import viteTsConfigPaths from 'vite-tsconfig-paths';
-import eslint from 'vite-plugin-eslint'
+import eslint from 'vite-plugin-eslint';
 
 export default defineConfig({
   cacheDir: '../../node_modules/.vite/chess-client',
   build: {
-    rollupOptions:
-    {
+    rollupOptions: {
       output: {
         manualChunks: {
           'chess-client': [
             'packages/chess-client/src/app/components/pages/best-score-page/best-score-page.ts',
-            ],
-          'game-page': [
-            'packages/chess-client/src/app/components/pages/game-page/game-page.ts',
-            ],
-        }
-      }
-    }
+          ],
+          'game-page': ['packages/chess-client/src/app/components/pages/game-page/game-page.ts'],
+        },
+      },
+    },
   },
   server: {
     port: 4200,
@@ -38,7 +35,7 @@ export default defineConfig({
     eslint({
       fix: true,
       failOnError: false,
-    })
+    }),
   ],
 
   // Uncomment this if you are using workers.

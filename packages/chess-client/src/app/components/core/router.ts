@@ -2,7 +2,7 @@ import type PageController from '../../interfaces/page';
 
 export interface RouteNames {
   name: string;
-  controller: PageController;
+  controller: Promise<PageController>;
 }
 
 const INDEX_OF_SECOND_ITEM_IN_ITERABLE = 1;
@@ -25,7 +25,9 @@ export default class Router {
         : 'default';
     const actualRoute = this.routes.find((routeName) => routeName.name === route);
     if (actualRoute) {
-      this.onHashChange(actualRoute.controller);
+      actualRoute.controller.then((page) => {
+        this.onHashChange(page);
+      });
     }
   };
 }
