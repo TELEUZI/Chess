@@ -28,11 +28,10 @@ export default class FieldView extends BaseComponent {
     for (let i = 0; i < TABLE_SIZE; i += 1) {
       const row = new BaseComponent('div', ['row'], '', this.node);
       for (let j = 0; j < TABLE_SIZE; j += 1) {
-        const cell = new CellView(row.getNode());
-        cell.setClasses(getCellColorClass(i, j));
-        cell.onClick = () => {
+        const cell = new CellView(row.getNode(), getCellColorClass(i, j), () => {
           this.onCellClick(cell, i, j);
-        };
+        });
+
         this.cells.push(cell);
       }
     }
@@ -44,8 +43,10 @@ export default class FieldView extends BaseComponent {
   refresh(field: FieldState): void {
     forEachCell<CellView>(this.cells, (cell, pos) => {
       const cellTo = field.getCellAt(pos.x, pos.y);
-      if (cellTo) {
-        cell.refresh(cellTo.getFigureType(), cellTo.getFigureColor());
+      const figureType = cellTo?.getFigureType();
+      const figureColor = cellTo?.getFigureColor();
+      if (figureType && figureColor) {
+        cell.refresh(figureType, figureColor);
       }
     });
   }

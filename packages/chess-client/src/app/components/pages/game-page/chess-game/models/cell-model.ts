@@ -4,34 +4,34 @@ import type { FigureInfo } from './figures/figure-model';
 import type FigureModel from './figures/figure-model';
 
 export default class CellModel {
-  private figure: FigureModel;
+  private figure: FigureModel | null = null;
 
-  constructor(figure: FigureModel) {
+  constructor(figure: FigureModel | null) {
     this.figure = figure;
   }
 
-  public setFigure(figure: FigureModel): void {
+  public setFigure(figure: FigureModel | null): void {
     this.figure = figure;
   }
 
   public getFigure(): FigureModel | null {
-    return this.figure;
+    return this.figure ?? null;
   }
 
-  public getFigureColor(): FigureColor {
-    return this.figure.getColor();
+  public getFigureColor(): FigureColor | null {
+    return this.figure?.getColor() ?? null;
   }
 
-  public getFigureType(): FigureType {
-    return this.figure.getType();
+  public getFigureType(): FigureType | null {
+    return this.figure?.getType() ?? null;
   }
 
   public setFigureColor(color: FigureColor): void {
-    this.figure.setColor(color);
+    this.figure?.setColor(color);
   }
 
-  public getFigureWeight(): number {
-    return this.figure.getWeight();
+  public getFigureWeight(): number | null {
+    return this.figure?.getWeight() ?? null;
   }
 
   public getFigureExternalInfo(): FigureInfo {

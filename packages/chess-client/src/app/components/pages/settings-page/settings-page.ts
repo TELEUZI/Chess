@@ -16,18 +16,17 @@ export default class SettingsPage implements PageController {
   constructor(root: HTMLElement) {
     this.root = root;
     this.selectWrapper = new BaseComponent('div', ['settings-wrapper']);
-    this.selectDifficulty = new Select('Choose Difficulty of AI', [
-      GameDifficultyOptions.easy,
-      GameDifficultyOptions.medium,
-      GameDifficultyOptions.hard,
-    ]);
-    this.selectDifficulty.onChange = () => {
-      this.onChangeHandler();
-    };
+    this.selectDifficulty = new Select(
+      'Choose Difficulty of AI',
+      [GameDifficultyOptions.easy, GameDifficultyOptions.medium, GameDifficultyOptions.hard],
+      () => {
+        this.onChangeHandler();
+      },
+    );
     this.selectWrapper.insertChilds([this.selectDifficulty]);
   }
 
-  async createPage(): Promise<void> {
+  createPage(): void {
     this.root.append(this.selectWrapper.getNode());
   }
 
@@ -35,6 +34,6 @@ export default class SettingsPage implements PageController {
     const { easy, medium, hard } = GameDifficultyOptions;
     const arr = [easy, medium, hard];
     const selectValue = this.selectDifficulty.getSelectValue();
-    this.model.setData(arr.find((option) => option === selectValue) || GameDifficultyOptions.easy);
+    this.model.setData(arr.find((option) => option === selectValue) ?? GameDifficultyOptions.easy);
   }
 }

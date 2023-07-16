@@ -67,8 +67,8 @@ export default class FieldModel {
     socketService.onMove = (state: string, currentColor: FigureColor, lastMove: MoveMessage) => {
       this.onMove.notify({
         figure: {
-          type: this.getCellAt(lastMove.to).getFigureType(),
-          color: this.getCellAt(lastMove.to).getFigureColor(),
+          type: this.getCellAt(lastMove.to)?.getFigureType() ?? null,
+          color: this.getCellAt(lastMove.to)?.getFigureColor() ?? null,
         },
         move: lastMove,
       });
@@ -178,13 +178,16 @@ export default class FieldModel {
 
   getCheckedKing(state: FieldState): boolean {
     const kingPos = getKingPosition(state, this.currentColor);
+    if (!kingPos) {
+      return false;
+    }
     return this.getCheckedStatus(state, kingPos.x, kingPos.y).isChecked;
   }
 
   getAllValidMoves(state: FieldState, color: FigureColor): FigureTurn[] {
     const moves: FigureTurn[] = [];
     const kingPos = getKingPosition(state, color);
-    forEachPlayerFigure(state, color, (cell, pos) => {
+    forEachPlayerFigure(state, color, (_, pos) => {
       if (this.getMovesAtPoint(pos.x, pos.y, state).length) {
         moves.push({ from: pos, to: this.getMovesAtPoint(pos.x, pos.y, state) });
       }
@@ -200,7 +203,7 @@ export default class FieldModel {
 
   private getCheckedStatus(state: FieldState, posX: number, posY: number) {
     let res = false;
-    let enemyCell: Coordinate = null;
+    let enemyCell: Coordinate | null = null;
     const enemies = this.getEnemyFigures(state, getNextFigureColor(this.currentColor));
     enemies.forEach((enemy) => {
       const allowed = this.getMovesAtPoint(enemy.x, enemy.y, state);
@@ -241,8 +244,8 @@ export default class FieldModel {
 
   getMovesAtPoint(fromX: number, fromY: number, state?: FieldState): Coordinate[] {
     return this.turnManager.getMoves(
-      state || store.getState().field,
-      state.getFigure(fromX, fromY) || getFigureFromState(fromX, fromY),
+      state ?? store.getState().field,
+      state?.getFigure(fromX, fromY) ?? getFigureFromState(fromX, fromY),
       fromX,
       fromY,
     );

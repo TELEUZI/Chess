@@ -4,8 +4,7 @@ import FigureWeight from '../../../../../../enums/figure-weight';
 
 export default class Knight extends FigureModel {
   constructor(color: number) {
-    super(color);
-    this.type = FigureType.KNIGHT;
+    super(color, FigureType.KNIGHT);
     this.weight = FigureWeight.KNIGHT;
   }
 }

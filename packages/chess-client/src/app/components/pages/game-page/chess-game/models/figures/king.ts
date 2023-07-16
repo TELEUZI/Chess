@@ -4,8 +4,7 @@ import FigureWeight from '../../../../../../enums/figure-weight';
 
 export default class King extends FigureModel {
   constructor(color: number) {
-    super(color);
-    this.type = FigureType.KING;
+    super(color, FigureType.KING);
     this.weight = FigureWeight.KING;
   }
 }

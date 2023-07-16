@@ -9,8 +9,6 @@ export default class TimerView extends BaseComponent {
     <div class="countdown__label">Time Passed</div>`);
   }
 
-  onUpdate: () => void;
-
   setTime(currentTime: string): void {
     this.setInnerHTML(`
     <div class='tiles'>${currentTime}</div>

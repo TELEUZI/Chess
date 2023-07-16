@@ -1,16 +1,8 @@
 import FigureColor from '../../../../../enums/figure-colors';
 import CellModel from '../models/cell-model';
 import type FigureModel from '../models/figures/figure-model';
-import createFigure from '../fabrics/figure-fabric';
+import { createFigurefromString } from '../fabrics/figure-fabric';
 import { TABLE_SIZE } from '../../../../../config';
-
-export function createFigurefromString(figure: string): FigureModel | null {
-  if (figure.trim() === '') {
-    return null;
-  }
-  const color = figure.toLowerCase() === figure ? FigureColor.BLACK : FigureColor.WHITE;
-  return createFigure(figure.toLowerCase(), color);
-}
 
 export function isInField(x: number, y: number): boolean {
   return x >= 0 && x < TABLE_SIZE && y >= 0 && y < TABLE_SIZE;
@@ -37,7 +29,7 @@ export default class FieldState {
     return null;
   }
 
-  setFigureAtCell(figure: FigureModel, x: number, y: number): void {
+  setFigureAtCell(figure: FigureModel | null, x: number, y: number): void {
     if (isInField(x, y)) {
       this.state[x][y].setFigure(figure);
     }
@@ -45,7 +37,7 @@ export default class FieldState {
 
   getFigure(x: number, y: number): FigureModel | null {
     if (isInField(x, y)) {
-      return this.getCellAt(x, y).getFigure();
+      return this.getCellAt(x, y)?.getFigure() ?? null;
     }
     return null;
   }
@@ -61,7 +53,7 @@ export default class FieldState {
     const state = emptyBoard();
     for (let i = 0; i < TABLE_SIZE; i += 1) {
       for (let j = 0; j < TABLE_SIZE; j += 1) {
-        state[i][j] = this.state[i][j]?.getFigureType();
+        state[i][j] = this.state[i][j]?.getFigureType() ?? ' ';
         if (state[i][j])
           state[i][j] =
             this.state[i][j]?.getFigureColor() === FigureColor.WHITE
@@ -75,11 +67,10 @@ export default class FieldState {
   clone(): FieldState {
     const newState = this.state.map((it) => {
       return it.map((jt) => {
-        const newCell = new CellModel(
-          createFigurefromString(jt.getFigure() ? jt.getFigureType() : ' '),
-        );
-        if (newCell.getFigure()) {
-          newCell.setFigureColor(jt.getFigureColor());
+        const figure = jt.getFigure();
+        const newCell = new CellModel(createFigurefromString(figure ? figure.getType() : ' '));
+        if (newCell.getFigure() && figure?.getColor()) {
+          newCell.setFigureColor(figure.getColor());
         }
         return newCell;
       });

@@ -10,7 +10,7 @@ export default class MenuItem extends BaseComponent {
 
   private readonly href: string;
 
-  constructor(textContent: string, href: string, iconClass?: string) {
+  constructor(textContent: string, href: string, iconClass = '') {
     super('li', ['menu__item'], '');
     this.href = href;
     this.link = new Link(textContent, href);

@@ -14,8 +14,7 @@ export default class Timer {
 
   constructor() {
     this.view = new TimerView();
-    this.model = new TimerModel();
-    this.model.onTick = this.updateView.bind(this);
+    this.model = new TimerModel(this.updateView.bind(this));
   }
 
   private getCurrentTime(currentTime: Time): string {

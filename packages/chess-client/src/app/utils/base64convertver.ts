@@ -1,4 +1,4 @@
-const toBase64 = async (file?: File): Promise<ArrayBuffer | string> =>
+const toBase64 = async (file: File | null): Promise<ArrayBuffer | string> =>
   new Promise((resolve, reject) => {
     if (!file) {
       resolve('');

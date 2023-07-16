@@ -23,27 +23,25 @@ const IS_UPDATABLE = false;
 class Chess extends BaseComponent {
   private readonly timer: Timer;
 
-  private playerOne: PlayerContainer;
+  private readonly playerOne: PlayerContainer;
 
-  private playerTwo: PlayerContainer;
+  private readonly playerTwo: PlayerContainer;
 
-  private chessBoard: ChessField;
+  private readonly chessBoard: ChessField;
 
   private readonly replayModel: ReplayDaoService;
 
-  private chessHistory: ChessHistory;
+  private readonly chessHistory: ChessHistory;
 
-  private readonly isReplay: boolean;
+  // private readonly isReplay: boolean;
 
   private readonly history: TimedMoveMessage[] = [];
 
-  private replay: Replay;
-
-  onCellClick: (coords: Coordinate) => void = () => {};
+  private replay: Replay | null = null;
 
   constructor(parentNode: HTMLElement, isReplay: boolean) {
     super('div', ['chess-wrapper'], '', parentNode);
-    this.isReplay = isReplay;
+    // this.isReplay = isReplay;
     this.replayModel = ReplayDaoService.getInstance();
     if (!isReplay) {
       this.createReplay();
@@ -51,7 +49,15 @@ class Chess extends BaseComponent {
     this.timer = new Timer();
     this.timer.start(TIMER_DELAY);
     this.node.append(this.timer.getNode());
-    this.createUI();
+    const chessBoardWrapper = new BaseComponent('div', ['chess'], '', this.node);
+    const chessHead = new BaseComponent('div', ['chess__head'], '', chessBoardWrapper.getNode());
+    this.playerOne = new PlayerContainer(store.getState().players.playerOne, IS_UPDATABLE);
+    this.playerTwo = new PlayerContainer(store.getState().players.playerTwo, IS_UPDATABLE);
+    const chessBody = new BaseComponent('div', ['chess__body'], '', chessBoardWrapper.getNode());
+    this.chessHistory = new ChessHistory(chessBody.getNode());
+    this.chessBoard = new ChessField({ parentNode: chessBody.getNode() });
+    this.playerOne.toggleClass('current');
+    chessHead.insertChilds([this.playerOne, this.playerTwo]);
     socketService.onPlayerLeave = () => {
       this.setPlayerLeave();
     };
@@ -100,18 +106,6 @@ class Chess extends BaseComponent {
     };
   }
 
-  createUI(): void {
-    const chessBoardWrapper = new BaseComponent('div', ['chess'], '', this.node);
-    const chessHead = new BaseComponent('div', ['chess__head'], '', chessBoardWrapper.getNode());
-    this.playerOne = new PlayerContainer(store.getState().players.playerOne, IS_UPDATABLE);
-    this.playerTwo = new PlayerContainer(store.getState().players.playerTwo, IS_UPDATABLE);
-    const chessBody = new BaseComponent('div', ['chess__body'], '', chessBoardWrapper.getNode());
-    this.chessHistory = new ChessHistory(chessBody.getNode());
-    this.chessBoard = new ChessField(chessBody.getNode());
-    this.playerOne.toggleClass('current');
-    chessHead.insertChilds([this.playerOne, this.playerTwo]);
-  }
-
   showDrawProposalModal(): void {
     const winContent = new ModalContent({
       header: 'Are you ok with draw?',
@@ -121,11 +115,11 @@ class Chess extends BaseComponent {
     const modalWindow = new ModalWindow(
       winContent,
       this.node,
-      () => {
-        socketService.answerDraw({ isDraw: true });
+      async () => {
+        await socketService.answerDraw({ isDraw: true });
       },
-      () => {
-        socketService.answerDraw({ isDraw: false });
+      async () => {
+        await socketService.answerDraw({ isDraw: false });
       },
     );
   }
@@ -180,6 +174,9 @@ class Chess extends BaseComponent {
   }
 
   setWinner(result: GameResult): void {
+    if (!this.replay) {
+      return;
+    }
     this.replay.history = [...this.history];
     this.replay.result = result;
     this.replay.moves = this.history.length;

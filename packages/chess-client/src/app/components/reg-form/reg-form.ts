@@ -10,13 +10,14 @@ export default class RegForm extends BaseComponent {
 
   inputs: Input[] = [];
 
-  onSubmit: (str: string[], avatar: File) => void;
-
   reset: Input;
 
-  image: Input;
+  image: FileInput;
 
-  constructor(classlist: string[]) {
+  constructor(
+    classlist: string[],
+    private readonly onSubmit: (str: string[], avatar: File | null) => void,
+  ) {
     super('form', ['form', 'container__child', 'signup__form', ...classlist], '');
     this.setAttribute('action', '');
     const formGroup = new BaseComponent('div', ['form-group']);
@@ -30,7 +31,7 @@ export default class RegForm extends BaseComponent {
     this.image.setAttribute('accept', 'image/*');
     this.inputs.push(this.nameInput);
     this.insertChilds([...this.inputs, this.submit, this.reset, this.image]);
-    this.nameInput.setHandler(Validator.validateFirstName);
+    this.nameInput.setHandler((input) => Validator.validateFirstName(input));
     this.submit.setAttribute('disabled', 'true');
     this.addUserInputListeners();
   }
@@ -39,11 +40,11 @@ export default class RegForm extends BaseComponent {
     this.addListener('input', () => {
       this.onValidate();
     });
-    this.submit.addListener('click', (e: Event) => {
-      e.preventDefault();
+    this.submit.addListener('click', (e: Event | undefined) => {
+      e?.preventDefault();
       this.onSubmit(
         this.inputs.map((input) => input.getValue()),
-        this.image.getFile() || null,
+        this.image.getFile() ?? null,
       );
     });
   }

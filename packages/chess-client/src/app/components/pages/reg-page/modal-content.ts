@@ -9,23 +9,15 @@ export interface IModalPopup {
 }
 
 class ModalContent extends BaseComponent {
-  private readonly modalMessage: BaseComponent;
-
-  private readonly messageHead: BaseComponent;
-
-  private readonly messageBody: BaseComponent;
-
-  private readonly submitButton: Button;
-
-  onModalClick: () => void = () => {};
-
-  onDeclineClick: () => void = () => {};
-
-  constructor(config: IModalPopup) {
+  constructor(
+    config: IModalPopup,
+    public onModalClick: () => void = () => {},
+    public onDeclineClick: () => void = () => {},
+  ) {
     super('div', ['modal-content'], '');
-    this.messageHead = new BaseComponent('div', ['popup-header'], config.header, this.node);
-    this.messageBody = new BaseComponent('div', ['popup-body'], config.text, this.node);
-    this.submitButton = new Button('OK', () => {
+    const messageHead = new BaseComponent('div', ['popup-header'], config.header);
+    const messageBody = new BaseComponent('div', ['popup-body'], config.text);
+    const submitButton = new Button('OK', () => {
       this.onModalClick();
     });
     if (config.secondButtonText) {
@@ -35,7 +27,7 @@ class ModalContent extends BaseComponent {
       this.insertChild(declineButton);
     }
 
-    this.insertChilds([this.submitButton]);
+    this.insertChilds([messageHead, messageBody, submitButton]);
   }
 }
 export default ModalContent;

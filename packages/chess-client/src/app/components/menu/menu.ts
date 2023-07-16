@@ -13,12 +13,12 @@ export default class Menu extends BaseComponent {
       new MenuItem('Replay', `#${AppRoutes.REPLAY}`, 'replay-icon'),
       new MenuItem('Game Settings', `#${AppRoutes.SETTINGS}`, 'settings-icon'),
     );
-    this.items.map((el) => {
+    this.items.forEach((el) => {
       this.insertChild(el);
     });
   }
 
   setCurrent(tabName: string): void {
-    this.items.find((item) => item.getHref() === tabName).toggleClass('current');
+    this.items.find((item) => item.getHref() === tabName)?.toggleClass('current');
   }
 }

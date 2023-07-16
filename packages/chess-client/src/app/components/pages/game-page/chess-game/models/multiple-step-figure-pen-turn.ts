@@ -18,7 +18,7 @@ export default abstract class MultipleStepsPerTurnFigure extends MultipleStepFig
         }
       } while (
         MultipleStepFigure.isRightMove(state, figure, posX, posY) &&
-        !store.getState().field.getCellAt(posX, posY).getFigure()
+        !store.getState().field.getCellAt(posX, posY)?.getFigure()
       );
     });
     return res;

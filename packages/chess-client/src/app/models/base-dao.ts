@@ -1,15 +1,15 @@
 import { IndexedDBStores, INDEXED_DB_NAME, INDEXED_DB_VERSION } from '../config';
 
 export default abstract class BaseDao<T> {
-  private response: IDBDatabase;
+  private response: IDBDatabase | undefined;
 
   private readonly objectStorename: string;
 
-  private readonly keyPath: string;
+  private readonly keyPath?: string;
 
-  private readonly key: number;
+  private readonly key: number | undefined;
 
-  constructor(objectStorename: string, keyPath: string, key: number) {
+  constructor(objectStorename: string, keyPath?: string, key?: number) {
     this.objectStorename = objectStorename;
     this.keyPath = keyPath;
     this.key = key;
@@ -18,7 +18,7 @@ export default abstract class BaseDao<T> {
 
   createStores(): void {
     const openRequest = window.indexedDB.open(INDEXED_DB_NAME, INDEXED_DB_VERSION + 1);
-    openRequest.onupgradeneeded = async () => {
+    openRequest.onupgradeneeded = () => {
       this.response = openRequest.result;
       this.response.createObjectStore(IndexedDBStores.USERS, {
         keyPath: 'name',
@@ -44,14 +44,14 @@ export default abstract class BaseDao<T> {
         autoIncrement: true,
       });
     };
-    openRequest.onsuccess = async () => {
+    openRequest.onsuccess = () => {
       this.response = openRequest.result;
       const item = this.response
         .transaction([this.objectStorename], 'readwrite')
         .objectStore(this.objectStorename)
         .put(entity, this.key);
       item.onsuccess = () => {
-        this.response.close();
+        this.response?.close();
       };
     };
   }
@@ -59,7 +59,6 @@ export default abstract class BaseDao<T> {
   public async findAll(): Promise<T[]> {
     const openRequest = window.indexedDB.open(INDEXED_DB_NAME, INDEXED_DB_VERSION + 1);
     const list: T[] = [];
-    let request: IDBRequest;
     return new Promise<T[]>((resolve, reject) => {
       openRequest.onerror = () => {
         reject();
@@ -69,14 +68,14 @@ export default abstract class BaseDao<T> {
         const store = this.response
           .transaction([this.objectStorename], 'readonly')
           .objectStore(this.objectStorename);
-        request = store.openCursor();
+        const request = store.openCursor();
         request.onsuccess = () => {
           const cursor = request.result;
           if (cursor) {
-            list.push(cursor.value);
+            list.push(cursor.value as T);
             cursor.continue();
           } else {
-            this.response.close();
+            this.response?.close();
             resolve(list);
           }
         };
@@ -95,7 +94,7 @@ export default abstract class BaseDao<T> {
         const request = store.openCursor();
         request.onsuccess = () => {
           const cursor = request.result;
-          resolve(cursor.value);
+          resolve(cursor?.value as T);
         };
       };
     });

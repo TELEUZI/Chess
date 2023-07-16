@@ -4,8 +4,7 @@ import FigureModel from './figure-model';
 
 export default class Rook extends FigureModel {
   constructor(color: number) {
-    super(color);
-    this.type = FigureType.ROOK;
+    super(color, FigureType.ROOK);
     this.weight = FigureWeight.ROOK;
   }
 }

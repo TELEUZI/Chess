@@ -17,7 +17,10 @@ import {
 
 function fieldReducer(
   state: FieldState = createFieldFromStrings(INIT_FIELD_STATE),
-  action: { type: string; payload: FieldState },
+  action: { type: string; payload: FieldState } = {
+    type: MOVE,
+    payload: createFieldFromStrings(INIT_FIELD_STATE),
+  },
 ) {
   switch (action.type) {
     case MOVE: {
@@ -33,7 +36,10 @@ function playerReducer(
     playerOne: 'Player 1',
     playerTwo: 'Player 2',
   },
-  action: { type: string; payload: { playerOne: string; playerTwo: string } },
+  action: { type: string; payload: { playerOne: string; playerTwo: string } } = {
+    type: CHANGE_USERNAME,
+    payload: { playerOne: 'Player 1', playerTwo: 'Player 2' },
+  },
 ) {
   switch (action.type) {
     case CHANGE_USERNAME:
@@ -48,7 +54,10 @@ function playerReducer(
 }
 function playerColorReducer(
   state = { color: 1 },
-  action: { type: string; payload: { color: number } },
+  action: { type: string; payload: { color: number } } = {
+    type: SET_USER_COLOR,
+    payload: { color: 1 },
+  },
 ) {
   switch (action.type) {
     case SET_USER_COLOR:
@@ -62,7 +71,10 @@ function playerColorReducer(
 }
 function winnerReducer(
   state = { winnerColor: 1 },
-  action: { type: string; payload: { winnerColor: FigureColor } },
+  action: { type: string; payload: { winnerColor: FigureColor } } = {
+    type: SET_WINNER,
+    payload: { winnerColor: 1 },
+  },
 ) {
   switch (action.type) {
     case SET_WINNER:
@@ -76,7 +88,10 @@ function winnerReducer(
 }
 function currentPlayerColorReducer(
   state = { currentUserColor: 1 },
-  action: { type: string; payload: { currentUserColor: number } },
+  action: { type: string; payload: { currentUserColor: number } } = {
+    type: SET_CURRENT_USER_COLOR,
+    payload: { currentUserColor: 1 },
+  },
 ) {
   switch (action.type) {
     case SET_CURRENT_USER_COLOR:
@@ -91,7 +106,10 @@ function currentPlayerColorReducer(
 
 function gameModeReducer(
   state = { currentGameMode: GameMode.SINGLE },
-  action: { type: string; payload: { currentGameMode: GameMode } },
+  action: { type: string; payload: { currentGameMode: GameMode } } = {
+    type: SET_GAME_MODE,
+    payload: { currentGameMode: GameMode.SINGLE },
+  },
 ) {
   switch (action.type) {
     case SET_GAME_MODE:
@@ -105,7 +123,10 @@ function gameModeReducer(
 }
 function replayStateReducer(
   state = { currentReplayDate: 0 },
-  action: { type: string; payload: { replayDate: number } },
+  action: { type: string; payload: { replayDate: number } } = {
+    type: SET_REPLAY_STATE,
+    payload: { replayDate: 0 },
+  },
 ) {
   switch (action.type) {
     case SET_REPLAY_STATE:

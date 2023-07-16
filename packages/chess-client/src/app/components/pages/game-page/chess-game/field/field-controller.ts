@@ -25,7 +25,7 @@ export default class ChessField {
 
   private selectedCell: CellModel | null = null;
 
-  private bot: ChessBot;
+  private bot: ChessBot | null = null;
 
   private readonly botConfigService: ConfigDaoService = ConfigDaoService.getInstance();
 
@@ -39,7 +39,7 @@ export default class ChessField {
 
   onEnd: () => void;
 
-  constructor(parentNode: HTMLElement) {
+  constructor({ parentNode }: { parentNode: HTMLElement }) {
     this.model = new FieldModel();
     this.getBotStrategy().then((strategy) => {
       this.bot = new ChessBot(this.model, strategy);
@@ -79,8 +79,10 @@ export default class ChessField {
   setUpModelListeners(): void {
     this.model.onCheckPromotion = (cell: CellModel) => {
       if (this.checkPromotion(cell)) {
-        const { x, y } = this.getCellPosition(cell);
-        this.model.promote(x, y);
+        const cellPosition = this.getCellPosition(cell);
+        if (cellPosition) {
+          this.model.promote(cellPosition.x, cellPosition.y);
+        }
       }
     };
     this.model.onMove.subscribe((turnInfo: TurnInfo) => {
@@ -93,7 +95,7 @@ export default class ChessField {
       });
     };
     this.model.onBotMove = () => {
-      this.bot.makeBotMove(this.model.state, FigureColor.BLACK);
+      this.bot?.makeBotMove(this.model.state, FigureColor.BLACK);
     };
     this.model.onReset = () => {
       store.dispatch(setCurrentUserColor(1));
@@ -134,6 +136,9 @@ export default class ChessField {
     }
     if (this.selectedCell?.getFigure()) {
       cellPos = this.getCellPosition(this.selectedCell);
+      if (!cellPos) {
+        return;
+      }
       const allowed: Coordinate[] = this.model.getAllowedMovesFromPoint(cellPos.x, cellPos.y);
       this.view.setAllowedMoves(allowed);
     } else {

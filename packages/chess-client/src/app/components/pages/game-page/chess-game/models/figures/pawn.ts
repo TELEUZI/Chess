@@ -4,8 +4,7 @@ import FigureWeight from '../../../../../../enums/figure-weight';
 
 export default class Pawn extends FigureModel {
   constructor(color: number) {
-    super(color);
-    this.type = FigureType.PAWN;
+    super(color, FigureType.PAWN);
     this.weight = FigureWeight.PAWN;
   }
 }

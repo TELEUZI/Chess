@@ -8,13 +8,13 @@ enum ValidType {
 export default class Input extends BaseComponent {
   protected input: HTMLInputElement;
 
-  onInput: (input: HTMLInputElement) => boolean;
+  onInput?: (input: HTMLInputElement) => boolean;
 
-  isValid: boolean;
+  isValid = true;
 
-  constructor(type: string, classlist: string[], placeholder?: string, value?: number | string) {
+  constructor(type: string, classlist: string[], placeholder = '', value?: number | string) {
     super('input', ['input', ...classlist], '');
-    this.input = <HTMLInputElement>this.node;
+    this.input = this.node as HTMLInputElement;
     this.setAttributes(type, placeholder, value);
     this.createListeners();
   }
@@ -32,11 +32,11 @@ export default class Input extends BaseComponent {
     }
   }
 
-  getFile(): File {
-    throw new Error(`${this}`);
-  }
+  // getFile(): File | undefined {
+  //   throw new Error(`${this}`);
+  // }
 
-  setAttributes(type: string, placeholder: string, value: number | string): void {
+  setAttributes(type: string, placeholder: string, value?: number | string): void {
     this.setAttribute('type', type);
     this.setAttribute('placeholder', placeholder);
     if (value) {
