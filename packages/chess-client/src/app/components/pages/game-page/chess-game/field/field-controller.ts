@@ -19,7 +19,7 @@ import type { Strategy } from '../../../../../interfaces/bot-strategy';
 import type TurnInfo from '../../../../../interfaces/turn-info';
 
 export default class ChessField {
-  model: FieldModel;
+  private readonly model: FieldModel;
 
   private readonly view: FieldView;
 
@@ -29,18 +29,62 @@ export default class ChessField {
 
   private readonly botConfigService: ConfigDaoService = ConfigDaoService.getInstance();
 
-  onMate: () => void;
+  private readonly onMate: () => void;
 
-  onStalemate: () => void;
+  private readonly onStalemate: () => void;
 
-  onNextTurn: () => void;
+  private readonly onNextTurn: () => void;
 
-  onFieldUpdate: (turnInfo: TurnInfo) => void;
+  private readonly onEnd: () => void;
 
-  onEnd: () => void;
+  private readonly onFieldUpdate: (turnInfo: TurnInfo) => void;
 
-  constructor({ parentNode }: { parentNode: HTMLElement }) {
-    this.model = new FieldModel();
+  constructor({
+    parentNode,
+    onMate,
+    onStalemate,
+    onNextTurn,
+    onEnd,
+    onFieldUpdate,
+  }: {
+    parentNode: HTMLElement;
+    onMate: () => void;
+    onStalemate: () => void;
+    onNextTurn: () => void;
+    onEnd: () => void;
+    onFieldUpdate: (turnInfo: TurnInfo) => void;
+  }) {
+    this.onMate = onMate;
+    this.onStalemate = onStalemate;
+    this.onNextTurn = onNextTurn;
+    this.onEnd = onEnd;
+    this.onFieldUpdate = onFieldUpdate;
+    this.model = new FieldModel({
+      onCheckPromotion: (cell: CellModel) => {
+        if (this.checkPromotion(cell)) {
+          const cellPosition = this.getCellPosition(cell);
+          if (cellPosition) {
+            this.model.promote(cellPosition.x, cellPosition.y);
+          }
+        }
+      },
+      onSinglePlayerMove: () => {
+        this.view.rotate();
+        forEachCell(this.view.getCells(), (cell) => {
+          cell.rotate();
+        });
+      },
+      onBotMove: () => {
+        this.bot?.makeBotMove(this.model.state, FigureColor.BLACK);
+      },
+      onReset: () => {
+        store.dispatch(setCurrentUserColor(1));
+      },
+      onStalemate: () => {
+        this.onStalemate();
+        this.onEnd();
+      },
+    });
     this.getBotStrategy().then((strategy) => {
       this.bot = new ChessBot(this.model, strategy);
     });
@@ -62,55 +106,27 @@ export default class ChessField {
         });
       }
     };
-    this.setUpModelListeners();
     this.model.onChange.subscribe((state: FieldState) => {
       this.view.refresh(state);
     });
-    this.model.onCheck.subscribe((vector: Coordinate) => {
+    this.model.onCheck.subscribe((vector) => {
       this.view.setCheck(vector);
     });
-    this.model.onMate.subscribe((attackingFigureCell: Coordinate) => {
+    this.model.onMate.subscribe((attackingFigureCell) => {
       this.view.setMate(attackingFigureCell);
       this.onMate();
       this.onEnd();
     });
-  }
-
-  setUpModelListeners(): void {
-    this.model.onCheckPromotion = (cell: CellModel) => {
-      if (this.checkPromotion(cell)) {
-        const cellPosition = this.getCellPosition(cell);
-        if (cellPosition) {
-          this.model.promote(cellPosition.x, cellPosition.y);
-        }
-      }
-    };
     this.model.onMove.subscribe((turnInfo: TurnInfo) => {
       this.onFieldUpdate(turnInfo);
     });
-    this.model.onSinglePlayerMove = () => {
-      this.view.rotate();
-      forEachCell(this.view.getCells(), (cell) => {
-        cell.rotate();
-      });
-    };
-    this.model.onBotMove = () => {
-      this.bot?.makeBotMove(this.model.state, FigureColor.BLACK);
-    };
-    this.model.onReset = () => {
-      store.dispatch(setCurrentUserColor(1));
-    };
-    this.model.onStalemate = () => {
-      this.onStalemate();
-      this.onEnd();
-    };
   }
 
-  async getBotStrategy(): Promise<Strategy | null> {
+  private async getBotStrategy(): Promise<Strategy | null> {
     return createStrategy(await this.botConfigService.getData());
   }
 
-  cellClickHandler(cell: CellView, i: number, j: number): void {
+  private cellClickHandler(cell: CellView, i: number, j: number): void {
     if (
       store.getState().currentPlayer.currentUserColor !== store.getState().color.color &&
       this.model.getGameMode() === GameMode.MULTIPLAYER
@@ -146,7 +162,7 @@ export default class ChessField {
     }
   }
 
-  getCellPosition(cell: CellModel | null): Coordinate | null {
+  private getCellPosition(cell: CellModel | null): Coordinate | null {
     let res: Coordinate | null = null;
     if (cell === null) {
       return null;
@@ -159,7 +175,7 @@ export default class ChessField {
     return res;
   }
 
-  checkPromotion(cell: CellModel): boolean {
+  private checkPromotion(cell: CellModel): boolean {
     if (cell.getFigureType() === FigureType.PAWN) {
       if (
         cell.getFigureColor() === FigureColor.WHITE &&
@@ -175,5 +191,9 @@ export default class ChessField {
       }
     }
     return false;
+  }
+
+  async makeMove(fromX: number, fromY: number, toX: number, toY: number): Promise<void> {
+    return this.model.makeMove(fromX, fromY, toX, toY);
   }
 }

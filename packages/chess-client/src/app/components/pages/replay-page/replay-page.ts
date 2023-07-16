@@ -9,7 +9,7 @@ export default class ReplayPage implements PageController {
 
   private readonly replayModel = ReplayDaoService.getInstance();
 
-  private game: Chess;
+  private game: Chess | null = null;
 
   constructor(root: HTMLElement) {
     this.root = root;
@@ -23,14 +23,17 @@ export default class ReplayPage implements PageController {
   async startGame(): Promise<void> {
     this.game = new Chess(this.root, true);
     const replay = await this.replayModel.getByDate(store.getState().replayDate.currentReplayDate);
+    if (!replay) {
+      return;
+    }
     Promise.all(
       replay.history.map(async (move) => {
         return delay(move.time * 1000).then(() => {
-          this.game.makeMove(move.from, move.to);
+          this.game?.makeMove(move.from, move.to);
         });
       }),
     ).then(() => {
-      this.game.stopTimer();
+      this.game?.stopTimer();
     });
   }
 }

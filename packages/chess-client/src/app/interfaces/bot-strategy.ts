@@ -3,10 +3,12 @@ import type FigureColor from '../enums/figure-colors';
 import type { FigureTurn } from './move-message';
 import type MoveMessage from './move-message';
 
+export interface BestMoveParams {
+  state: FieldState;
+  color: FigureColor;
+  avaliableMoves: FigureTurn[];
+}
+
 export interface Strategy {
-  getBestMove: (
-    state: FieldState,
-    color: FigureColor,
-    avaliableMoves: FigureTurn[],
-  ) => MoveMessage | null;
+  getBestMove: ({ state, color, avaliableMoves }: BestMoveParams) => MoveMessage | null;
 }

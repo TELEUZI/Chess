@@ -10,17 +10,17 @@ export default class Header extends BaseComponent {
 
   private readonly menu: Menu;
 
-  firstControlButton?: Button;
-
-  secondControlButton: Button;
-
   private readonly avatar: HTMLImageElement;
+
+  public firstControlButton?: Button;
+
+  public secondControlButton: Button;
 
   constructor(state: State<Header>, onButtonClick?: () => void) {
     super('header', ['header']);
     this.state = state;
     this.transitionTo(this.state);
-    this.createButton(onButtonClick);
+    this.createButton({ onFirstButtonClick: onButtonClick });
     this.menu = new Menu();
     this.avatar = this.createAvatar();
     this.node.append(this.avatar);
@@ -33,11 +33,15 @@ export default class Header extends BaseComponent {
     this.state.setContext(this);
   }
 
-  createButton(
-    onFirstButtonClick?: () => void,
-    onSecondButtonClick?: () => void,
-    avatar?: ArrayBuffer | string,
-  ): void {
+  createButton({
+    onFirstButtonClick,
+    onSecondButtonClick,
+    avatar,
+  }: {
+    onFirstButtonClick?: () => void;
+    onSecondButtonClick?: () => void;
+    avatar?: ArrayBuffer | string;
+  }): void {
     this.state.createButton({ onFirstButtonClick, onSecondButtonClick, avatar });
   }
 

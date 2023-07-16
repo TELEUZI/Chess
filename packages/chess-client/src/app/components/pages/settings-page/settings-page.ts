@@ -31,9 +31,11 @@ export default class SettingsPage implements PageController {
   }
 
   onChangeHandler(): void {
-    const { easy, medium, hard } = GameDifficultyOptions;
-    const arr = [easy, medium, hard];
     const selectValue = this.selectDifficulty.getSelectValue();
-    this.model.setData(arr.find((option) => option === selectValue) ?? GameDifficultyOptions.easy);
+    this.model.setData(
+      [GameDifficultyOptions.easy, GameDifficultyOptions.medium, GameDifficultyOptions.hard].find(
+        (option) => option === selectValue,
+      ) ?? GameDifficultyOptions.easy,
+    );
   }
 }

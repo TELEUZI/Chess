@@ -36,21 +36,15 @@ class SocketService {
 
   private roomName?: string;
 
-  // private playerToken?: string;
+  onMove?: (fieldState: string, currentColor: FigureColor, lastMove: MoveMessage) => void;
 
-  // private playerInfo?: PlayerSerializable;
+  onStart?: () => void;
 
-  onMove: (fieldState: string, currentColor: FigureColor, lastMove: MoveMessage) => void = () => {};
+  onPlayerLeave?: () => void;
 
-  // onSetColor: (color: FigureColor) => void;
+  onPlayerDrawResponse?: (result: boolean) => void;
 
-  onStart: () => void = () => {};
-
-  onPlayerLeave: () => void = () => {};
-
-  onPlayerDrawResponse: (result: boolean) => void = () => {};
-
-  onPlayerDrawSuggest: () => void = () => {};
+  onPlayerDrawSuggest?: () => void;
 
   async createRoom(playerName: string): Promise<void> {
     this.roomName = 't'.repeat(Math.floor(Math.random() * 14));
@@ -95,13 +89,13 @@ class SocketService {
   handleGameStart(payload: GameInfo) {
     redirectToGameWithMode(GameMode.MULTIPLAYER);
     const [playerOne, playerTwo] = payload.players.map((player) => player.name);
-    this.onStart();
+    this.onStart?.();
     store.dispatch(changeName({ playerOne, playerTwo }));
     store.dispatch(setCurrentUserColor(payload.currentPlayerColor));
   }
 
   handleFigureMove(payload: GameInfo) {
-    this.onMove(payload.fieldState, payload.currentPlayerColor, payload.lastMove);
+    this.onMove?.(payload.fieldState, payload.currentPlayerColor, payload.lastMove);
     store.dispatch(setCurrentUserColor(payload.currentPlayerColor));
   }
 
@@ -117,17 +111,17 @@ class SocketService {
           break;
         case GameAction.disconnect:
           store.dispatch(setWinner((response.payload as GameInfo).players[0].color));
-          this.onPlayerLeave();
+          this.onPlayerLeave?.();
           break;
         case GameAction.drawSuggest:
-          this.onPlayerDrawSuggest();
+          this.onPlayerDrawSuggest?.();
           break;
         case GameAction.setUserColor:
           store.dispatch(setUserColor((response.payload as ColorMessage).color));
-          this.onStart();
+          this.onStart?.();
           break;
         case GameAction.drawResponse:
-          this.onPlayerDrawResponse((response.payload as DrawResult).isDraw);
+          this.onPlayerDrawResponse?.((response.payload as DrawResult).isDraw);
           break;
         default:
           break;

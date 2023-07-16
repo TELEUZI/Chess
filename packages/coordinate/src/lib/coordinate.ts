@@ -12,7 +12,7 @@ export class Coordinate {
     return new Coordinate(this.x, this.y);
   }
 
-  public equals(coordinate: Readonly<Coordinate>): boolean {
-    return this.x === coordinate.x && this.y === coordinate.y;
+  public equals(coordinate: Readonly<Coordinate | null>): boolean {
+    return this.x === coordinate?.x && this.y === coordinate.y;
   }
 }

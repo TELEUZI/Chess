@@ -37,13 +37,13 @@ export function forEachPlayerFigure(
   });
 }
 export function getKingPosition(state: FieldState, color: number): Coordinate | null {
-  let res: Coordinate | null = null;
-  forEachPlayerFigure(state, color, (cell, pos) => {
+  let kingPosition: Coordinate | null = null;
+  forEachPlayerFigure(state, color, (cell, position) => {
     if (cell.getFigureType() === FigureType.KING) {
-      res = pos;
+      kingPosition = position;
     }
   });
-  return res;
+  return kingPosition;
 }
 export function getStateAfterMove(
   state: FieldState,

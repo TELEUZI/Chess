@@ -32,10 +32,6 @@ export default class Input extends BaseComponent {
     }
   }
 
-  // getFile(): File | undefined {
-  //   throw new Error(`${this}`);
-  // }
-
   setAttributes(type: string, placeholder: string, value?: number | string): void {
     this.setAttribute('type', type);
     this.setAttribute('placeholder', placeholder);

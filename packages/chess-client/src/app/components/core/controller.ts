@@ -12,6 +12,39 @@ import GameMode from '../../enums/game-mode';
 import { socketService } from '../../services/websocket-service';
 import AppRoutes from '../../enums/app-routes';
 
+function createAppRoutes(root: HTMLElement, gamePage: Promise<GamePage>) {
+  return [
+    {
+      name: AppRoutes.DEFAULT,
+      controller: import('../pages/reg-page/start-page').then(
+        ({ default: AboutPage }) => new AboutPage(root),
+      ),
+    },
+    {
+      name: AppRoutes.SETTINGS,
+      controller: import('../pages/settings-page/settings-page').then(
+        ({ default: SettingsPage }) => new SettingsPage(root),
+      ),
+    },
+    {
+      name: AppRoutes.REPLAY,
+      controller: import('../pages/best-score-page/best-score-page').then(
+        ({ default: BestScorePage }) => new BestScorePage(root),
+      ),
+    },
+    {
+      name: AppRoutes.GAME,
+      controller: gamePage,
+    },
+    {
+      name: AppRoutes.WATCH,
+      controller: import('../pages/replay-page/replay-page').then(
+        ({ default: ReplayPage }) => new ReplayPage(root),
+      ),
+    },
+  ];
+}
+
 export default class Controller extends BaseComponent {
   private readonly appRoot: BaseComponent;
 
@@ -36,36 +69,7 @@ export default class Controller extends BaseComponent {
     );
 
     const router = new Router(
-      [
-        {
-          name: AppRoutes.DEFAULT,
-          controller: import('../pages/reg-page/start-page').then(
-            ({ default: AboutPage }) => new AboutPage(this.getAppRoot()),
-          ),
-        },
-        {
-          name: AppRoutes.SETTINGS,
-          controller: import('../pages/settings-page/settings-page').then(
-            ({ default: SettingsPage }) => new SettingsPage(this.getAppRoot()),
-          ),
-        },
-        {
-          name: AppRoutes.REPLAY,
-          controller: import('../pages/replay-page/replay-page').then(
-            ({ default: BestScorePage }) => new BestScorePage(this.getAppRoot()),
-          ),
-        },
-        {
-          name: AppRoutes.GAME,
-          controller: this.gamePage,
-        },
-        {
-          name: AppRoutes.WATCH,
-          controller: import('../pages/replay-page/replay-page').then(
-            ({ default: ReplayPage }) => new ReplayPage(this.getAppRoot()),
-          ),
-        },
-      ],
+      createAppRoutes(this.getAppRoot(), this.gamePage),
       this.moveToPage.bind(this),
     );
     router.hashChanged();
@@ -130,8 +134,8 @@ export default class Controller extends BaseComponent {
   startGame(): void {
     window.location.hash = '#game';
     this.headerStateManager.transitionToStopGameState(
-      async () => this.offerLooseGame(),
-      async () => this.offerDraw(),
+      () => this.offerLooseGame(),
+      () => this.offerDraw(),
     );
   }
 }

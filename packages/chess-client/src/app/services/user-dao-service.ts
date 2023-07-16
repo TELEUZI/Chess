@@ -22,10 +22,6 @@ export default class UserDaoService {
     return UserDaoService.instance;
   }
 
-  // getCurrentUser(): User | null {
-  //   return this.currentUser;
-  // }
-
   setData(user: User): void {
     this.currentUser = user;
     this.dao.create(user);
@@ -37,10 +33,6 @@ export default class UserDaoService {
   //   this.setData(currentUser);
   // }
 
-  // async getData(): Promise<User> {
-  //   return this.dao.get();
-  // }
-
   async getAvatar(): Promise<ArrayBuffer | string> {
     return (await this.findCurrentByEmail(this.currentUser))?.avatar ?? '';
   }
@@ -50,9 +42,4 @@ export default class UserDaoService {
       ? (await this.dao.findAll()).find((user) => user.name === userToFind.name) ?? null
       : null;
   }
-
-  // async getLast(): Promise<User> {
-  //   const usersArray: User[] = await this.dao.findAll();
-  //   return usersArray[usersArray.length - 1];
-  // }
 }

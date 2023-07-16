@@ -1,6 +1,6 @@
 import { BEST_VALUE_MOVE_FOR_BLACK } from '../../../../../../config';
 import type FigureColor from '../../../../../../enums/figure-colors';
-import type { Strategy } from '../../../../../../interfaces/bot-strategy';
+import type { BestMoveParams, Strategy } from '../../../../../../interfaces/bot-strategy';
 import type { FigureTurn } from '../../../../../../interfaces/move-message';
 import type MoveMessage from '../../../../../../interfaces/move-message';
 import { getStateAfterMove } from '../../services/field-service/field-service';
@@ -9,11 +9,7 @@ import { evaluateBoard } from '../chess-bot';
 
 const SEARCH_DEPTH = 2;
 export default class MinMaxBotStrategy implements Strategy {
-  public getBestMove(
-    state: FieldState,
-    color: FigureColor,
-    avaliableMoves: FigureTurn[],
-  ): MoveMessage | null {
+  public getBestMove({ state, color, avaliableMoves }: BestMoveParams): MoveMessage | null {
     let bestMove: MoveMessage | null = null;
     let bestValue = BEST_VALUE_MOVE_FOR_BLACK;
     avaliableMoves.forEach((newGameMove) => {
@@ -35,7 +31,7 @@ export default class MinMaxBotStrategy implements Strategy {
     return bestMove;
   }
 
-  minimax(
+  private minimax(
     depth: number,
     state: FieldState,
     color: FigureColor,
@@ -59,7 +55,7 @@ export default class MinMaxBotStrategy implements Strategy {
     return this.findMinMax(depth, state, color, avaliableMoves, isMaximizingPlayer, Math.min, 9999);
   }
 
-  findMinMax(
+  private findMinMax(
     depth: number,
     state: FieldState,
     color: FigureColor,
