@@ -12,12 +12,18 @@ export default class HeaderStateManager {
 
   transitionToRegisteredState(onStartGame: () => void, avatarImage: ArrayBuffer | string): void {
     this.header.transitionTo(new StartGameState());
-    this.header.createButton(onStartGame, () => {}, avatarImage);
+    this.header.createButton({
+      onFirstButtonClick: onStartGame,
+      avatar: avatarImage,
+    });
   }
 
   transitionToStopGameState(onLoose: () => void, onDraw: () => void): void {
     this.header.transitionTo(new StopGameState());
-    this.header.createButton(onLoose, onDraw);
+    this.header.createButton({
+      onFirstButtonClick: onLoose,
+      onSecondButtonClick: onDraw,
+    });
   }
 
   getHeaderNode(): HTMLElement {

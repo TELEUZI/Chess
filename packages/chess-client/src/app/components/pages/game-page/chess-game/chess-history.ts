@@ -24,14 +24,12 @@ export default class ChessHistory extends BaseComponent {
     this.historyWrapper = new BaseComponent('div', ['chess__history_items'], '', this.node);
   }
 
-  setHistoryMove(coords: TurnInfo, time: string): void {
+  public setHistoryMove(coords: TurnInfo, time: string): void {
     if (deepEqual(this.lastTurn, coords)) {
-      this.lastTurn = coords;
       return;
     }
     this.lastTurn = coords;
-    const { move } = coords;
-    const { figure } = coords;
+    const { move, figure } = coords;
     const figureView = new FigureView(this.node, [
       `chess__figure`,
       `chess-field__${

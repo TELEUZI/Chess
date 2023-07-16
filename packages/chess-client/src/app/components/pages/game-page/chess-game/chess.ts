@@ -33,15 +33,12 @@ class Chess extends BaseComponent {
 
   private readonly chessHistory: ChessHistory;
 
-  // private readonly isReplay: boolean;
-
   private readonly history: TimedMoveMessage[] = [];
 
   private replay: Replay | null = null;
 
   constructor(parentNode: HTMLElement, isReplay: boolean) {
     super('div', ['chess-wrapper'], '', parentNode);
-    // this.isReplay = isReplay;
     this.replayModel = ReplayDaoService.getInstance();
     if (!isReplay) {
       this.createReplay();
@@ -55,7 +52,32 @@ class Chess extends BaseComponent {
     this.playerTwo = new PlayerContainer(store.getState().players.playerTwo, IS_UPDATABLE);
     const chessBody = new BaseComponent('div', ['chess__body'], '', chessBoardWrapper.getNode());
     this.chessHistory = new ChessHistory(chessBody.getNode());
-    this.chessBoard = new ChessField({ parentNode: chessBody.getNode() });
+    this.chessBoard = new ChessField({
+      parentNode: chessBody.getNode(),
+      onEnd: () => {
+        this.timer.toggle();
+      },
+      onMate: () => {
+        store.dispatch(
+          setWinner(getNextFigureColor(store.getState().currentPlayer.currentUserColor)),
+        );
+        this.setWinner(store.getState().winner.winnerColor);
+        this.showMateModal();
+      },
+      onStalemate: () => {
+        this.showStalemateModal();
+        this.setWinner(store.getState().winner.winnerColor);
+      },
+      onFieldUpdate: (turnInfo: TurnInfo) => {
+        this.chessHistory.setHistoryMove(turnInfo, this.timer.getTime());
+        if (!isReplay) {
+          this.pushMoveToHistory(turnInfo);
+        }
+      },
+      onNextTurn: () => {
+        this.nextTurnHandler();
+      },
+    });
     this.playerOne.toggleClass('current');
     chessHead.insertChilds([this.playerOne, this.playerTwo]);
     socketService.onPlayerLeave = () => {
@@ -69,10 +91,9 @@ class Chess extends BaseComponent {
         this.setDraw();
       }
     };
-    this.setUpChessBoardListeners(isReplay);
   }
 
-  pushMoveToHistory(turnInfo: TurnInfo): void {
+  private pushMoveToHistory(turnInfo: TurnInfo): void {
     this.history.push({
       from: turnInfo.move.from,
       to: turnInfo.move.to,
@@ -80,33 +101,7 @@ class Chess extends BaseComponent {
     });
   }
 
-  setUpChessBoardListeners(isReplay: boolean): void {
-    this.chessBoard.onEnd = () => {
-      this.timer.toggle();
-    };
-    this.chessBoard.onMate = () => {
-      store.dispatch(
-        setWinner(getNextFigureColor(store.getState().currentPlayer.currentUserColor)),
-      );
-      this.setWinner(store.getState().winner.winnerColor);
-      this.showMateModal();
-    };
-    this.chessBoard.onStalemate = () => {
-      this.showStalemateModal();
-      this.setWinner(store.getState().winner.winnerColor);
-    };
-    this.chessBoard.onFieldUpdate = (turnInfo: TurnInfo) => {
-      this.chessHistory.setHistoryMove(turnInfo, this.timer.getTime());
-      if (!isReplay) {
-        this.pushMoveToHistory(turnInfo);
-      }
-    };
-    this.chessBoard.onNextTurn = () => {
-      this.nextTurnHandler();
-    };
-  }
-
-  showDrawProposalModal(): void {
+  private showDrawProposalModal(): void {
     const winContent = new ModalContent({
       header: 'Are you ok with draw?',
       text: `...`,
@@ -124,7 +119,7 @@ class Chess extends BaseComponent {
     );
   }
 
-  showStalemateModal(): void {
+  private showStalemateModal(): void {
     const winContent = new ModalContent({
       header: 'Stalemate!',
       text: `It isn't win, just a draw, bro.`,
@@ -133,7 +128,7 @@ class Chess extends BaseComponent {
     const modalWindow = new ModalWindow(winContent, this.node);
   }
 
-  showMateModal(): void {
+  private showMateModal(): void {
     const winContent = new ModalContent({
       header: 'Check and mate!',
       text: `Player of ${
@@ -146,7 +141,7 @@ class Chess extends BaseComponent {
     const modalWindow = new ModalWindow(winContent, this.node);
   }
 
-  setPlayerLeave(): void {
+  public setPlayerLeave(): void {
     const result = getNextFigureColor(store.getState().currentPlayer.currentUserColor);
     this.setWinner(result);
     const winContent = new ModalContent({
@@ -159,7 +154,7 @@ class Chess extends BaseComponent {
     const modalWindow = new ModalWindow(winContent, this.node);
   }
 
-  setDraw(): void {
+  private setDraw(): void {
     const winContent = new ModalContent({
       header: 'Stalemate!',
       text: `It isn't win, just a draw, bro.`,
@@ -169,11 +164,11 @@ class Chess extends BaseComponent {
     this.setWinner('draw');
   }
 
-  makeMove(from: Coordinate, to: Coordinate): void {
-    this.chessBoard.model.makeMove(from.x, from.y, to.x, to.y);
+  public makeMove(from: Coordinate, to: Coordinate): void {
+    this.chessBoard.makeMove(from.x, from.y, to.x, to.y);
   }
 
-  setWinner(result: GameResult): void {
+  private setWinner(result: GameResult): void {
     if (!this.replay) {
       return;
     }
@@ -184,7 +179,7 @@ class Chess extends BaseComponent {
     this.replay = null;
   }
 
-  createReplay(): void {
+  private createReplay(): void {
     this.replay = {
       date: new Date().getTime(),
       history: [],
@@ -206,11 +201,11 @@ class Chess extends BaseComponent {
     };
   }
 
-  stopTimer(): void {
+  public stopTimer(): void {
     this.timer.toggle();
   }
 
-  nextTurnHandler(): void {
+  private nextTurnHandler(): void {
     this.playerOne.toggleClass('current');
     this.playerTwo.toggleClass('current');
   }

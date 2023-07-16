@@ -36,11 +36,11 @@ export default class ChessBot {
   }
 
   makeBotMove(state: FieldState, color: FigureColor): void {
-    const bestMove = this.strategy.getBestMove(
+    const bestMove = this.strategy.getBestMove({
       state,
       color,
-      this.model.getAllValidMoves(state, color),
-    );
+      avaliableMoves: this.model.getAllValidMoves(state, color),
+    });
     if (!bestMove) {
       return;
     }

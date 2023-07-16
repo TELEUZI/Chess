@@ -1,21 +1,11 @@
 import { BEST_VALUE_MOVE_FOR_BLACK } from '../../../../../../config';
-import type FigureColor from '../../../../../../enums/figure-colors';
-import type { Strategy } from '../../../../../../interfaces/bot-strategy';
-import type { FigureTurn } from '../../../../../../interfaces/move-message';
+import type { BestMoveParams, Strategy } from '../../../../../../interfaces/bot-strategy';
 import type MoveMessage from '../../../../../../interfaces/move-message';
 import { getStateAfterMove } from '../../services/field-service/field-service';
-import type FieldState from '../../state/field-state';
 import { evaluateBoard } from '../chess-bot';
 
 export default class EvaluationStrategy implements Strategy {
-  avaliableMoves: FigureTurn[] = [];
-
-  public getBestMove(
-    state: FieldState,
-    color: FigureColor,
-    avaliableMoves: FigureTurn[],
-  ): MoveMessage | null {
-    this.avaliableMoves = avaliableMoves;
+  public getBestMove({ state, avaliableMoves }: BestMoveParams): MoveMessage | null {
     let bestMove: MoveMessage | null = null;
     let bestValue = BEST_VALUE_MOVE_FOR_BLACK;
     avaliableMoves.forEach((newGameMove) => {

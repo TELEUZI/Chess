@@ -27,6 +27,14 @@ import type TurnInfo from '../../../../../interfaces/turn-info';
 import FigureType from '../../../../../enums/figure-type';
 import { INIT_FIELD_STATE } from '../../../../../config';
 
+interface FieldModelProps {
+  onStalemate: () => void;
+  onBotMove: () => void;
+  onSinglePlayerMove: () => void;
+  onReset: () => void;
+  onCheckPromotion: (cell: CellModel) => void;
+}
+
 export default class FieldModel {
   public state: FieldState;
 
@@ -40,25 +48,36 @@ export default class FieldModel {
 
   onChange = new Observable<FieldState>();
 
-  onCheck = new Observable<Coordinate>();
+  onCheck = new Observable<Coordinate | null>();
 
-  onMate = new Observable<Coordinate>();
+  onMate = new Observable<Coordinate | null>();
 
   onMove = new Observable<TurnInfo>();
 
   onNextTurn = new Observable<void>();
 
-  onStalemate: () => void;
+  private readonly onStalemate: () => void;
 
-  onBotMove: () => void;
+  private readonly onBotMove: () => void;
 
-  onSinglePlayerMove: () => void;
+  private readonly onSinglePlayerMove: () => void;
 
-  onReset: () => void;
+  private readonly onReset: () => void;
 
-  onCheckPromotion: (cell: CellModel) => void;
+  private readonly onCheckPromotion: (cell: CellModel) => void;
 
-  constructor() {
+  constructor({
+    onStalemate,
+    onBotMove,
+    onSinglePlayerMove,
+    onReset,
+    onCheckPromotion,
+  }: FieldModelProps) {
+    this.onStalemate = onStalemate;
+    this.onBotMove = onBotMove;
+    this.onSinglePlayerMove = onSinglePlayerMove;
+    this.onReset = onReset;
+    this.onCheckPromotion = onCheckPromotion;
     this.turnManager = new TurnManager();
     const initState = createFieldFromStrings(INIT_FIELD_STATE);
     this.state = store.getState().field;
@@ -103,8 +122,9 @@ export default class FieldModel {
 
   checkGameSituation(): void {
     const isMoves = this.getAllValidMoves(this.state, this.currentColor).length !== 0;
+    const kingPosition = getKingPosition(this.state, this.currentColor);
     if (!isMoves && this.getCheckedKing(this.state)) {
-      this.onMate.notify(getKingPosition(this.state, this.currentColor));
+      this.onMate.notify(kingPosition);
       this.gameResult = this.currentColor;
       this.onReset();
     } else if (!isMoves && !this.getCheckedKing(this.state)) {
@@ -112,7 +132,7 @@ export default class FieldModel {
       this.gameResult = 'draw';
       this.onReset();
     } else if (this.getCheckedKing(this.state)) {
-      this.onCheck.notify(getKingPosition(this.state, this.currentColor));
+      this.onCheck.notify(kingPosition);
     }
   }
 
@@ -136,7 +156,10 @@ export default class FieldModel {
         to: new Coordinate(toX, toY),
       });
     }
-    this.onCheckPromotion(this.getCellAt(new Coordinate(toX, toY)));
+    const cell = this.getCellAt(new Coordinate(toX, toY));
+    if (cell) {
+      this.onCheckPromotion(cell);
+    }
     this.setNextPlayerColor();
     this.checkGameSituation();
   }
@@ -162,9 +185,9 @@ export default class FieldModel {
     this.onMove.notify(move);
   }
 
-  getEnemyFigures(state: FieldState, color: number): { x: number; y: number }[] {
+  private getEnemyFigures(state: FieldState, color: number): { x: number; y: number }[] {
     const res: { x: number; y: number }[] = [];
-    forEachPlayerFigure(state, color, (cell, pos) => {
+    forEachPlayerFigure(state, color, (_, pos) => {
       if (this.getMovesAtPoint(pos.x, pos.y, state).length) {
         res.push(pos);
       }
@@ -176,7 +199,7 @@ export default class FieldModel {
     return this.state.getCellAt(to.x, to.y);
   }
 
-  getCheckedKing(state: FieldState): boolean {
+  private getCheckedKing(state: FieldState): boolean {
     const kingPos = getKingPosition(state, this.currentColor);
     if (!kingPos) {
       return false;
@@ -237,12 +260,12 @@ export default class FieldModel {
     return [];
   };
 
-  setEndGame(): void {
-    this.setState(createFieldFromStrings(INIT_FIELD_STATE));
-    store.dispatch(setCurrentUserColor(FigureColor.WHITE));
-  }
+  // setEndGame(): void {
+  //   this.setState(createFieldFromStrings(INIT_FIELD_STATE));
+  //   store.dispatch(setCurrentUserColor(FigureColor.WHITE));
+  // }
 
-  getMovesAtPoint(fromX: number, fromY: number, state?: FieldState): Coordinate[] {
+  private getMovesAtPoint(fromX: number, fromY: number, state?: FieldState): Coordinate[] {
     return this.turnManager.getMoves(
       state ?? store.getState().field,
       state?.getFigure(fromX, fromY) ?? getFigureFromState(fromX, fromY),
@@ -251,7 +274,7 @@ export default class FieldModel {
     );
   }
 
-  setState(newState: FieldState): void {
+  private setState(newState: FieldState): void {
     this.state = newState;
     this.onChange.notify(newState);
     store.dispatch(makeMove(newState));
