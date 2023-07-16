@@ -36,7 +36,7 @@ export default class PlayerContainer extends BaseComponent {
 
   submit(): void {
     const updatedName = this.player.userNameUpdate.getValue();
-    this.onSubmit(updatedName);
+    this.onSubmit?.(updatedName);
     this.player.setUpdateMode();
     this.image.destroy();
     this.image = new BaseComponent('div', ['avatar'], updatedName[0].toUpperCase());

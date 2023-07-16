@@ -1,8 +1,8 @@
+import { GameStatus } from '@chess/game-common';
 import shuffle from '../../utils/shuffle';
 import Player from '../player/player';
 import { PlayerColor, PlayerState } from '../player/player-enums';
 import type { PlayerSerializable } from '../player/player-interfaces';
-import { GameStatus } from './game-enums';
 import type { GameExternalInfo, GameInfo, MoveMessage } from './game-interfaces';
 
 export default class Game {

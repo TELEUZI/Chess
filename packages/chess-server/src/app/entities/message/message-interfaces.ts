@@ -1,4 +1,4 @@
-import type { GameAction } from '../game/game-enums';
+import type { GameAction } from '@chess/game-common';
 import type { GameInfo, MoveMessage } from '../game/game-interfaces';
 import type { PlayerSerializable } from '../player/player-interfaces';
 

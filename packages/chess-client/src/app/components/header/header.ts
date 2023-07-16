@@ -5,6 +5,13 @@ import Menu from '../menu/menu';
 import type State from './header-states/state';
 import BASE_LOGO from '../../../assets/icons/ava.png';
 
+const createAvatar = (): HTMLImageElement => {
+  const avatar = new Image();
+  avatar.src = BASE_LOGO;
+  avatar.classList.add('avatar');
+  return avatar;
+};
+
 export default class Header extends BaseComponent {
   private state: State<Header>;
 
@@ -22,9 +29,12 @@ export default class Header extends BaseComponent {
     this.transitionTo(this.state);
     this.createButton({ onFirstButtonClick: onButtonClick });
     this.menu = new Menu();
-    this.avatar = this.createAvatar();
+    this.avatar = createAvatar();
     this.node.append(this.avatar);
-    this.insertChilds([this.menu, this.firstControlButton]);
+    this.insertChild(this.menu);
+    if (this.firstControlButton) {
+      this.insertChild(this.firstControlButton);
+    }
     this.secondControlButton = new Button('', onButtonClick);
   }
 
@@ -43,13 +53,6 @@ export default class Header extends BaseComponent {
     avatar?: ArrayBuffer | string;
   }): void {
     this.state.createButton({ onFirstButtonClick, onSecondButtonClick, avatar });
-  }
-
-  createAvatar(): HTMLImageElement {
-    const avatar = new Image();
-    avatar.src = BASE_LOGO;
-    avatar.classList.add('avatar');
-    return avatar;
   }
 
   setAvatarSrc(src: string): void {

@@ -1,5 +1,5 @@
+import type { GameAction, GameStatus } from '@chess/game-common';
 import type FigureColor from '../enums/figure-colors';
-import type { GameAction, GameStatus } from '../enums/game-status-action';
 import type MoveMessage from './move-message';
 
 export interface GameMessage {

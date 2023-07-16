@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import type WebSocket from 'ws';
 import qs from 'qs';
 import buildRoomsRouting from '../rooms/ws';
