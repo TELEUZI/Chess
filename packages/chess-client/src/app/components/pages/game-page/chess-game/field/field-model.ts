@@ -44,17 +44,17 @@ export default class FieldModel {
 
   private readonly gameMode: GameMode = GameMode.SINGLE;
 
-  private gameResult: GameResult;
+  private gameResult?: GameResult;
 
-  onChange = new Observable<FieldState>();
+  public onChange = new Observable<FieldState>();
 
-  onCheck = new Observable<Coordinate | null>();
+  public onCheck = new Observable<Coordinate | null>();
 
-  onMate = new Observable<Coordinate | null>();
+  public onMate = new Observable<Coordinate | null>();
 
-  onMove = new Observable<TurnInfo>();
+  public onMove = new Observable<TurnInfo>();
 
-  onNextTurn = new Observable<void>();
+  public onNextTurn = new Observable<void>();
 
   private readonly onStalemate: () => void;
 
@@ -62,7 +62,7 @@ export default class FieldModel {
 
   private readonly onSinglePlayerMove: () => void;
 
-  private readonly onReset: () => void;
+  private readonly onReset: (result?: string) => void;
 
   private readonly onCheckPromotion: (cell: CellModel) => void;
 
@@ -126,11 +126,11 @@ export default class FieldModel {
     if (!isMoves && this.getCheckedKing(this.state)) {
       this.onMate.notify(kingPosition);
       this.gameResult = this.currentColor;
-      this.onReset();
+      this.onReset(this.gameResult.toString());
     } else if (!isMoves && !this.getCheckedKing(this.state)) {
       this.onStalemate();
       this.gameResult = 'draw';
-      this.onReset();
+      this.onReset(this.gameResult);
     } else if (this.getCheckedKing(this.state)) {
       this.onCheck.notify(kingPosition);
     }
@@ -259,11 +259,6 @@ export default class FieldModel {
     }
     return [];
   };
-
-  // setEndGame(): void {
-  //   this.setState(createFieldFromStrings(INIT_FIELD_STATE));
-  //   store.dispatch(setCurrentUserColor(FigureColor.WHITE));
-  // }
 
   private getMovesAtPoint(fromX: number, fromY: number, state?: FieldState): Coordinate[] {
     return this.turnManager.getMoves(

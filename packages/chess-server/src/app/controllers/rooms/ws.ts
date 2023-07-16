@@ -1,10 +1,10 @@
 import type WebSocket from 'ws';
+import { GameAction } from '@chess/game-common';
 import { rooms } from '../../entities/room/room';
 import broadcastToRoom from '../../services/room/broadcast-to-room';
 import type { PlayerTokenInfo } from '../../services/player/player-tokenify';
 import type { MoveMessage } from '../../entities/game/game-interfaces';
 import isReadyWS from '../../utils/ws-alive-check';
-import { GameAction } from '../../entities/game/game-enums';
 
 export function disconnectFromGame(
   ws: WebSocket,

@@ -109,7 +109,7 @@ class Chess extends BaseComponent {
     });
     const modalWindow = new ModalWindow(
       winContent,
-      this.node,
+      null,
       async () => {
         await socketService.answerDraw({ isDraw: true });
       },
@@ -117,6 +117,7 @@ class Chess extends BaseComponent {
         await socketService.answerDraw({ isDraw: false });
       },
     );
+    this.node.append(modalWindow.getNode());
   }
 
   private showStalemateModal(): void {
@@ -125,7 +126,8 @@ class Chess extends BaseComponent {
       text: `It isn't win, just a draw, bro.`,
       buttonText: "It's a pity!",
     });
-    const modalWindow = new ModalWindow(winContent, this.node);
+    const modalWindow = new ModalWindow(winContent);
+    this.node.append(modalWindow.getNode());
   }
 
   private showMateModal(): void {
@@ -138,7 +140,8 @@ class Chess extends BaseComponent {
       } has won!`,
       buttonText: 'Ok',
     });
-    const modalWindow = new ModalWindow(winContent, this.node);
+    const modalWindow = new ModalWindow(winContent);
+    this.node.append(modalWindow.getNode());
   }
 
   public setPlayerLeave(): void {
@@ -151,7 +154,8 @@ class Chess extends BaseComponent {
       } has won!`,
       buttonText: 'Ok',
     });
-    const modalWindow = new ModalWindow(winContent, this.node);
+    const modalWindow = new ModalWindow(winContent);
+    this.node.append(modalWindow.getNode());
   }
 
   private setDraw(): void {
@@ -160,7 +164,8 @@ class Chess extends BaseComponent {
       text: `It isn't win, just a draw, bro.`,
       buttonText: "It's a pity!",
     });
-    const modalWindow = new ModalWindow(winContent, this.node);
+    const modalWindow = new ModalWindow(winContent);
+    this.node.append(modalWindow.getNode());
     this.setWinner('draw');
   }
 

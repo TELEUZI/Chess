@@ -1,9 +1,9 @@
 import type { ParsedQs } from 'qs';
 import type WebSocket from 'ws';
+import { GameAction } from '@chess/game-common';
 import type { PlayerTokenInfo } from '../../services/player/player-tokenify';
 import { verifyDecodeToken } from '../../services/player/player-tokenify';
 import { rooms } from '../../entities/room/room';
-import { GameAction } from '../../entities/game/game-enums';
 import {
   declineDraw,
   disconnectFromGame,

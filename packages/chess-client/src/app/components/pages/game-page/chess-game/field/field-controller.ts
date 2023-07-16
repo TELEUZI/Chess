@@ -155,8 +155,8 @@ export default class ChessField {
       if (!cellPos) {
         return;
       }
-      const allowed: Coordinate[] = this.model.getAllowedMovesFromPoint(cellPos.x, cellPos.y);
-      this.view.setAllowedMoves(allowed);
+      const allowedMoves: Coordinate[] = this.model.getAllowedMovesFromPoint(cellPos.x, cellPos.y);
+      this.view.setAllowedMoves(allowedMoves);
     } else {
       this.view.setAllowedMoves([]);
     }

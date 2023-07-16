@@ -1,5 +1,6 @@
 import type { AxiosResponse } from 'axios';
 import { AxiosError } from 'axios';
+import { GameStatus, GameAction } from '@chess/game-common';
 import {
   changeName,
   setCurrentUserColor,
@@ -11,7 +12,6 @@ import { api, SERVER_ENDPOINT, wsProtocol, baseURL } from '../config';
 
 import type FigureColor from '../enums/figure-colors';
 import GameMode from '../enums/game-mode';
-import { GameStatus, GameAction } from '../enums/game-status-action';
 import type MoveMessage from '../interfaces/move-message';
 import type {
   Room,
@@ -75,8 +75,10 @@ class SocketService {
     let resp: AxiosResponse<PlayerAddResponse> | null = null;
     try {
       resp = await api.put(`${SERVER_ENDPOINT}${room}/players?playerName=${playerName}`);
-    } catch (error) {
-      console.error(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(error.message);
+      }
     }
     if (resp == null) {
       return;
@@ -127,7 +129,9 @@ class SocketService {
           break;
       }
     } catch (error) {
-      console.error(error.message);
+      if (error instanceof Error) {
+        console.error(error.message);
+      }
     }
   }
 

@@ -3,9 +3,9 @@ export enum PlayerColor {
   white = 1,
 }
 export enum PlayerState {
-  joined,
-  ready,
-  playing,
-  disconnected,
-  victor,
+  joined = 'joined',
+  ready = 'ready',
+  playing = 'playing',
+  disconnected = 'disconnected',
+  victor = 'victor',
 }

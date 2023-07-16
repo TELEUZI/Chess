@@ -39,11 +39,10 @@
         "@typescript-eslint/no-extraneous-class": 0,
         "@typescript-eslint/no-unsafe-return": 0,
         "@typescript-eslint/parameter-properties": 0,
-        "@typescript-eslint/no-type-alias": 0,
         "@typescript-eslint/no-magic-numbers": 0,
         "@typescript-eslint/member-ordering": 0,
         "@typescript-eslint/prefer-enum-initializers": 0,
-        "no-console": 0,
+        "no-console": 1,
         "@typescript-eslint/no-unsafe-member-access": 1
       }
     },

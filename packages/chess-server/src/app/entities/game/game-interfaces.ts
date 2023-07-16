@@ -1,7 +1,7 @@
 import type { Coordinate } from '@coordinate';
+import type { GameStatus } from '@chess/game-common';
 import type { PlayerColor } from '../player/player-enums';
 import type { PlayerSerializable } from '../player/player-interfaces';
-import type { GameStatus } from './game-enums';
 
 export interface GameInfo {
   gameStatus: GameStatus;

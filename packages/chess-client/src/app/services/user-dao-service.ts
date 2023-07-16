@@ -27,12 +27,6 @@ export default class UserDaoService {
     this.dao.create(user);
   }
 
-  // async updateUserScore(newUser: User): Promise<void> {
-  //   const currentUser: User = await this.findCurrentByEmail(newUser);
-  //   currentUser.score = newUser.score > currentUser.score ? newUser.score : currentUser.score;
-  //   this.setData(currentUser);
-  // }
-
   async getAvatar(): Promise<ArrayBuffer | string> {
     return (await this.findCurrentByEmail(this.currentUser))?.avatar ?? '';
   }

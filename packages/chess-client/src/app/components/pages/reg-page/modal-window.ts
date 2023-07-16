@@ -9,7 +9,7 @@ export default class ModalWindow extends BaseComponent {
 
   constructor(
     modalContent: ModalContent | RegForm,
-    parentNode?: HTMLElement,
+    parentNode?: HTMLElement | null,
     private readonly onModalClick?: () => void,
     private readonly onDeclineClick?: () => void,
   ) {
