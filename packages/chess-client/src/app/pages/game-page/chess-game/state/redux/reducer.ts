@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
-import { INIT_FIELD_STATE } from '../../../../../config';
-import type FigureColor from '../../../../../enums/figure-colors';
-import GameMode from '../../../../../enums/game-mode';
+import { INIT_FIELD_STATE } from '@client/app/config';
+import type FigureColor from '@client/app/enums/figure-colors';
+import GameMode from '@client/app/enums/game-mode';
 import createFieldFromStrings from '../../fabrics/field-fabric';
 import type FieldState from '../field-state';
 

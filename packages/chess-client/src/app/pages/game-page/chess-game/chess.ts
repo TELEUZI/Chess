@@ -1,4 +1,6 @@
 import type { Coordinate } from '@coordinate';
+import FigureColor from '@client/app/enums/figure-colors';
+import FigureColorText from '@client/app/enums/figure-color-text';
 import BaseComponent from '../../../components/base-component';
 import Timer from '../../../components/timer/timer';
 import ChessField from './field/field-controller';
@@ -11,13 +13,11 @@ import getNextFigureColor from '../../../utils/get-next-figure-color';
 import ReplayDaoService from '../../../services/replay-dao-service';
 import type { TimedMoveMessage } from '../../../interfaces/move-message';
 import { setWinner } from './state/redux/action-creators';
-import FigureColor from '../../../enums/figure-colors';
 import type { GameResult } from '../../../interfaces/replay';
 import type Replay from '../../../interfaces/replay';
 import { socketService } from '../../../services/websocket-service';
 import { TIMER_DELAY } from '../../../config';
 import type TurnInfo from '../../../interfaces/turn-info';
-import FigureColorText from '../../../enums/figure-color-text';
 
 const IS_UPDATABLE = false;
 class Chess extends BaseComponent {

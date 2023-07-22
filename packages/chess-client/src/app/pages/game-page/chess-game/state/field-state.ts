@@ -1,8 +1,8 @@
-import FigureColor from '../../../../enums/figure-colors';
+import FigureColor from '@client/app/enums/figure-colors';
+import { TABLE_SIZE } from '@client/app/config';
 import CellModel from '../models/cell-model';
 import type FigureModel from '../models/figures/figure-model';
 import { createFigurefromString } from '../fabrics/figure-fabric';
-import { TABLE_SIZE } from '../../../../config';
 
 export function isInField(x: number, y: number): boolean {
   return x >= 0 && x < TABLE_SIZE && y >= 0 && y < TABLE_SIZE;

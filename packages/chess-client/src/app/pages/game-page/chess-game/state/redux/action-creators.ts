@@ -1,5 +1,5 @@
-import type FigureColor from '../../../../../enums/figure-colors';
-import type GameMode from '../../../../../enums/game-mode';
+import type FigureColor from '@client/app/enums/figure-colors';
+import type GameMode from '@client/app/enums/game-mode';
 import type FieldState from '../field-state';
 import {
   CHANGE_USERNAME,

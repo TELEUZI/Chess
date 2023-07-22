@@ -1,6 +1,6 @@
-import FigureColorLetter from '../../../../enums/figure-color-letter';
-import FigureColor from '../../../../enums/figure-colors';
-import BaseComponent from '../../../../components/base-component';
+import FigureColorLetter from '@client/app/enums/figure-color-letter';
+import FigureColor from '@client/app/enums/figure-colors';
+import BaseComponent from '@client/app/components/base-component';
 import Figure from './figure-view';
 
 export default class CellView extends BaseComponent {

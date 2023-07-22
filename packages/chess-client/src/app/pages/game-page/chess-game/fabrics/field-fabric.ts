@@ -1,4 +1,4 @@
-import { TABLE_SIZE } from '../../../../config';
+import { TABLE_SIZE } from '@client/app/config';
 import CellModel from '../models/cell-model';
 import FieldState from '../state/field-state';
 import { createFigurefromString } from './figure-fabric';

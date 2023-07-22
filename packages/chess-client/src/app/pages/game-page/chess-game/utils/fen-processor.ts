@@ -1,4 +1,4 @@
-import { TABLE_SIZE } from '../../../../config';
+import { TABLE_SIZE } from '@client/app/config';
 
 export function getEmptyBoard(): string[][] {
   const board = [];

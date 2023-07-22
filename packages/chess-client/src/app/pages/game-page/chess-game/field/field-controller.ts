@@ -1,22 +1,22 @@
 import type { Coordinate } from '@coordinate';
+import GameMode from '@client/app/enums/game-mode';
+import FigureType from '@client/app/enums/figure-type';
+import FigureColor from '@client/app/enums/figure-colors';
+import { socketService } from '@client/app/services/websocket-service';
+import ConfigDaoService from '@client/app/services/config-dao-service';
+import { BLACK_ROW_INDEX, WHITE_ROW_INDEX } from '@client/app/config';
+import type { Strategy } from '@client/app/interfaces/bot-strategy';
+import type TurnInfo from '@client/app/interfaces/turn-info';
 import type CellModel from '../models/cell-model';
 import type CellView from '../views/cell-view';
 import type FieldState from '../state/field-state';
 import FieldView from '../views/field-view';
 import store from '../state/redux/store';
 import FieldModel from './field-model';
-import GameMode from '../../../../enums/game-mode';
 import ChessBot from './chess-bot';
 import forEachCell from '../utils/cells-iterator';
-import FigureType from '../../../../enums/figure-type';
-import FigureColor from '../../../../enums/figure-colors';
-import { socketService } from '../../../../services/websocket-service';
 import { setCurrentUserColor } from '../state/redux/action-creators';
-import ConfigDaoService from '../../../../services/config-dao-service';
-import { BLACK_ROW_INDEX, WHITE_ROW_INDEX } from '../../../../config';
 import createStrategy from '../fabrics/bot-strategy-fabric';
-import type { Strategy } from '../../../../interfaces/bot-strategy';
-import type TurnInfo from '../../../../interfaces/turn-info';
 
 export default class ChessField {
   private readonly model: FieldModel;

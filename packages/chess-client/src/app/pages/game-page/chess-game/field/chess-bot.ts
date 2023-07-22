@@ -1,8 +1,8 @@
-import FigureColor from '../../../../enums/figure-colors';
+import FigureColor from '@client/app/enums/figure-colors';
+import type { Strategy } from '@client/app/interfaces/bot-strategy';
 import type FieldState from '../state/field-state';
 import type FieldModel from './field-model';
 import { forEachPlayerFigure } from '../services/field-service/field-service';
-import type { Strategy } from '../../../../interfaces/bot-strategy';
 import RandomMoveStrategy from './chess-bot-strategies/random-move-strategy';
 
 export function evaluateBoard(chess: FieldState): number {
@@ -39,7 +39,7 @@ export default class ChessBot {
     const bestMove = this.strategy.getBestMove({
       state,
       color,
-      avaliableMoves: this.model.getAllValidMoves(state, color),
+      availableMoves: this.model.getAllValidMoves(state, color),
     });
     if (!bestMove) {
       return;

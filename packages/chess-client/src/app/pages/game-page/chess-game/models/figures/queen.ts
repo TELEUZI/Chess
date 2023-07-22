@@ -1,6 +1,6 @@
-import FigureType from '../../../../../enums/figure-type';
+import FigureType from '@client/app/enums/figure-type';
+import FigureWeight from '@client/app/enums/figure-weight';
 import FigureModel from './figure-model';
-import FigureWeight from '../../../../../enums/figure-weight';
 
 export default class Queen extends FigureModel {
   constructor(color: number) {

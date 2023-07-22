@@ -1,9 +1,9 @@
 import './header.scss';
+import BASE_LOGO from '@client/app/assets/icons/ava.png';
 import BaseComponent from '../base-component';
 import Button from '../button/button';
 import Menu from '../menu/menu';
 import type State from './header-states/state';
-import BASE_LOGO from '../../../assets/icons/ava.png';
 
 const createAvatar = (): HTMLImageElement => {
   const avatar = new Image();
