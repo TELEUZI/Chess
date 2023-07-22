@@ -29,7 +29,7 @@ export default class RegFormModal extends BaseComponent {
     const currentUser = {
       name: str[0],
       score: 0,
-      avatar: avatarBase64,
+      avatar: avatarBase64 ?? '',
     };
     this.onGetData(currentUser);
   }

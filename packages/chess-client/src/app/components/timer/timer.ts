@@ -10,7 +10,7 @@ export default class Timer {
 
   private isRunning = true;
 
-  private currentTime: string;
+  private currentTime = '';
 
   constructor() {
     this.view = new TimerView();
