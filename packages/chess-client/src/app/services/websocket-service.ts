@@ -6,8 +6,8 @@ import {
   setCurrentUserColor,
   setUserColor,
   setWinner,
-} from '../components/pages/game-page/chess-game/state/redux/action-creators';
-import store from '../components/pages/game-page/chess-game/state/redux/store';
+} from '../pages/game-page/chess-game/state/redux/action-creators';
+import store from '../pages/game-page/chess-game/state/redux/store';
 import { api, SERVER_ENDPOINT, wsProtocol, baseURL } from '../config';
 
 import type FigureColor from '../enums/figure-colors';

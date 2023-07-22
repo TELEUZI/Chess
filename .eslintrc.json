@@ -16,7 +16,7 @@
           "error",
           {
             "enforceBuildableLibDependency": true,
-            "allow": [],
+            "allowCircularSelfDependency": true,
             "depConstraints": [
               {
                 "sourceTag": "*",
@@ -47,7 +47,8 @@
           "error",
           { "includeInternal": true, "includeTypes": true }
         ],
-        "@typescript-eslint/no-type-alias": 0
+        "@typescript-eslint/no-type-alias": 0,
+        "import/prefer-default-export": 0
       }
     },
     {
