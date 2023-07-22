@@ -169,8 +169,8 @@ class Chess extends BaseComponent {
     this.setWinner('draw');
   }
 
-  public makeMove(from: Coordinate, to: Coordinate): void {
-    this.chessBoard.makeMove(from.x, from.y, to.x, to.y);
+  public async makeMove(from: Coordinate, to: Coordinate): Promise<void> {
+    await this.chessBoard.makeMove(from.x, from.y, to.x, to.y);
   }
 
   private setWinner(result: GameResult): void {

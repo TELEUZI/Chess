@@ -23,16 +23,12 @@ export default class ChessBot {
 
   // private readonly currentColor: FigureColor = FigureColor.BLACK;
 
-  private strategy: Strategy;
+  private readonly strategy: Strategy;
 
   constructor(model: FieldModel, strategy: Strategy | null = null) {
     this.model = model;
     forEachPlayerFigure.bind(this);
     this.strategy = strategy ?? new RandomMoveStrategy();
-  }
-
-  setStrategy(strategy: Strategy): void {
-    this.strategy = strategy;
   }
 
   makeBotMove(state: FieldState, color: FigureColor): void {
@@ -44,7 +40,8 @@ export default class ChessBot {
     if (!bestMove) {
       return;
     }
-    this.model.makeMove(bestMove.from.x, bestMove.from.y, bestMove.to.x, bestMove.to.y);
-    this.model.checkGameSituation();
+    this.model.makeMove(bestMove.from.x, bestMove.from.y, bestMove.to.x, bestMove.to.y).then(() => {
+      this.model.checkGameSituation();
+    });
   }
 }

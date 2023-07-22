@@ -20,10 +20,6 @@ export default class Game {
     return this.players;
   }
 
-  public getPlayer(token: string): Player | null {
-    return this.players.get(token) ?? null;
-  }
-
   public start(): GameInfo {
     if (this.status !== GameStatus.waitingRoom) {
       throw new Error("Game state doesn't allow for game start. Must be 'waitingRoom'.");

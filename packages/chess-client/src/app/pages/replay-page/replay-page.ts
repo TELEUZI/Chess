@@ -17,7 +17,9 @@ export default class ReplayPage implements PageController {
 
   createPage(): void {
     this.root.innerHTML = '';
-    this.startGame();
+    this.startGame().catch(() => {
+      console.error('Failed to start game');
+    });
   }
 
   async startGame(): Promise<void> {
@@ -29,7 +31,7 @@ export default class ReplayPage implements PageController {
     Promise.all(
       replay.history.map(async (move) => {
         return delay(move.time * 1000).then(() => {
-          this.game?.makeMove(move.from, move.to);
+          return this.game?.makeMove(move.from, move.to);
         });
       }),
     ).then(() => {

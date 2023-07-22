@@ -22,7 +22,7 @@ export default class FieldView extends BaseComponent {
 
   constructor(
     parentNode: HTMLElement,
-    private readonly onCellClick: (cell: CellView, i: number, j: number) => void,
+    private readonly onCellClick: (cell: CellView, i: number, j: number) => Promise<void>,
   ) {
     super('div', ['table'], '', parentNode);
     for (let i = 0; i < TABLE_SIZE; i += 1) {
@@ -67,7 +67,7 @@ export default class FieldView extends BaseComponent {
     }
     forEachCell<CellView>(this.cells, (cell, pos) => {
       const isAllowed = pos.equals(selection);
-      cell.highlightCheck(!!isAllowed);
+      cell.highlightCheck(isAllowed);
     });
   }
 
@@ -80,14 +80,14 @@ export default class FieldView extends BaseComponent {
     }
     forEachCell<CellView>(this.cells, (cell, pos) => {
       const isAllowed = pos.equals(selection);
-      cell.highlightMate(!!isAllowed);
+      cell.highlightMate(isAllowed);
     });
   }
 
   setAllowedMoves(selection: Coordinate[]): void {
     forEachCell<CellView>(this.cells, (cell, pos) => {
       const isAllowed = selection.findIndex((move) => move.equals(pos)) !== -1;
-      cell.highlightAllowedMoves(!!isAllowed);
+      cell.highlightAllowedMoves(isAllowed);
     });
   }
 

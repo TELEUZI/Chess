@@ -43,11 +43,11 @@ export default class ReplayDaoService {
   async getByDate(date: number): Promise<Replay | undefined> {
     return (await this.dao.findAll()).find((replay) => replay.date === date);
   }
-
-  async getLast(): Promise<Replay> {
-    const usersArray: Replay[] = await this.dao.findAll();
-    return usersArray[usersArray.length - 1];
-  }
+  //
+  // async getLast(): Promise<Replay> {
+  //   const usersArray: Replay[] = await this.dao.findAll();
+  //   return usersArray[usersArray.length - 1];
+  // }
 
   async getAll(): Promise<Replay[]> {
     return this.dao.findAll();

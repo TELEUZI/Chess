@@ -35,16 +35,16 @@ export default class TurnManager {
     this.queenTurnManager = new QueenTurnManager();
   }
 
-  checkMove(state: FieldState, fromX: number, fromY: number, toX: number, toY: number): boolean {
-    this.field = store.getState().field;
-    const figure = this.field.getCellAt(fromX, fromY)?.getFigure() ?? null;
-    const allowed = this.getMoves(state, figure, fromX, fromY);
-    return allowed.findIndex((coord) => coord.x === toX && coord.y === toY) !== -1;
-  }
-
-  isRightMove(posX: number, posY: number): boolean {
-    return !!this.field.getCellAt(posX, posY) && !this.field.getCellAt(posX, posY)?.getFigure();
-  }
+  // checkMove(state: FieldState, fromX: number, fromY: number, toX: number, toY: number): boolean {
+  //   this.field = store.getState().field;
+  //   const figure = this.field.getCellAt(fromX, fromY)?.getFigure() ?? null;
+  //   const allowed = this.getMoves(state, figure, fromX, fromY);
+  //   return allowed.findIndex((coord) => coord.x === toX && coord.y === toY) !== -1;
+  // }
+  //
+  // isRightMove(posX: number, posY: number): boolean {
+  //   return !!this.field.getCellAt(posX, posY) && !this.field.getCellAt(posX, posY)?.getFigure();
+  // }
 
   getMoves(
     state: FieldState,

@@ -136,7 +136,7 @@ export default class FieldModel {
     }
   }
 
-  moveFigure(fromX: number, fromY: number, toX: number, toY: number): void {
+  async moveFigure(fromX: number, fromY: number, toX: number, toY: number): Promise<void> {
     const allowed = this.getAllowedMovesFromPoint(fromX, fromY);
     const isAllowed = allowed.findIndex((it) => {
       return it.x === toX && it.y === toY;
@@ -145,13 +145,13 @@ export default class FieldModel {
       this.checkGameSituation();
       return;
     }
-    this.makeMove(fromX, fromY, toX, toY);
+    await this.makeMove(fromX, fromY, toX, toY);
     if (this.gameMode === GameMode.SINGLE) {
       this.onSinglePlayerMove();
     } else if (this.gameMode === GameMode.BOT) {
       this.onBotMove();
     } else if (this.gameMode === GameMode.MULTIPLAYER) {
-      socketService.move(getFenFromStringBoard(this.state.getPlainState()), {
+      await socketService.move(getFenFromStringBoard(this.state.getPlainState()), {
         from: new Coordinate(fromX, fromY),
         to: new Coordinate(toX, toY),
       });

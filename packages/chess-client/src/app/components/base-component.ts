@@ -74,10 +74,6 @@ export default class BaseComponent {
     this.node.classList.remove(className);
   }
 
-  setBgImage(image: string): void {
-    this.node.style.backgroundImage = `url(${image})`;
-  }
-
   addListener(
     event: string,
     listener: (e?: Event) => void,

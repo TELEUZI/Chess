@@ -78,8 +78,4 @@ export default class CellView extends BaseComponent {
   rotate(): void {
     this.toggleClass('rotate');
   }
-
-  getFigure(): Figure {
-    return this.figure;
-  }
 }

@@ -77,13 +77,6 @@ export default class Controller extends BaseComponent {
     router.hashChanged();
   }
 
-  async moveToRegisteredState(): Promise<void> {
-    this.headerStateManager.transitionToRegisteredState(
-      this.startGame.bind(this),
-      await this.userModel.getAvatar(),
-    );
-  }
-
   toggleModal(): void {
     this.modal.toggleClass('hidden');
   }
@@ -114,7 +107,7 @@ export default class Controller extends BaseComponent {
   async offerLooseGame(): Promise<void> {
     window.location.hash = '#default';
     if (store.getState().gameMode.currentGameMode === GameMode.MULTIPLAYER) {
-      socketService.endGame('end');
+      await socketService.endGame('end');
     }
     (await this.gamePage).endGame();
     this.headerStateManager.transitionToRegisteredState(
@@ -125,7 +118,7 @@ export default class Controller extends BaseComponent {
 
   async offerDraw(): Promise<void> {
     if (store.getState().gameMode.currentGameMode === GameMode.MULTIPLAYER) {
-      socketService.suggestDraw();
+      await socketService.suggestDraw();
     }
     this.headerStateManager.transitionToRegisteredState(
       this.startGame.bind(this),
