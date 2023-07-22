@@ -1,18 +1,18 @@
-import { BEST_VALUE_MOVE_FOR_BLACK } from '../../../../../config';
-import type FigureColor from '../../../../../enums/figure-colors';
-import type { BestMoveParams, Strategy } from '../../../../../interfaces/bot-strategy';
-import type { FigureTurn } from '../../../../../interfaces/move-message';
-import type MoveMessage from '../../../../../interfaces/move-message';
+import { BEST_VALUE_MOVE_FOR_BLACK } from '@client/app/config';
+import type FigureColor from '@client/app/enums/figure-colors';
+import type { BestMoveParams, Strategy } from '@client/app/interfaces/bot-strategy';
+import type { FigureTurn } from '@client/app/interfaces/move-message';
+import type MoveMessage from '@client/app/interfaces/move-message';
 import { getStateAfterMove } from '../../services/field-service/field-service';
 import type FieldState from '../../state/field-state';
 import { evaluateBoard } from '../chess-bot';
 
 const SEARCH_DEPTH = 2;
 export default class MinMaxBotStrategy implements Strategy {
-  public getBestMove({ state, color, avaliableMoves }: BestMoveParams): MoveMessage | null {
+  public getBestMove({ state, color, availableMoves }: BestMoveParams): MoveMessage | null {
     let bestMove: MoveMessage | null = null;
     let bestValue = BEST_VALUE_MOVE_FOR_BLACK;
-    avaliableMoves.forEach((newGameMove) => {
+    availableMoves.forEach((newGameMove) => {
       newGameMove.to.forEach((moveTo) => {
         const newState = getStateAfterMove(
           state,
@@ -21,7 +21,7 @@ export default class MinMaxBotStrategy implements Strategy {
           moveTo.x,
           moveTo.y,
         );
-        const boardValue = this.minimax(SEARCH_DEPTH, newState, color, avaliableMoves, !!color);
+        const boardValue = this.minimax(SEARCH_DEPTH, newState, color, availableMoves, !!color);
         if (boardValue >= bestValue) {
           bestValue = boardValue;
           bestMove = { from: newGameMove.from, to: moveTo };

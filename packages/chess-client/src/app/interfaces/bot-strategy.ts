@@ -6,9 +6,9 @@ import type MoveMessage from './move-message';
 export interface BestMoveParams {
   state: FieldState;
   color: FigureColor;
-  avaliableMoves: FigureTurn[];
+  availableMoves: FigureTurn[];
 }
 
 export interface Strategy {
-  getBestMove: ({ state, color, avaliableMoves }: BestMoveParams) => MoveMessage | null;
+  getBestMove: ({ state, color, availableMoves }: BestMoveParams) => MoveMessage | null;
 }

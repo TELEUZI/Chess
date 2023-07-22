@@ -1,8 +1,16 @@
 import { Coordinate } from '@coordinate';
-import FigureColor from '../../../../enums/figure-colors';
-import GameMode from '../../../../enums/game-mode';
-import { socketService } from '../../../../services/websocket-service';
-import getNextFigureColor from '../../../../utils/get-next-figure-color';
+import FigureColor from '@client/app/enums/figure-colors';
+import GameMode from '@client/app/enums/game-mode';
+import { socketService } from '@client/app/services/websocket-service';
+import getNextFigureColor from '@client/app/utils/get-next-figure-color';
+import type { FigureTurn } from '@client/app/interfaces/move-message';
+import type MoveMessage from '@client/app/interfaces/move-message';
+import Observable from '@client/app/services/observable';
+import type { GameResult } from '@client/app/interfaces/replay';
+import getOpeningName from '@client/app/services/chess-openings-service';
+import type TurnInfo from '@client/app/interfaces/turn-info';
+import FigureType from '@client/app/enums/figure-type';
+import { INIT_FIELD_STATE } from '@client/app/config';
 import type CellModel from '../models/cell-model';
 
 import type FieldState from '../state/field-state';
@@ -10,22 +18,14 @@ import store from '../state/redux/store';
 import createFieldFromStrings from '../fabrics/field-fabric';
 import TurnManager from '../services/figure-moves/turn-manager';
 import { createFigurefromString } from '../fabrics/figure-fabric';
-import type { FigureTurn } from '../../../../interfaces/move-message';
-import type MoveMessage from '../../../../interfaces/move-message';
 import {
   getKingPosition,
   forEachPlayerFigure,
   getStateAfterMove,
   getFigureFromState,
 } from '../services/field-service/field-service';
-import Observable from '../../../../services/observable';
-import type { GameResult } from '../../../../interfaces/replay';
 import { setCurrentUserColor, makeMove } from '../state/redux/action-creators';
 import { getBoardFromFen, getFenFromStringBoard } from '../utils/fen-processor';
-import getOpeningName from '../../../../services/chess-openings-service';
-import type TurnInfo from '../../../../interfaces/turn-info';
-import FigureType from '../../../../enums/figure-type';
-import { INIT_FIELD_STATE } from '../../../../config';
 
 interface FieldModelProps {
   onStalemate: () => void;

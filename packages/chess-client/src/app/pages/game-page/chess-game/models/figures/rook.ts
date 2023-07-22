@@ -1,5 +1,5 @@
-import FigureType from '../../../../../enums/figure-type';
-import FigureWeight from '../../../../../enums/figure-weight';
+import FigureType from '@client/app/enums/figure-type';
+import FigureWeight from '@client/app/enums/figure-weight';
 import FigureModel from './figure-model';
 
 export default class Rook extends FigureModel {

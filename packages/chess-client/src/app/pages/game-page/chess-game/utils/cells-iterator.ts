@@ -1,5 +1,5 @@
 import { Coordinate } from '@coordinate';
-import { TABLE_SIZE } from '../../../../config';
+import { TABLE_SIZE } from '@client/app/config';
 
 export default function forEachCell<T>(
   cells: T[],

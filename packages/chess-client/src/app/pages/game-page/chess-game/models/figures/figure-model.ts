@@ -1,7 +1,7 @@
-import type FigureColor from '../../../../../enums/figure-colors';
-import type FigureType from '../../../../../enums/figure-type';
-import type { FigureWeightValues } from '../../../../../enums/figure-weight';
-import FigureWeight from '../../../../../enums/figure-weight';
+import type { FigureWeightValues } from '@client/app/enums/figure-weight';
+import type FigureColor from '@client/app/enums/figure-colors';
+import type FigureType from '@client/app/enums/figure-type';
+import FigureWeight from '@client/app/enums/figure-weight';
 
 export interface FigureInfo {
   readonly type: FigureType | null;

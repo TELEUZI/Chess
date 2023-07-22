@@ -1,5 +1,5 @@
+import BASE_LOGO from '@client/app/assets/icons/ava.png';
 import State from './state';
-import BASE_LOGO from '../../../../assets/icons/ava.png';
 import Button from '../../button/button';
 import type Header from '../header';
 

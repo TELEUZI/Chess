@@ -1,4 +1,5 @@
-import FigureColor from '../../../../enums/figure-colors';
+import FigureColor from '@client/app/enums/figure-colors';
+import FigureType from '@client/app/enums/figure-type';
 import Bishop from '../models/figures/bishop';
 import type FigureModel from '../models/figures/figure-model';
 import King from '../models/figures/king';
@@ -6,7 +7,6 @@ import Knight from '../models/figures/knight';
 import Pawn from '../models/figures/pawn';
 import Queen from '../models/figures/queen';
 import Rook from '../models/figures/rook';
-import FigureType from '../../../../enums/figure-type';
 
 export default function createFigure(type: string, color: FigureColor): FigureModel | null {
   const figures = new Map<string, [typeof FigureModel, FigureType]>([

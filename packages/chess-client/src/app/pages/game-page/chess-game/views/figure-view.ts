@@ -1,4 +1,4 @@
-import BaseComponent from '../../../../components/base-component';
+import BaseComponent from '@client/app/components/base-component';
 
 class FigureView extends BaseComponent {
   constructor(parentNode: HTMLElement, style: string[]) {
