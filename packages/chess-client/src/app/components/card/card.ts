@@ -1,6 +1,6 @@
+import PlayerContainer from '../../pages/reg-page/reg-page__components/player-control';
 import BaseComponent from '../base-component';
 import Button from '../button/button';
-import PlayerContainer from '../pages/reg-page/reg-page__components/player-control';
 
 export default class Card extends BaseComponent {
   private readonly cardButtonView: Button;
