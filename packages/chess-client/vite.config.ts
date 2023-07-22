@@ -3,6 +3,7 @@ import { defineConfig } from 'vite';
 
 import viteTsConfigPaths from 'vite-tsconfig-paths';
 import eslint from 'vite-plugin-eslint';
+import checker from 'vite-plugin-checker';
 
 export default defineConfig({
   cacheDir: '../../node_modules/.vite/chess-client',
@@ -10,10 +11,10 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'chess-client': [
-            'packages/chess-client/src/app/components/pages/best-score-page/best-score-page.ts',
+          components: [
+            'packages/chess-client/src/app/components/timer/timer.ts',
+            'packages/chess-client/src/app/components/header/header.ts',
           ],
-          'game-page': ['packages/chess-client/src/app/components/pages/game-page/game-page.ts'],
         },
       },
     },
@@ -35,6 +36,11 @@ export default defineConfig({
     eslint({
       fix: true,
       failOnError: false,
+    }),
+    checker({
+      typescript: {
+        tsconfigPath: 'packages/chess-client/tsconfig.app.json',
+      },
     }),
   ],
 

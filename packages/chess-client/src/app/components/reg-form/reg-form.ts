@@ -1,6 +1,6 @@
 import BaseComponent from '../base-component';
 import Input from '../input/input';
-import Validator from '../../utils/validator';
+import { validateFirstName } from '../../utils/validator';
 import FileInput from '../input/file-input';
 
 export default class RegForm extends BaseComponent {
@@ -31,7 +31,7 @@ export default class RegForm extends BaseComponent {
     this.image.setAttribute('accept', 'image/*');
     this.inputs.push(this.nameInput);
     this.insertChilds([...this.inputs, this.submit, this.reset, this.image]);
-    this.nameInput.setHandler((input) => Validator.validateFirstName(input));
+    this.nameInput.setHandler((input) => validateFirstName(input));
     this.submit.setAttribute('disabled', 'true');
     this.addUserInputListeners();
   }
