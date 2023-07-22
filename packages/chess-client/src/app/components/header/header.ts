@@ -1,5 +1,5 @@
-import './header.scss';
-import BASE_LOGO from '@client/app/assets/icons/ava.png';
+import BASE_LOGO from '../../../assets/icons/ava.png';
+import s from './header.module.scss';
 import BaseComponent from '../base-component';
 import Button from '../button/button';
 import Menu from '../menu/menu';
@@ -24,7 +24,7 @@ export default class Header extends BaseComponent {
   public secondControlButton: Button;
 
   constructor(state: State<Header>, onButtonClick?: () => void) {
-    super('header', ['header']);
+    super('header', [s.header]);
     this.state = state;
     this.transitionTo(this.state);
     this.createButton({ onFirstButtonClick: onButtonClick });
