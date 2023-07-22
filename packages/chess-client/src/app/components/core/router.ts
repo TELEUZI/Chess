@@ -21,7 +21,7 @@ export default class Router {
   hashChanged = (): void => {
     const route =
       window.location.hash.length > 0
-        ? window.location.hash.substr(INDEX_OF_SECOND_ITEM_IN_ITERABLE)
+        ? window.location.hash.substring(INDEX_OF_SECOND_ITEM_IN_ITERABLE)
         : 'default';
     const actualRoute = this.routes.find((routeName) => routeName.name === route);
     if (actualRoute) {

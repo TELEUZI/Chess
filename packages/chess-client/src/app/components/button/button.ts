@@ -13,8 +13,4 @@ export default class Button extends BaseComponent {
       this.onClick();
     };
   }
-
-  public updateOnClick(onClick: () => void): void {
-    this.onClick = onClick;
-  }
 }

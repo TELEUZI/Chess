@@ -24,10 +24,6 @@ export interface GameExternalInfo {
   playerCount: number;
 }
 
-export interface GamePlayers {
-  players: PlayerSerializable[];
-}
-
 export interface Player {
   name: string;
   color: FigureColor;

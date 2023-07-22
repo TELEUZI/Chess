@@ -10,18 +10,13 @@ export interface GameInfo {
   players: PlayerSerializable[];
   lastMove?: MoveMessage;
 }
+
 export interface GameExternalInfo {
   gameStatus: GameStatus;
   playerCount: number;
 }
-export interface GamePlayers {
-  players: PlayerSerializable[];
-}
+
 export interface MoveMessage {
   from: Coordinate;
   to: Coordinate;
-}
-export interface FigureTurn {
-  from: Coordinate;
-  to: Coordinate[];
 }

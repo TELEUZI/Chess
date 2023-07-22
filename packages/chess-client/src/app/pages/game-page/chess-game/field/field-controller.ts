@@ -91,8 +91,8 @@ export default class ChessField {
     this.model.onNextTurn.subscribe(() => {
       this.onNextTurn();
     });
-    this.view = new FieldView(parentNode, (cell: CellView, i: number, j: number) => {
-      this.cellClickHandler(cell, i, j);
+    this.view = new FieldView(parentNode, async (cell: CellView, i: number, j: number) => {
+      await this.cellClickHandler(cell, i, j);
     });
     this.view.refresh(store.getState().field);
     store.subscribe(() => {
@@ -126,7 +126,7 @@ export default class ChessField {
     return createStrategy(await this.botConfigService.getData());
   }
 
-  private cellClickHandler(cell: CellView, i: number, j: number): void {
+  private async cellClickHandler(cell: CellView, i: number, j: number): Promise<void> {
     if (
       store.getState().currentPlayer.currentUserColor !== store.getState().color.color &&
       this.model.getGameMode() === GameMode.MULTIPLAYER
@@ -135,7 +135,7 @@ export default class ChessField {
     }
     let cellPos = this.getCellPosition(this.selectedCell);
     if (cellPos) {
-      this.model.moveFigure(cellPos.x, cellPos.y, i, j);
+      await this.model.moveFigure(cellPos.x, cellPos.y, i, j);
       forEachCell(this.view.getCells(), (currentCell) => {
         currentCell.highlightSelectedCell(false);
         currentCell.highlightAllowedMoves(false);
