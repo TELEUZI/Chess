@@ -6,7 +6,11 @@ import Figure from './figure-view';
 export default class CellView extends BaseComponent {
   private figure: Figure;
 
-  constructor(parentNode: HTMLElement, className: string, private readonly onClick: () => void) {
+  constructor(
+    parentNode: HTMLElement,
+    className: string,
+    private readonly onClick: () => void,
+  ) {
     super('div', ['cell', className], '', parentNode);
     this.figure = new Figure(this.node, []);
     this.node.onclick = () => {

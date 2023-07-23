@@ -7,7 +7,7 @@ import ConfigDaoService from '../../services/config-dao-service';
 export default class SettingsPage implements PageController {
   private readonly root: HTMLElement;
 
-  private readonly selectDifficulty: Select;
+  private readonly selectDifficulty: Select<GameDifficultyOptions>;
 
   private readonly selectWrapper: BaseComponent;
 
@@ -16,7 +16,7 @@ export default class SettingsPage implements PageController {
   constructor(root: HTMLElement) {
     this.root = root;
     this.selectWrapper = new BaseComponent('div', ['settings-wrapper']);
-    this.selectDifficulty = new Select(
+    this.selectDifficulty = new Select<GameDifficultyOptions>(
       'Choose Difficulty of AI',
       [GameDifficultyOptions.easy, GameDifficultyOptions.medium, GameDifficultyOptions.hard],
       () => {

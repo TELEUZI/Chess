@@ -5,7 +5,10 @@ export default class SelectView extends BaseComponent {
 
   private readonly select: HTMLSelectElement;
 
-  constructor(options: string[], private readonly onChange: () => void) {
+  constructor(
+    options: string[],
+    private readonly onChange: () => void,
+  ) {
     super('select', ['select', 'select-multiple'], '');
     this.select = this.node as HTMLSelectElement;
     this.options = options.map((option) => {
