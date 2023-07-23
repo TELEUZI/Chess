@@ -6,11 +6,10 @@ import helmet from 'helmet';
 import * as path from 'path';
 
 import express from 'express';
-import type { ExtentedWebsocket } from './routes/index/ws';
 import buildWsRouting from './routes/index/ws';
 import { router } from './routes/index/http';
 
-const host = '0.0.0.0';
+const host = 'localhost';
 const DEFAULT_PORT = 5000;
 const PORT = process.env.PORT ?? DEFAULT_PORT;
 
@@ -21,13 +20,13 @@ export interface ServerItems {
 }
 export async function setUpServer(): Promise<ServerItems> {
   const app = express();
+  app.use(cors());
+  app.use(helmet());
 
   app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
   const server = http.createServer(app);
-  const wss = new WebSocket.Server<ExtentedWebsocket>({ server });
-  app.use(cors());
-  app.use(helmet());
+  const wss = new WebSocket.Server({ server });
   app.use(router);
   app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
     console.error('Http error:', error);
@@ -42,10 +41,10 @@ export async function setUpServer(): Promise<ServerItems> {
     console.error('WebSocket error:', error);
   });
   const { sep } = path;
-  const appBuildPath = path.join(__dirname, `..${sep}..${sep}client${sep}dist${sep}`);
+  const appBuildPath = path.join(__dirname, `..${sep}..${sep}packages${sep}chess-client${sep}`);
   app.use(express.static(appBuildPath));
   app.get('*', (req, res) => {
-    res.sendFile(path.join(appBuildPath), 'index.html');
+    res.sendFile(path.join(appBuildPath, 'index.html'));
   });
   await new Promise<void>((resolve) => {
     server.listen(PORT, () => {
