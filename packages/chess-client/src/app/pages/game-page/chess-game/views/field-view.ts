@@ -45,7 +45,7 @@ export default class FieldView extends BaseComponent {
       const cellTo = field.getCellAt(pos.x, pos.y);
       const figureType = cellTo?.getFigureType();
       const figureColor = cellTo?.getFigureColor();
-      if (figureType && figureColor) {
+      if (figureType != null && figureColor != null) {
         cell.refresh(figureType, figureColor);
       }
     });

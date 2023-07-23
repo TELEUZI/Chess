@@ -7,11 +7,12 @@ import type { FigureTurn } from '@client/app/interfaces/move-message';
 import type MoveMessage from '@client/app/interfaces/move-message';
 import Observable from '@client/app/services/observable';
 import type { GameResult } from '@client/app/interfaces/replay';
-import getOpeningName from '@client/app/services/chess-openings-service';
+import { getOpeningName, getOpenings } from '@client/app/services/chess-openings-service';
 import type TurnInfo from '@client/app/interfaces/turn-info';
 import FigureType from '@client/app/enums/figure-type';
 import { INIT_FIELD_STATE } from '@client/app/config';
 import { Subject } from '@client/app/services/subject';
+import type ChessOpening from '@client/app/interfaces/chess-opening';
 import type CellModel from '../models/cell-model';
 
 import type FieldState from '../state/field-state';
@@ -66,6 +67,8 @@ export default class FieldModel {
   private readonly onReset: (result?: string) => void;
 
   private readonly onCheckPromotion: (cell: CellModel) => void;
+
+  private readonly openings: Promise<ChessOpening[]> = getOpenings();
 
   constructor({
     onStalemate,
@@ -175,7 +178,7 @@ export default class FieldModel {
     this.setState(this.state);
     this.onNextTurn.notify();
     const fenState = getFenFromStringBoard(this.state.getPlainState());
-    const isOpening = await getOpeningName(fenState);
+    const isOpening = getOpeningName(await this.openings, fenState);
     const move: TurnInfo = {
       figure: this.state.getCellAt(toX, toY)?.getFigureExternalInfo(),
       move: { from: new Coordinate(fromX, fromY), to: new Coordinate(toX, toY) },
