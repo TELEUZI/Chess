@@ -11,7 +11,10 @@ export interface FigureInfo {
 export default class FigureModel {
   protected weight: FigureWeightValues = FigureWeight.PAWN;
 
-  constructor(private color: FigureColor, protected type: FigureType) {}
+  constructor(
+    private color: FigureColor,
+    protected type: FigureType,
+  ) {}
 
   getColor(): FigureColor {
     return this.color;

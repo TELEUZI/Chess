@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { INIT_FIELD_STATE } from '@client/app/config';
-import type FigureColor from '@client/app/enums/figure-colors';
+import FigureColor from '@client/app/enums/figure-colors';
 import GameMode from '@client/app/enums/game-mode';
 import createFieldFromStrings from '../../fabrics/field-fabric';
 import type FieldState from '../field-state';
@@ -36,7 +36,7 @@ function playerReducer(
     playerOne: 'Player 1',
     playerTwo: 'Player 2',
   },
-  action: { type: string; payload: { playerOne: string; playerTwo: string } } = {
+  action: { type: typeof CHANGE_USERNAME; payload: { playerOne: string; playerTwo: string } } = {
     type: CHANGE_USERNAME,
     payload: { playerOne: 'Player 1', playerTwo: 'Player 2' },
   },
@@ -53,10 +53,10 @@ function playerReducer(
   }
 }
 function playerColorReducer(
-  state = { color: 1 },
-  action: { type: string; payload: { color: number } } = {
+  state = { color: FigureColor.WHITE },
+  action: { type: typeof SET_USER_COLOR; payload: { color: FigureColor } } = {
     type: SET_USER_COLOR,
-    payload: { color: 1 },
+    payload: { color: FigureColor.WHITE },
   },
 ) {
   switch (action.type) {
@@ -70,10 +70,10 @@ function playerColorReducer(
   }
 }
 function winnerReducer(
-  state = { winnerColor: 1 },
-  action: { type: string; payload: { winnerColor: FigureColor } } = {
+  state = { winnerColor: FigureColor.WHITE },
+  action: { type: typeof SET_WINNER; payload: { winnerColor: FigureColor } } = {
     type: SET_WINNER,
-    payload: { winnerColor: 1 },
+    payload: { winnerColor: FigureColor.WHITE },
   },
 ) {
   switch (action.type) {
@@ -87,10 +87,10 @@ function winnerReducer(
   }
 }
 function currentPlayerColorReducer(
-  state = { currentUserColor: 1 },
-  action: { type: string; payload: { currentUserColor: number } } = {
+  state = { currentUserColor: FigureColor.WHITE },
+  action: { type: typeof SET_CURRENT_USER_COLOR; payload: { currentUserColor: FigureColor } } = {
     type: SET_CURRENT_USER_COLOR,
-    payload: { currentUserColor: 1 },
+    payload: { currentUserColor: FigureColor.WHITE },
   },
 ) {
   switch (action.type) {
@@ -106,7 +106,7 @@ function currentPlayerColorReducer(
 
 function gameModeReducer(
   state = { currentGameMode: GameMode.SINGLE },
-  action: { type: string; payload: { currentGameMode: GameMode } } = {
+  action: { type: typeof SET_GAME_MODE; payload: { currentGameMode: GameMode } } = {
     type: SET_GAME_MODE,
     payload: { currentGameMode: GameMode.SINGLE },
   },

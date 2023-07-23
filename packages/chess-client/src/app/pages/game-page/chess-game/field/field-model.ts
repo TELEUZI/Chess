@@ -11,6 +11,7 @@ import getOpeningName from '@client/app/services/chess-openings-service';
 import type TurnInfo from '@client/app/interfaces/turn-info';
 import FigureType from '@client/app/enums/figure-type';
 import { INIT_FIELD_STATE } from '@client/app/config';
+import { Subject } from '@client/app/services/subject';
 import type CellModel from '../models/cell-model';
 
 import type FieldState from '../state/field-state';
@@ -48,9 +49,9 @@ export default class FieldModel {
 
   public onChange = new Observable<FieldState>();
 
-  public onCheck = new Observable<Coordinate | null>();
+  public onCheck = new Subject<Coordinate | null>(null);
 
-  public onMate = new Observable<Coordinate | null>();
+  public onMate = new Subject<Coordinate | null>(null);
 
   public onMove = new Observable<TurnInfo>();
 
@@ -92,8 +93,7 @@ export default class FieldModel {
         move: lastMove,
       });
       const newState = getBoardFromFen(state);
-      const st = createFieldFromStrings(newState);
-      this.setState(st);
+      this.setState(createFieldFromStrings(newState));
       this.currentColor = currentColor;
     };
   }
