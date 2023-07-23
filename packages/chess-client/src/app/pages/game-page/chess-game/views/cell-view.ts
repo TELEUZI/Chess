@@ -11,7 +11,7 @@ export default class CellView extends BaseComponent {
     className: string,
     private readonly onClick: () => void,
   ) {
-    super('div', ['cell', className], '', parentNode);
+    super('div', ['cell', ...className.split(' ')], '', parentNode);
     this.figure = new Figure(this.node, []);
     this.node.onclick = () => {
       this.onClick();

@@ -110,9 +110,14 @@ export default class ChessField {
       this.view.refresh(state);
     });
     this.model.onCheck.subscribe((vector) => {
-      this.view.setCheck(vector);
+      if (vector) {
+        this.view.setCheck(vector);
+      }
     });
     this.model.onMate.subscribe((attackingFigureCell) => {
+      if (!attackingFigureCell) {
+        return;
+      }
       this.view.setMate(attackingFigureCell);
       this.onMate();
       this.onEnd();
