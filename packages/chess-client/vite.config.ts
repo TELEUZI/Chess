@@ -8,16 +8,7 @@ import checker from 'vite-plugin-checker';
 export default defineConfig({
   cacheDir: '../../node_modules/.vite/chess-client',
   build: {
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          components: [
-            'packages/chess-client/src/app/components/timer/timer.ts',
-            'packages/chess-client/src/app/components/header/header.ts',
-          ],
-        },
-      },
-    },
+    sourcemap: true,
   },
   server: {
     port: 4200,
