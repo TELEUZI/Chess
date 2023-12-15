@@ -1,5 +1,5 @@
-import BaseComponent from '../../components/base-component';
-import Button from '../../components/button/button';
+import BaseComponent from '../base-component';
+import Button from '../button/button';
 
 export interface IModalPopup {
   header: string;
@@ -9,12 +9,18 @@ export interface IModalPopup {
 }
 
 class ModalContent extends BaseComponent {
+  public onModalClick: () => void;
+
+  public onDeclineClick: () => void;
+
   constructor(
     config: IModalPopup,
-    public onModalClick: () => void = () => {},
-    public onDeclineClick: () => void = () => {},
+    onModalClick: () => void = () => {},
+    onDeclineClick: () => void = () => {},
   ) {
     super({ className: 'modal-content' });
+    this.onModalClick = onModalClick;
+    this.onDeclineClick = onDeclineClick;
     const messageHead = new BaseComponent({ className: 'popup-header', content: config.header });
     const messageBody = new BaseComponent({ className: 'popup-body', content: config.text });
     const submitButton = new Button('OK', () => {

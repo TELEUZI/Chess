@@ -4,7 +4,7 @@ import MultipleStepFigure from '../../../models/multiple-step-figure';
 import type FieldState from '../../../state/field-state';
 import MOVES from '../../../models/figure-actions';
 
-export default class KingTurnManager extends MultipleStepFigure {
+export default class KingTurnManager {
   static getMoves(
     state: FieldState,
     figure: FigureModel,

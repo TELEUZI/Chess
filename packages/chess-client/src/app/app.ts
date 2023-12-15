@@ -1,4 +1,4 @@
-import Controller from './components/core/controller';
+import Controller from '@client/app/core/controller';
 
 class App {
   private readonly controller: Controller;

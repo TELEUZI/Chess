@@ -1,10 +1,7 @@
 import type { Coordinate } from '@coordinate';
+import MultipleStepsPerTurnFigure from '@client/app/pages/game-page/chess-game/models/multiple-step-figure-pen-turn';
 import MOVES from '../../../models/figure-actions';
-import MultipleStepsPerTurnFigure from '../../../models/multiple-step-figure-pen-turn';
 
-export default class QueenTurnManager extends MultipleStepsPerTurnFigure {
-  constructor() {
-    super();
-    this.moves = MOVES.QUEEN as Coordinate[];
-  }
+export default class QueenTurnManager {
+  static getMoves = MultipleStepsPerTurnFigure.getMoves.bind(null, MOVES.QUEEN as Coordinate[]);
 }

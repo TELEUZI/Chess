@@ -2,16 +2,13 @@ import BaseComponent from '../../../components/base-component';
 import Input from '../../../components/input/input';
 
 export default class PlayerView extends BaseComponent {
-  private name: string;
-
   private readonly userName: BaseComponent<'label'>;
 
-  userNameUpdate: Input;
+  private readonly userNameUpdate: Input;
 
-  constructor(name: string) {
+  constructor(private name: string) {
     super({ className: 'user' });
     const userInfoWrapper = new BaseComponent({ className: 'user__info' });
-    this.name = name;
     this.userName = new BaseComponent({ tag: 'label', className: 'user__name', content: name });
     this.userNameUpdate = new Input('text', ['user__name-input', 'hidden']);
     this.userNameUpdate.setValue(name);
@@ -31,5 +28,9 @@ export default class PlayerView extends BaseComponent {
   setUpdateMode(): void {
     this.userName.toggleClass('hidden');
     this.userNameUpdate.toggleClass('hidden');
+  }
+
+  getValue(): string {
+    return this.userNameUpdate.getValue();
   }
 }

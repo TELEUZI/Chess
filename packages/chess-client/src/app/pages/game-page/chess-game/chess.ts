@@ -1,14 +1,14 @@
 import type { Coordinate } from '@coordinate';
 import FigureColor from '@client/app/enums/figure-colors';
 import FigureColorText from '@client/app/enums/figure-color-text';
-import BaseComponent from '../../../components/base-component';
-import Timer from '../../../components/timer/timer';
+import { ModalWindow } from '@components/modal';
+import BaseComponent from '@components/base-component';
+import Timer from '@components/timer/timer';
+import ModalContent from '@components/modal/modal-content';
 import ChessField from './field/field-controller';
 import PlayerContainer from '../../reg-page/reg-page__components/player-control';
 import store from './state/redux/store';
 import ChessHistory from './chess-history';
-import ModalWindow from '../../reg-page/modal-window';
-import ModalContent from '../../reg-page/modal-content';
 import getNextFigureColor from '../../../utils/get-next-figure-color';
 import ReplayDaoService from '../../../services/replay-dao-service';
 import type { TimedMoveMessage } from '../../../interfaces/move-message';
@@ -19,7 +19,6 @@ import { socketService } from '../../../services/websocket-service';
 import { TIMER_DELAY } from '../../../config';
 import type TurnInfo from '../../../interfaces/turn-info';
 
-const IS_UPDATABLE = false;
 class Chess extends BaseComponent {
   private readonly timer: Timer;
 
@@ -51,8 +50,8 @@ class Chess extends BaseComponent {
       parent: this.node,
     });
     const chessHead = new BaseComponent({ className: 'chess__head', parent: chessBoardWrapper });
-    this.playerOne = new PlayerContainer(store.getState().players.playerOne, IS_UPDATABLE);
-    this.playerTwo = new PlayerContainer(store.getState().players.playerTwo, IS_UPDATABLE);
+    this.playerOne = new PlayerContainer(store.getState().players.playerOne, false);
+    this.playerTwo = new PlayerContainer(store.getState().players.playerTwo, false);
     const chessBody = new BaseComponent({ className: 'chess__body', parent: chessBoardWrapper });
     this.chessHistory = new ChessHistory(chessBody.getNode());
     this.chessBoard = new ChessField({

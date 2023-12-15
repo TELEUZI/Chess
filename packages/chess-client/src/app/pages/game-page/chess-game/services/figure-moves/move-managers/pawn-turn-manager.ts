@@ -4,7 +4,7 @@ import type Pawn from '../../../models/figures/pawn';
 import OneStepFigure from '../../../models/one-step-figure';
 import type FieldState from '../../../state/field-state';
 
-export default class PawnTurnManager extends OneStepFigure {
+export default class PawnTurnManager {
   static getMoves(state: FieldState, pawn: Pawn, fromX: number, fromY: number): Coordinate[] {
     const res: Coordinate[] = [];
     const direction = pawn.getColor() === FigureColor.WHITE ? -1 : 1;

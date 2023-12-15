@@ -1,5 +1,5 @@
-import BaseComponent from '../../../components/base-component';
-import Button from '../../../components/button/button';
+import BaseComponent from '@components/base-component';
+import Button from '@components/button/button';
 import PlayerView from './player';
 
 export default class PlayerContainer extends BaseComponent {
@@ -35,7 +35,7 @@ export default class PlayerContainer extends BaseComponent {
   }
 
   submit(): void {
-    const updatedName = this.player.userNameUpdate.getValue();
+    const updatedName = this.player.getValue();
     this.onSubmit?.(updatedName);
     this.player.setUpdateMode();
     this.image.destroy();

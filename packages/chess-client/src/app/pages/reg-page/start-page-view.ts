@@ -1,5 +1,5 @@
-import BaseComponent from '../../components/base-component';
-import Button from '../../components/button/button';
+import BaseComponent from '@components/base-component';
+import Button from '@components/button/button';
 import PlayerContainer from './reg-page__components/player-control';
 
 export default class StartPageView extends BaseComponent {
@@ -22,10 +22,9 @@ export default class StartPageView extends BaseComponent {
 
     private readonly onStartMultiplayerGame: () => void,
 
-    private readonly onUserNameChanged: (firstUserName: string, secondtUserName: string) => void,
+    private readonly onUserNameChanged: (firstUserName: string, secondUserName: string) => void,
   ) {
     super({ className: 'reg-page' });
-    this.gameControlButtons = new BaseComponent({ className: 'game-control' });
     this.startButton = new Button('Play offline', () => {
       this.onStartSingleGame();
     });
@@ -35,11 +34,10 @@ export default class StartPageView extends BaseComponent {
     this.startGameWithBot = new Button('Play with computer', () => {
       this.onStartGameWithBot();
     });
-    this.gameControlButtons.appendChildren([
-      this.startButton,
-      this.gameModeButton,
-      this.startGameWithBot,
-    ]);
+    this.gameControlButtons = new BaseComponent({
+      className: 'game-control',
+      children: [this.startButton, this.gameModeButton, this.startGameWithBot],
+    });
     this.playerOne = new PlayerContainer('Player 1', true, (name: string) => {
       this.onUserNameChanged(name, this.playerOne.getUserName());
     });

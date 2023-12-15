@@ -35,7 +35,7 @@ export default class MinMaxBotStrategy implements Strategy {
     depth: number,
     state: FieldState,
     color: FigureColor,
-    avaliableMoves: FigureTurn[],
+    availableMoves: FigureTurn[],
     isMaximizingPlayer: boolean,
   ): number {
     if (depth === 0) {
@@ -46,26 +46,26 @@ export default class MinMaxBotStrategy implements Strategy {
         depth,
         state,
         color,
-        avaliableMoves,
+        availableMoves,
         isMaximizingPlayer,
         Math.max,
         -9999,
       );
     }
-    return this.findMinMax(depth, state, color, avaliableMoves, isMaximizingPlayer, Math.min, 9999);
+    return this.findMinMax(depth, state, color, availableMoves, isMaximizingPlayer, Math.min, 9999);
   }
 
   private findMinMax(
     depth: number,
     state: FieldState,
     color: FigureColor,
-    avaliableMoves: FigureTurn[],
+    availableMoves: FigureTurn[],
     isMaximizingPlayer: boolean,
     extremumFunc: (...values: number[]) => number,
     bestValue: number,
   ): number {
     let bestMove = bestValue;
-    avaliableMoves.forEach((newGameMove) => {
+    availableMoves.forEach((newGameMove) => {
       newGameMove.to.forEach((move) => {
         const newState = getStateAfterMove(
           state,
@@ -76,7 +76,7 @@ export default class MinMaxBotStrategy implements Strategy {
         );
         bestMove = extremumFunc(
           bestMove,
-          this.minimax(depth - 1, newState, color, avaliableMoves, !isMaximizingPlayer),
+          this.minimax(depth - 1, newState, color, availableMoves, !isMaximizingPlayer),
         );
       });
     });

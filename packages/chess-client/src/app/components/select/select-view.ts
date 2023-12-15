@@ -15,16 +15,21 @@ export default class SelectView extends BaseComponent<'select'> {
       opt.textContent = option;
       return opt;
     });
-    this.options.forEach((option) => {
-      this.node.append(option);
-    });
-    this.node.addEventListener('change', () => {
-      this.onChange();
-    });
+    this.appendChildren(this.options);
+    this.node.addEventListener('change', this.handleEvent);
     this.setAttribute('multiple', 'true');
   }
 
   getValue(): string {
     return this.node.value;
+  }
+
+  public handleEvent = (): void => {
+    this.onChange();
+  };
+
+  override destroy(): void {
+    super.destroy();
+    this.node.removeEventListener('change', this.handleEvent);
   }
 }

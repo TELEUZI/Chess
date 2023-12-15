@@ -5,14 +5,15 @@ import store from '../state/redux/store';
 import MultipleStepFigure from './multiple-step-figure';
 
 export default abstract class MultipleStepsPerTurnFigure extends MultipleStepFigure {
-  public getMoves(
+  public static getMoves(
+    initialMoves: Coordinate[],
     state: FieldState,
     figure: FigureModel,
     fromX: number,
     fromY: number,
   ): Coordinate[] {
     const moves: Coordinate[] = [];
-    this.moves.forEach((move) => {
+    initialMoves.forEach((move) => {
       let posX = fromX;
       let posY = fromY;
       do {
