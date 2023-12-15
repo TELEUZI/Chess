@@ -1,8 +1,8 @@
-import BaseComponent from '../../components/base-component';
-import type RegForm from '../../components/reg-form/reg-form';
+import BaseComponent from '../base-component';
+import type RegForm from '../reg-form/reg-form';
 import ModalContent from './modal-content';
 
-export default class ModalWindow extends BaseComponent {
+export class ModalWindow extends BaseComponent {
   private readonly modalContent: ModalContent | RegForm;
 
   private readonly modalWrapper: BaseComponent;
@@ -16,15 +16,16 @@ export default class ModalWindow extends BaseComponent {
     super({ className: 'modal' });
     this.modalWrapper = new BaseComponent({ className: 'grey-modal' });
     this.modalContent = modalContent;
-    if (modalContent instanceof ModalContent)
-      (this.modalContent as ModalContent).onModalClick = () => {
+    if (this.modalContent instanceof ModalContent) {
+      this.modalContent.onModalClick = () => {
         this.toggleModal();
         this.onModalClick?.();
       };
-    (this.modalContent as ModalContent).onDeclineClick = () => {
-      this.toggleModal();
-      this.onDeclineClick?.();
-    };
+      this.modalContent.onDeclineClick = () => {
+        this.toggleModal();
+        this.onDeclineClick?.();
+      };
+    }
     if (parentNode) {
       parentNode.append(this.node);
     }

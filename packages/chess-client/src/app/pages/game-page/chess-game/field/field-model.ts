@@ -19,7 +19,7 @@ import type FieldState from '../state/field-state';
 import store from '../state/redux/store';
 import createFieldFromStrings from '../fabrics/field-fabric';
 import TurnManager from '../services/figure-moves/turn-manager';
-import { createFigurefromString } from '../fabrics/figure-fabric';
+import { createFigureFromString } from '../fabrics/figure-fabric';
 import {
   getKingPosition,
   forEachPlayerFigure,
@@ -41,8 +41,6 @@ export default class FieldModel {
   public state: FieldState;
 
   private currentColor = FigureColor.WHITE;
-
-  private readonly turnManager: TurnManager;
 
   private readonly gameMode: GameMode = GameMode.SINGLE;
 
@@ -82,7 +80,6 @@ export default class FieldModel {
     this.onSinglePlayerMove = onSinglePlayerMove;
     this.onReset = onReset;
     this.onCheckPromotion = onCheckPromotion;
-    this.turnManager = new TurnManager();
     const initState = createFieldFromStrings(INIT_FIELD_STATE);
     this.state = store.getState().field;
     this.setState(initState);
@@ -112,7 +109,7 @@ export default class FieldModel {
 
   promote(i: number, j: number): void {
     this.state.setFigureAtCell(
-      createFigurefromString(
+      createFigureFromString(
         this.getCellAt(new Coordinate(i, j))?.getFigureColor() === FigureColor.WHITE
           ? FigureType.QUEEN.toUpperCase()
           : FigureType.QUEEN,
@@ -264,7 +261,7 @@ export default class FieldModel {
   };
 
   private getMovesAtPoint(fromX: number, fromY: number, state?: FieldState): Coordinate[] {
-    return this.turnManager.getMoves(
+    return TurnManager.getMoves(
       state ?? store.getState().field,
       state?.getFigure(fromX, fromY) ?? getFigureFromState(fromX, fromY),
       fromX,

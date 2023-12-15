@@ -8,7 +8,7 @@ import Pawn from '../models/figures/pawn';
 import Queen from '../models/figures/queen';
 import Rook from '../models/figures/rook';
 
-export default function createFigure(type: string, color: FigureColor): FigureModel | null {
+function createFigure(type: string, color: FigureColor): FigureModel | null {
   const figures = new Map<string, [typeof FigureModel, FigureType]>([
     ['p', [Pawn, FigureType.PAWN]],
     ['r', [Rook, FigureType.ROOK]],
@@ -25,7 +25,7 @@ export default function createFigure(type: string, color: FigureColor): FigureMo
   return new FigureClass(color, figureType);
 }
 
-export function createFigurefromString(figure: string): FigureModel | null {
+export function createFigureFromString(figure: string): FigureModel | null {
   if (figure.trim() === '') {
     return null;
   }

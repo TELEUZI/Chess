@@ -1,4 +1,5 @@
 import { p } from '@client/app/components/utils/p';
+import { h4 } from '@client/app/components/utils';
 import PlayerContainer from '../../pages/reg-page/reg-page__components/player-control';
 import BaseComponent from '../base-component';
 import Button from '../button/button';
@@ -12,22 +13,16 @@ export default class Card extends BaseComponent {
 
   private readonly gameDescription: BaseComponent;
 
-  onViewClick: () => void;
-
   constructor(
     firstPlayerName: string,
     secondPlayerName: string,
     date: number,
     moves: number,
     result: string,
-    onViewClick: () => void,
+    private readonly onViewClick: () => void,
   ) {
     super({ className: 'card' });
-    const header = new BaseComponent({
-      tag: 'h4',
-      className: 'headline',
-      content: 'Replay',
-    });
+    const header = h4('headline', 'Replay');
     this.append(header);
     const contentWrapper = new BaseComponent({
       tag: 'div',
@@ -50,14 +45,13 @@ export default class Card extends BaseComponent {
     this.gameDescription = new BaseComponent({
       tag: 'div',
       className: 'card__desc',
+      children: [
+        p('card__text', `Date: ${new Date(date).toLocaleString()}`),
+        p('card__text', `Moves: ${moves}`),
+        p('card__text', result),
+      ],
     });
-    this.gameDescription.appendChildren([
-      p('card__text', `Date: ${new Date(date).toLocaleString()}`),
-      p('card__text', `Moves: ${moves}`),
-      p('card__text', result),
-    ]);
     cardButtons.appendChildren([this.cardButtonView]);
     contentWrapper.appendChildren([this.playerOne, this.gameDescription, this.playerTwo]);
-    this.onViewClick = onViewClick;
   }
 }

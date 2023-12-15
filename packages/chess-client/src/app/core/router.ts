@@ -1,4 +1,4 @@
-import type PageController from '../../interfaces/page';
+import type PageController from '../interfaces/page';
 
 export interface RouteNames {
   name: string;

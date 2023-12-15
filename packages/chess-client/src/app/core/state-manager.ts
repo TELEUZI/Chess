@@ -1,7 +1,7 @@
-import Header from '../header/header';
-import RegisterState from '../header/header-states/register-state';
-import StartGameState from '../header/header-states/start-game-state';
-import StopGameState from '../header/header-states/stop-game-state';
+import Header from '../components/header/header';
+import RegisterState from '../components/header/header-states/register-state';
+import StartGameState from '../components/header/header-states/start-game-state';
+import StopGameState from '../components/header/header-states/stop-game-state';
 
 export default class HeaderStateManager {
   private readonly header: Header;

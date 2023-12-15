@@ -2,7 +2,7 @@ import FigureColor from '@client/app/enums/figure-colors';
 import { TABLE_SIZE } from '@client/app/config';
 import CellModel from '../models/cell-model';
 import type FigureModel from '../models/figures/figure-model';
-import { createFigurefromString } from '../fabrics/figure-fabric';
+import { createFigureFromString } from '../fabrics/figure-fabric';
 
 export function isInField(x: number, y: number): boolean {
   return x >= 0 && x < TABLE_SIZE && y >= 0 && y < TABLE_SIZE;
@@ -68,7 +68,7 @@ export default class FieldState {
     const newState = this.state.map((it) => {
       return it.map((jt) => {
         const figure = jt.getFigure();
-        const newCell = new CellModel(createFigurefromString(figure ? figure.getType() : ' '));
+        const newCell = new CellModel(createFigureFromString(figure ? figure.getType() : ' '));
         if (newCell.getFigure() && figure?.getColor()) {
           newCell.setFigureColor(figure.getColor());
         }

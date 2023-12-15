@@ -132,6 +132,7 @@ class SocketService {
       if (error instanceof Error) {
         console.error(error.message);
       }
+      console.error(error);
     }
   }
 

@@ -61,7 +61,7 @@ export default class ChessField {
     this.onFieldUpdate = onFieldUpdate;
     this.model = new FieldModel({
       onCheckPromotion: (cell: CellModel) => {
-        if (this.checkPromotion(cell)) {
+        if (this.shouldPromote(cell)) {
           const cellPosition = this.getCellPosition(cell);
           if (cellPosition) {
             this.model.promote(cellPosition.x, cellPosition.y);
@@ -180,7 +180,7 @@ export default class ChessField {
     return res;
   }
 
-  private checkPromotion(cell: CellModel): boolean {
+  private shouldPromote(cell: CellModel): boolean {
     if (cell.getFigureType() === FigureType.PAWN) {
       if (
         cell.getFigureColor() === FigureColor.WHITE &&
