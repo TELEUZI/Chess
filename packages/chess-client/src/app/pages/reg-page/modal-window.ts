@@ -13,8 +13,8 @@ export default class ModalWindow extends BaseComponent {
     private readonly onModalClick?: () => void,
     private readonly onDeclineClick?: () => void,
   ) {
-    super('div', ['modal']);
-    this.modalWrapper = new BaseComponent('div', ['grey-modal']);
+    super({ className: 'modal' });
+    this.modalWrapper = new BaseComponent({ className: 'grey-modal' });
     this.modalContent = modalContent;
     if (modalContent instanceof ModalContent)
       (this.modalContent as ModalContent).onModalClick = () => {
@@ -28,7 +28,7 @@ export default class ModalWindow extends BaseComponent {
     if (parentNode) {
       parentNode.append(this.node);
     }
-    this.insertChilds([this.modalContent, this.modalWrapper]);
+    this.appendChildren([this.modalContent, this.modalWrapper]);
   }
 
   toggleModal(): void {

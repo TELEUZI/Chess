@@ -57,15 +57,15 @@ export default class Controller extends BaseComponent {
   private readonly gamePage: Promise<GamePage>;
 
   constructor() {
-    super('div', ['app']);
-    this.appRoot = new BaseComponent('div', ['page']);
+    super({ className: 'app' });
+    this.appRoot = new BaseComponent({ className: 'page' });
     this.userModel = UserDaoService.getInstance();
     this.headerStateManager = new HeaderStateManager(() => {
       this.toggleModal();
     });
-    this.insertChild(this.appRoot);
+    this.append(this.appRoot);
     this.modal = new RegFormModal(this.onRegister.bind(this));
-    this.insertChild(this.modal);
+    this.append(this.modal);
     this.gamePage = import('../../pages/game-page/game-page').then(
       ({ default: GamePage }) => new GamePage(this.getAppRoot()),
     );

@@ -24,8 +24,8 @@ export default class StartPageView extends BaseComponent {
 
     private readonly onUserNameChanged: (firstUserName: string, secondtUserName: string) => void,
   ) {
-    super('div', ['reg-page']);
-    this.gameControlButtons = new BaseComponent('div', ['game-control']);
+    super({ className: 'reg-page' });
+    this.gameControlButtons = new BaseComponent({ className: 'game-control' });
     this.startButton = new Button('Play offline', () => {
       this.onStartSingleGame();
     });
@@ -35,7 +35,7 @@ export default class StartPageView extends BaseComponent {
     this.startGameWithBot = new Button('Play with computer', () => {
       this.onStartGameWithBot();
     });
-    this.gameControlButtons.insertChilds([
+    this.gameControlButtons.appendChildren([
       this.startButton,
       this.gameModeButton,
       this.startGameWithBot,
@@ -46,6 +46,6 @@ export default class StartPageView extends BaseComponent {
     this.playerTwo = new PlayerContainer('Player 2', true, (name: string) => {
       this.onUserNameChanged(this.playerTwo.getUserName(), name);
     });
-    this.insertChilds([this.playerOne, this.gameControlButtons, this.playerTwo]);
+    this.appendChildren([this.playerOne, this.gameControlButtons, this.playerTwo]);
   }
 }

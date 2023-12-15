@@ -12,7 +12,7 @@ const createAvatar = (): HTMLImageElement => {
   return avatar;
 };
 
-export default class Header extends BaseComponent {
+export default class Header extends BaseComponent<'header'> {
   private state: State<Header>;
 
   private readonly menu: Menu;
@@ -24,16 +24,16 @@ export default class Header extends BaseComponent {
   public secondControlButton: Button;
 
   constructor(state: State<Header>, onButtonClick?: () => void) {
-    super('header', [s.header]);
+    super({ tag: 'header', className: s.header });
     this.state = state;
     this.transitionTo(this.state);
     this.createButton({ onFirstButtonClick: onButtonClick });
     this.menu = new Menu();
     this.avatar = createAvatar();
     this.node.append(this.avatar);
-    this.insertChild(this.menu);
+    this.append(this.menu);
     if (this.firstControlButton) {
-      this.insertChild(this.firstControlButton);
+      this.append(this.firstControlButton);
     }
     this.secondControlButton = new Button('', onButtonClick);
   }

@@ -4,20 +4,20 @@ import SelectView from './select-view';
 export default class SelectController<T = string> extends BaseComponent {
   private readonly select: SelectView;
 
-  private readonly label: BaseComponent;
+  private readonly label: BaseComponent<'label'>;
 
   constructor(
     label: string,
     options: string[],
     private readonly onChange: () => void,
   ) {
-    super('div', ['select-controller'], '');
-    this.label = new BaseComponent('label', ['label', 'settings__label']);
+    super({ className: 'select-controller' });
+    this.label = new BaseComponent({ tag: 'label', className: `label settings__label` });
     this.label.setContent(label);
     this.select = new SelectView(options, () => {
       this.onChange();
     });
-    this.insertChilds([this.select, this.label]);
+    this.appendChildren([this.select, this.label]);
   }
 
   getSelectValue(): T {

@@ -15,7 +15,7 @@ export default class StopGameState extends State<Header> {
       this.context.removeButtons();
       this.context.firstControlButton = new Button('Admit Loose', onButtonClick);
       this.context.secondControlButton = new Button('Offer a draw', onSecondButtonClick);
-      this.context.insertChilds([
+      this.context.appendChildren([
         this.context.firstControlButton,
         this.context.secondControlButton,
       ]);

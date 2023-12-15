@@ -5,7 +5,7 @@ enum ValidType {
   valid = 'valid',
   invalid = 'invalid',
 }
-export default class Input extends BaseComponent {
+export default class Input extends BaseComponent<'input'> {
   protected input: HTMLInputElement;
 
   onInput?: (input: HTMLInputElement) => boolean;
@@ -13,8 +13,8 @@ export default class Input extends BaseComponent {
   isValid = true;
 
   constructor(type: string, classlist: string[], placeholder = '', value?: number | string) {
-    super('input', ['input', ...classlist], '');
-    this.input = this.node as HTMLInputElement;
+    super({ tag: 'input', className: ['input', ...classlist].join(' ') });
+    this.input = this.node;
     this.setAttributes(type, placeholder, value);
     this.createListeners();
   }

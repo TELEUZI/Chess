@@ -1,38 +1,45 @@
 import './style.scss';
 import './normalize.scss';
 
-export default class BaseComponent {
-  protected node: HTMLElement;
+interface Component<K extends keyof HTMLElementTagNameMap, P extends keyof HTMLElementTagNameMap> {
+  parent?: BaseComponent<P> | HTMLElement | null;
+  tag?: K;
+  className?: string;
+  content?: string;
+}
 
-  constructor(
-    tagName: keyof HTMLElementTagNameMap = 'div',
-    classNames: string[] = [],
-    textContent = '',
-    parentNode?: HTMLElement,
-  ) {
-    this.node = document.createElement(tagName);
-    this.node.classList.add(...classNames);
-    this.node.textContent = textContent;
-    if (parentNode) {
-      parentNode.append(this.node);
+export default class BaseComponent<T extends keyof HTMLElementTagNameMap = 'div'> {
+  protected node: HTMLElementTagNameMap[T];
+
+  constructor({ parent, tag, className, content }: Component<T, 'div'>) {
+    const node = document.createElement(tag ?? ('div' as T));
+    node.className = className ?? '';
+    node.textContent = content ?? '';
+    if (parent) {
+      parent.append(node);
+    }
+    this.node = node;
+  }
+
+  append(child: BaseComponent<keyof HTMLElementTagNameMap> | HTMLElement): void {
+    if (child instanceof BaseComponent) {
+      this.node.append(child.getNode());
+    } else {
+      this.node.append(child);
     }
   }
 
-  insertChild(child: BaseComponent): void {
-    this.node.append(child.getNode());
-  }
-
-  insertChildBefore(child: BaseComponent): void {
+  prepend(child: BaseComponent): void {
     this.node.prepend(child.getNode());
   }
 
-  insertChilds(childs: BaseComponent[]): void {
-    childs.forEach((el) => {
-      this.insertChild(el);
+  appendChildren(children: BaseComponent<keyof HTMLElementTagNameMap>[]): void {
+    children.forEach((el) => {
+      this.append(el);
     });
   }
 
-  getNode(): HTMLElement {
+  getNode(): HTMLElementTagNameMap[T] {
     return this.node;
   }
 

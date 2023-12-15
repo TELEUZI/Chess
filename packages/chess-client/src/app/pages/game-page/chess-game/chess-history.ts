@@ -1,5 +1,6 @@
 import FigureColorLetter from '@client/app/enums/figure-color-letter';
 import FigureColor from '@client/app/enums/figure-colors';
+import { h3, p } from '@client/app/components/utils';
 import type TurnInfo from '../../../interfaces/turn-info';
 import BaseComponent from '../../../components/base-component';
 
@@ -18,10 +19,13 @@ export default class ChessHistory extends BaseComponent {
   private lastTurn: TurnInfo | null = null;
 
   constructor(parentNode: HTMLElement) {
-    super('div', ['chess__history'], '', parentNode);
-    const historyHeader = new BaseComponent('h3', ['chess__history_header'], 'History: ');
-    this.insertChild(historyHeader);
-    this.historyWrapper = new BaseComponent('div', ['chess__history_items'], '', this.node);
+    super({ className: 'chess__history', parent: parentNode });
+    const historyHeader = h3('chess__history_header', 'History: ');
+    this.append(historyHeader);
+    this.historyWrapper = new BaseComponent({
+      className: 'chess__history_wrapper',
+      parent: this.node,
+    });
   }
 
   public setHistoryMove(coords: TurnInfo, time: string): void {
@@ -37,24 +41,23 @@ export default class ChessHistory extends BaseComponent {
       }${figure?.type ?? ''}`,
     ]);
     const { comment } = coords;
-    const historyItem = new BaseComponent(
-      'div',
-      ['chess__history_item'],
-      '',
-      this.historyWrapper.getNode(),
-    );
-    const moveText = new BaseComponent(
-      'p',
-      ['text'],
+    const historyItem = new BaseComponent({
+      className: 'chess__history_item',
+      parent: this.historyWrapper.getNode(),
+    });
+    const moveText = p(
+      'text',
       `${boardCoordsY[move.from.y]}${boardCoordsX[move.from.x]}-${boardCoordsY[move.to.y]}${
         boardCoordsX[move.to.x]
       } ${time}`,
     );
-    historyItem.insertChild(moveText);
-    historyItem.insertChildBefore(figureView);
+    historyItem.append(moveText);
+    historyItem.prepend(figureView);
     if (comment) {
-      const commentItem = new BaseComponent('div', ['chess__history_item'], comment);
-      this.historyWrapper.insertChild(commentItem);
+      const commentItem = new BaseComponent({
+        className: 'chess__history_comment',
+      });
+      this.historyWrapper.append(commentItem);
     }
   }
 }

@@ -3,6 +3,6 @@ import BaseComponent from '../../base-component';
 
 export default class Icon extends BaseComponent {
   constructor(iconClass: string[] = []) {
-    super('div', ['icon', ...iconClass], '');
+    super({ tag: 'div', className: `icon ${iconClass.join(' ')}` });
   }
 }
