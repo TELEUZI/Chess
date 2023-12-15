@@ -1,4 +1,4 @@
-@import "variables";
+@import 'variables';
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 * {
@@ -83,7 +83,7 @@
   border-radius: 50%;
   background-color: $green-valid;
   text-align: center;
-  font-family: "Roboto", "Helvetica Neue", serif;
+  font-family: 'Roboto', 'Helvetica Neue', serif;
   color: $black;
 }
 
@@ -130,7 +130,6 @@
   overflow-y: scroll;
   font-family: 'Roboto', sans-serif;
 
-
   &_items {
     display: flex;
     width: 100%;
@@ -155,7 +154,6 @@
     position: relative;
   }
 }
-
 
 .chess-field__bp {
   background-image: url('../../assets/icons/black-pawn.svg');
@@ -215,7 +213,13 @@
   cursor: pointer;
   pointer-events: none;
   border: 3px solid transparent;
-  transition: border .1s, left .7s, right .7s, top .7s, bottom .7s, opacity .3s;
+  transition:
+    border 0.1s,
+    left 0.7s,
+    right 0.7s,
+    top 0.7s,
+    bottom 0.7s,
+    opacity 0.3s;
   z-index: 5;
 }
 
@@ -224,13 +228,9 @@
   flex-direction: column;
   align-items: center;
   font-family: 'Roboto', sans-serif;
-  .user{
+  .user {
     text-align: center;
   }
-}
-
-.row {
-  display: flex;
 }
 
 .current {
@@ -264,11 +264,9 @@
   border: solid 3px $black;
 }
 
-
 .cell__check {
   background-color: $red;
 }
-
 
 .cell__mate {
   background-color: $black;
@@ -301,15 +299,15 @@
   font-size: 1.6rem;
   transform: translateX(-50%);
   color: $light-green;
-  display: none
+  display: none;
 }
 
 .online .card__online {
-  display: block
+  display: block;
 }
 
 .card__player {
-  position: relative
+  position: relative;
 }
 
 .card__img {
@@ -320,7 +318,7 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  position: relative
+  position: relative;
 }
 
 .card__content {
@@ -337,7 +335,7 @@
   background-size: 70%;
   background-repeat: no-repeat;
   position: absolute;
-  bottom: -6px
+  bottom: -6px;
 }
 
 .card__result {
@@ -350,7 +348,7 @@
   border-radius: 50%;
   overflow: hidden;
   top: -17px;
-  right: -7px
+  right: -7px;
 }
 
 .card__name {
@@ -358,7 +356,7 @@
   font-weight: bold;
   color: $dark-yellow;
   text-align: center;
-  padding-top: 10px
+  padding-top: 10px;
 }
 
 .card__desc {
@@ -368,11 +366,11 @@
   justify-content: space-between;
   flex-grow: 1;
   text-align: center;
-  font-size: 1.6rem
+  font-size: 1.6rem;
 }
 
 .card__text {
-  margin: 5px 0
+  margin: 5px 0;
 }
 
 .card__text .atribute {
@@ -390,15 +388,15 @@
   cursor: pointer;
   opacity: 0;
   background-color: $black-light;
-  transition: all .3s
+  transition: all 0.3s;
 }
 
 .card__buttons .button {
-  margin: 10px
+  margin: 10px;
 }
 
 .card__buttons:hover {
-  opacity: 1
+  opacity: 1;
 }
 
 .select {
@@ -423,7 +421,7 @@
 
 .select {
   display: grid;
-  grid-template-areas: "select";
+  grid-template-areas: 'select';
   align-items: center;
   position: relative;
 
@@ -445,7 +443,7 @@
   background-color: $perfect-white;
   background-image: linear-gradient(to top, $white, $perfect-white 33%);
 
-  &:focus+.focus {
+  &:focus + .focus {
     position: absolute;
     top: -1px;
     left: -1px;
@@ -456,27 +454,26 @@
   }
 }
 
-  .select-multiple {
-    padding-right: 0;
-    height: 6rem;
+.select-multiple {
+  padding-right: 0;
+  height: 6rem;
 
-    .option {
-      white-space: normal;
-      outline-color: $black;
-    }
-
-    &:not(:disabled) .option {
-      border-radius: 12px;
-      transition: 120ms all ease-in;
-
-      &:checked {
-        background: linear-gradient($light-purple, $purple);
-        padding-left: 0.5em;
-        color: $black !important;
-      }
-    }
+  .option {
+    white-space: normal;
+    outline-color: $black;
   }
 
+  &:not(:disabled) .option {
+    border-radius: 12px;
+    transition: 120ms all ease-in;
+
+    &:checked {
+      background: linear-gradient($light-purple, $purple);
+      padding-left: 0.5em;
+      color: $black !important;
+    }
+  }
+}
 
 .coordinates {
   position: absolute;
@@ -494,7 +491,6 @@
   z-index: -1;
 }
 
-
 .rotate text {
   transform: scaleX(-1) rotate(180deg);
   transform-origin: center;
@@ -503,11 +499,11 @@
 
 @keyframes rot {
   from {
-    opacity: 0
+    opacity: 0;
   }
 
   to {
-    opacity: 1
+    opacity: 1;
   }
 }
 
@@ -523,25 +519,23 @@
 
 @keyframes rot {
   from {
-    opacity: 0
+    opacity: 0;
   }
 
   to {
-    opacity: 1
+    opacity: 1;
   }
 }
 
 @keyframes rot1 {
   from {
-    opacity: 0
+    opacity: 0;
   }
 
   to {
-    opacity: 1
+    opacity: 1;
   }
 }
-
-
 
 .countdown {
   box-shadow: 0 1px 2px 0 $black-light;
@@ -567,7 +561,6 @@
     font-weight: 300;
     display: block;
     background: $green;
-
   }
 
   .countdown__label {
@@ -577,7 +570,7 @@
     text-transform: uppercase;
     display: inline-block;
     letter-spacing: 2px;
-    margin-top: 9px
+    margin-top: 9px;
   }
 }
 .settings-wrapper {
@@ -594,20 +587,19 @@
     font-weight: bold;
   }
 }
-.lobby-icon{
-  background-image: url('../../assets/icons/chess.png')
+.lobby-icon {
+  background-image: url('../../assets/icons/white-queen.svg');
 }
-.replay-icon{
-  background-image: url('../../assets/icons/replay.svg')
+.replay-icon {
+  background-image: url('../../assets/icons/replay.svg');
 }
-.settings-icon{
-  background-image: url('../../assets/icons/settings.svg')
+.settings-icon {
+  background-image: url('../../assets/icons/settings.svg');
 }
-.link{
+.link {
   font-size: 18px;
   text-decoration: none;
   color: $white;
-
 }
 .signup__form {
   padding: 2.5rem;
@@ -624,33 +616,38 @@
   border-right: 0;
   border-left: 0;
   border-radius: 0;
-  &:focus {border-color: $black;}
+  &:focus {
+    border-color: $black;
+  }
 }
-[type="text"] {color: $black;}
+[type='text'] {
+  color: $black;
+}
 .btn--form {
-  padding: .5rem 2.5rem;
-  font-size: .95rem;
+  padding: 0.5rem 2.5rem;
+  font-size: 0.95rem;
   font-weight: 600;
   text-transform: uppercase;
   color: $white;
   background: $black;
   border-radius: 35px;
   &:focus,
-  &:hover {background: lighten($black, 13%);}
+  &:hover {
+    background: lighten($black, 13%);
+  }
 }
 .signup__link {
-  font-size: .8rem;
+  font-size: 0.8rem;
   font-weight: 600;
   text-decoration: underline;
   color: $grey;
   &:focus,
-  &:hover {color: darken($grey, 13%);}
+  &:hover {
+    color: darken($grey, 13%);
+  }
 }
-.pop-up__header{
-  margin-bottom: 30px;
-  font-size: 36px;
-}
-.pop-up__header{
+
+.pop-up__header {
   margin-bottom: 30px;
   font-size: 36px;
 }
