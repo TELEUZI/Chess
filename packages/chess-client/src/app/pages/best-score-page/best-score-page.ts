@@ -30,7 +30,7 @@ export default class BestScorePage implements PageController {
 
   async createPage(): Promise<void> {
     const cards = await this.replayModel.getAll();
-    const cardContainer = new BaseComponent('div', ['card-container']);
+    const cardContainer = new BaseComponent({ tag: 'div', className: 'card-container' });
     cards.forEach((card) => {
       const gameResult = getWinner(card.result);
       const cardView = new Card(
@@ -45,7 +45,7 @@ export default class BestScorePage implements PageController {
           window.location.hash = AppRoutes.WATCH;
         },
       );
-      cardContainer.insertChild(cardView);
+      cardContainer.append(cardView);
     });
     this.root.append(cardContainer.getNode());
   }

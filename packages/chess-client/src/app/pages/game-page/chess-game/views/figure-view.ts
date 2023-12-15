@@ -1,8 +1,8 @@
 import BaseComponent from '@client/app/components/base-component';
 
 class FigureView extends BaseComponent {
-  constructor(parentNode: HTMLElement, style: string[]) {
-    super('div', [...style], '', parentNode);
+  constructor(parent: HTMLElement, style: string[]) {
+    super({ tag: 'div', className: ['figure', ...style].join(' '), content: '', parent });
   }
 }
 

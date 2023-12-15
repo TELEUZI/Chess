@@ -1,7 +1,8 @@
 @import "../variables";
+
 .menu {
   list-style: none;
   display: flex;
-  width: 288px;
   color: $white;
+  padding: 0;
 }

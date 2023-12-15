@@ -16,14 +16,14 @@ export default class PlayerContainer extends BaseComponent {
     isUpdatable: boolean,
     private readonly onSubmit?: (name: string) => void,
   ) {
-    super('div', ['player-wrapper']);
+    super({ className: 'player-container' });
     this.name = name;
     this.player = new PlayerView(name);
     this.updateButton = new Button('Update', this.edit.bind(this), ['button_update']);
-    this.image = new BaseComponent('div', ['avatar'], this.name[0].toUpperCase());
-    this.insertChilds([this.image, this.player]);
+    this.image = new BaseComponent({ className: 'avatar', content: this.name[0].toUpperCase() });
+    this.appendChildren([this.image, this.player]);
     if (isUpdatable) {
-      this.insertChild(this.updateButton);
+      this.append(this.updateButton);
     }
   }
 
@@ -39,8 +39,8 @@ export default class PlayerContainer extends BaseComponent {
     this.onSubmit?.(updatedName);
     this.player.setUpdateMode();
     this.image.destroy();
-    this.image = new BaseComponent('div', ['avatar'], updatedName[0].toUpperCase());
-    this.insertChildBefore(this.image);
+    this.image = new BaseComponent({ className: 'avatar', content: updatedName[0].toUpperCase() });
+    this.prepend(this.image);
     this.player.setName(updatedName);
     this.updateButton.getNode().remove();
     this.updateButton = new Button('Update', this.edit.bind(this), ['button_update']);

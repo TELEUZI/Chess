@@ -16,7 +16,7 @@ export default class StartGameState extends State<Header> {
       this.context.setAvatarSrc(avatar ?? BASE_LOGO);
       this.context.removeButtons();
       this.context.firstControlButton = new Button('Start Game', onButtonClick);
-      this.context.insertChild(this.context.firstControlButton);
+      this.context.append(this.context.firstControlButton);
     }
   }
 }

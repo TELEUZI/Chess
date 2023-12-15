@@ -1,11 +1,11 @@
 import BaseComponent from '../../base-component';
 
-export default class CustomImage extends BaseComponent {
+export default class CustomImage extends BaseComponent<'img'> {
   private readonly src: string;
 
-  constructor(src: string, imageClass?: string[]) {
-    super('img', ['icon', ...(imageClass ?? [])], '');
+  constructor(src: string, imageClass: string[] = []) {
+    super({ tag: 'img', className: `icon ${imageClass.join(' ')}` });
     this.src = src;
-    (this.node as HTMLImageElement).src = this.src;
+    this.node.src = this.src;
   }
 }

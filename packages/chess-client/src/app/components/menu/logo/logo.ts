@@ -8,10 +8,10 @@ export default class Logo extends BaseComponent {
   private readonly icon: Icon;
 
   constructor(iconClass: string[]) {
-    super();
+    super({});
     this.icon = new Icon(iconClass);
     this.link = new Link('', `#default`);
-    this.link.insertChild(this.icon);
-    this.insertChild(this.link);
+    this.link.append(this.icon);
+    this.append(this.link);
   }
 }

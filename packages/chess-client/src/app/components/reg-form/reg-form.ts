@@ -3,7 +3,7 @@ import Input from '../input/input';
 import { validateFirstName } from '../../utils/validator';
 import FileInput from '../input/file-input';
 
-export default class RegForm extends BaseComponent {
+export default class RegForm extends BaseComponent<'form'> {
   nameInput: Input;
 
   submit: Input;
@@ -18,19 +18,22 @@ export default class RegForm extends BaseComponent {
     classlist: string[],
     private readonly onSubmit: (str: string[], avatar: File | null) => void,
   ) {
-    super('form', ['form', 'container__child', 'signup__form', ...classlist], '');
+    super({
+      tag: 'form',
+      className: ['form', 'container__child', 'signup__form', ...classlist].join(' '),
+    });
     this.setAttribute('action', '');
-    const formGroup = new BaseComponent('div', ['form-group']);
-    const label = new BaseComponent('label', ['label'], 'Username');
+    const formGroup = new BaseComponent({ tag: 'div', className: 'form__group' });
+    const label = new BaseComponent({ tag: 'label', className: 'form__label', content: 'Name' });
     this.nameInput = new Input('text', [], 'Name');
-    formGroup.insertChilds([label, this.nameInput]);
-    this.insertChild(formGroup);
+    formGroup.appendChildren([label, this.nameInput]);
+    this.append(formGroup);
     this.submit = new Input('submit', ['btn--form'], '', 'Submit');
     this.reset = new Input('reset', ['btn--form'], '', 'Reset');
     this.image = new FileInput('file', [], 'Avatar');
     this.image.setAttribute('accept', 'image/*');
     this.inputs.push(this.nameInput);
-    this.insertChilds([...this.inputs, this.submit, this.reset, this.image]);
+    this.appendChildren([...this.inputs, this.submit, this.reset, this.image]);
     this.nameInput.setHandler((input) => validateFirstName(input));
     this.submit.setAttribute('disabled', 'true');
     this.addUserInputListeners();

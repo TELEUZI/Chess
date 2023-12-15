@@ -10,10 +10,10 @@ export default class RegFormModal extends BaseComponent {
   private readonly modal: ModalWindow;
 
   constructor(private readonly onGetData: (user: User) => void) {
-    super('div', ['reg-form']);
+    super({ className: 'reg-form' });
     this.form = new RegForm(['modal-content', 'signup__container'], this.getFormData.bind(this));
     this.modal = new ModalWindow(this.form);
-    this.insertChild(this.modal);
+    this.append(this.modal);
     this.modal.getModalWrapper().addListener('click', () => {
       this.toggleModal();
     });

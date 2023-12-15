@@ -24,9 +24,15 @@ export default class FieldView extends BaseComponent {
     parentNode: HTMLElement,
     private readonly onCellClick: (cell: CellView, i: number, j: number) => Promise<void>,
   ) {
-    super('div', ['table'], '', parentNode);
+    super({
+      className: 'table',
+      parent: parentNode,
+    });
     for (let i = 0; i < TABLE_SIZE; i += 1) {
-      const row = new BaseComponent('div', ['row'], '', this.node);
+      const row = new BaseComponent({
+        className: 'row',
+        parent: this.node,
+      });
       for (let j = 0; j < TABLE_SIZE; j += 1) {
         const cell = new CellView(row.getNode(), getCellColorClass(i, j), () => {
           this.onCellClick(cell, i, j);

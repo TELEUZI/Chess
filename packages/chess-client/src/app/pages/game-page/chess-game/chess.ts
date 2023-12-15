@@ -38,7 +38,7 @@ class Chess extends BaseComponent {
   private replay: Replay | null = null;
 
   constructor(parentNode: HTMLElement, isReplay: boolean) {
-    super('div', ['chess-wrapper'], '', parentNode);
+    super({ tag: 'div', className: 'chess-wrapper', parent: parentNode });
     this.replayModel = ReplayDaoService.getInstance();
     if (!isReplay) {
       this.createReplay();
@@ -46,11 +46,14 @@ class Chess extends BaseComponent {
     this.timer = new Timer();
     this.timer.start(TIMER_DELAY);
     this.node.append(this.timer.getNode());
-    const chessBoardWrapper = new BaseComponent('div', ['chess'], '', this.node);
-    const chessHead = new BaseComponent('div', ['chess__head'], '', chessBoardWrapper.getNode());
+    const chessBoardWrapper = new BaseComponent({
+      className: 'chess',
+      parent: this.node,
+    });
+    const chessHead = new BaseComponent({ className: 'chess__head', parent: chessBoardWrapper });
     this.playerOne = new PlayerContainer(store.getState().players.playerOne, IS_UPDATABLE);
     this.playerTwo = new PlayerContainer(store.getState().players.playerTwo, IS_UPDATABLE);
-    const chessBody = new BaseComponent('div', ['chess__body'], '', chessBoardWrapper.getNode());
+    const chessBody = new BaseComponent({ className: 'chess__body', parent: chessBoardWrapper });
     this.chessHistory = new ChessHistory(chessBody.getNode());
     this.chessBoard = new ChessField({
       parentNode: chessBody.getNode(),
@@ -79,7 +82,7 @@ class Chess extends BaseComponent {
       },
     });
     this.playerOne.toggleClass('current');
-    chessHead.insertChilds([this.playerOne, this.playerTwo]);
+    chessHead.appendChildren([this.playerOne, this.playerTwo]);
     socketService.onPlayerLeave = () => {
       this.setPlayerLeave();
     };

@@ -1,16 +1,13 @@
 import BaseComponent from '../base-component';
 
-export default class SelectView extends BaseComponent {
+export default class SelectView extends BaseComponent<'select'> {
   private readonly options: HTMLOptionElement[];
-
-  private readonly select: HTMLSelectElement;
 
   constructor(
     options: string[],
     private readonly onChange: () => void,
   ) {
-    super('select', ['select', 'select-multiple'], '');
-    this.select = this.node as HTMLSelectElement;
+    super({ tag: 'select', className: 'select select-multiple' });
     this.options = options.map((option) => {
       const opt = document.createElement('option');
       opt.classList.add('option');
@@ -19,15 +16,15 @@ export default class SelectView extends BaseComponent {
       return opt;
     });
     this.options.forEach((option) => {
-      this.select.append(option);
+      this.node.append(option);
     });
-    this.select.addEventListener('change', () => {
+    this.node.addEventListener('change', () => {
       this.onChange();
     });
     this.setAttribute('multiple', 'true');
   }
 
   getValue(): string {
-    return this.select.value;
+    return this.node.value;
   }
 }

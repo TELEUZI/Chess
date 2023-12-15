@@ -1,14 +1,13 @@
 import './link.scss';
 import BaseComponent from '../base-component';
-import type ClickElement from '../../interfaces/click-elem';
 
-export default class Link extends BaseComponent implements ClickElement {
+export default class Link extends BaseComponent<'a'> {
   constructor(
     textContent: string,
     href: string,
     public onClick: () => void = () => {},
   ) {
-    super('a', ['link'], textContent);
+    super({ tag: 'a', className: 'link', content: textContent });
     this.setAttribute('href', href);
     this.node.onclick = () => {
       this.onClick();

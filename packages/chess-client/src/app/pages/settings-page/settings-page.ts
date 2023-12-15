@@ -15,7 +15,7 @@ export default class SettingsPage implements PageController {
 
   constructor(root: HTMLElement) {
     this.root = root;
-    this.selectWrapper = new BaseComponent('div', ['settings-wrapper']);
+    this.selectWrapper = new BaseComponent({ className: 'settings-wrapper' });
     this.selectDifficulty = new Select<GameDifficultyOptions>(
       'Choose Difficulty of AI',
       [GameDifficultyOptions.easy, GameDifficultyOptions.medium, GameDifficultyOptions.hard],
@@ -23,7 +23,7 @@ export default class SettingsPage implements PageController {
         this.onChangeHandler();
       },
     );
-    this.selectWrapper.insertChilds([this.selectDifficulty]);
+    this.selectWrapper.appendChildren([this.selectDifficulty]);
   }
 
   createPage(): void {
