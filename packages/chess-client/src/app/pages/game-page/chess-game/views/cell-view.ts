@@ -65,7 +65,7 @@ export default class CellView extends BaseComponent {
   }
 
   private setFigure(type: string, color: FigureColor): void {
-    if (type && type && type !== ' ') {
+    if (type && type !== ' ') {
       this.figure.destroy();
       this.figure = new Figure(this.node, [
         `chess__figure`,
@@ -81,5 +81,9 @@ export default class CellView extends BaseComponent {
 
   rotate(): void {
     this.toggleClass('rotate');
+  }
+
+  destroyFigure(): void {
+    this.figure.destroy();
   }
 }
