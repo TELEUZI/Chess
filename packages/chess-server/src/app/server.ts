@@ -48,7 +48,7 @@ export async function setUpServer(): Promise<ServerItems> {
   });
   await new Promise<void>((resolve) => {
     server.listen(PORT, () => {
-      if (process.env.NODE_ENV !== 'test') console.log(`listening on ${host}:${PORT}`);
+      if (process.env.NODE_ENV !== 'test') console.debug(`listening on ${host}:${PORT}`);
       resolve();
     });
   });
