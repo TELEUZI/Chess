@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from 'express';
+import type { GameExternalInfo } from '@chess/game-common';
 import { rooms } from '../../entities/room/room';
-import type { GameExternalInfo } from '../../entities/game/game-interfaces';
 import { createGameRoom } from '../../services/room/create-game-room';
 import { addNewPlayer } from '../../services/room/add-player';
 

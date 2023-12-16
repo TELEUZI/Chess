@@ -18,14 +18,14 @@ export default class Router {
     window.onhashchange = this.hashChanged;
   }
 
-  hashChanged = (): void => {
+  public hashChanged = (): void => {
     const route =
       window.location.hash.length > 0
         ? window.location.hash.substring(INDEX_OF_SECOND_ITEM_IN_ITERABLE)
         : 'default';
     const actualRoute = this.routes.find((routeName) => routeName.name === route);
     if (actualRoute) {
-      actualRoute.controller.then((page) => {
+      void actualRoute.controller.then((page) => {
         this.onHashChange(page);
       });
     }

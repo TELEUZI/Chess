@@ -1,5 +1,5 @@
+import type { RoomCreateResponse } from '@chess/game-common';
 import Game from '../../entities/game/game';
-import type { RoomCreateResponse } from '../../entities/message/message-interfaces';
 import { rooms } from '../../entities/room/room';
 import { buildToken } from '../player/player-tokenify';
 

@@ -1,6 +1,6 @@
 import FigureColorLetter from '@client/app/enums/figure-color-letter';
-import FigureColor from '@client/app/enums/figure-colors';
 import { h3, p } from '@client/app/components/utils';
+import { FigureColor } from '@chess/game-common';
 import type TurnInfo from '../../../interfaces/turn-info';
 import BaseComponent from '../../../components/base-component';
 
@@ -53,7 +53,7 @@ export default class ChessHistory extends BaseComponent {
     );
     historyItem.append(moveText);
     historyItem.prepend(figureView);
-    if (comment) {
+    if (comment != null) {
       const commentItem = new BaseComponent({
         className: 'chess__history_comment',
       });

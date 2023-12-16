@@ -1,4 +1,4 @@
-import type { PlayerAddResponse } from '../../entities/message/message-interfaces';
+import type { PlayerAddResponse } from '@chess/game-common';
 import { rooms } from '../../entities/room/room';
 import generateRandomString from '../../utils/postfix-generator';
 import { buildToken } from '../player/player-tokenify';

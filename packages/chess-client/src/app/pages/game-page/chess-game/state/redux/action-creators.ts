@@ -1,5 +1,5 @@
-import type FigureColor from '@client/app/enums/figure-colors';
 import type GameMode from '@client/app/enums/game-mode';
+import type { FigureColor } from '@chess/game-common';
 import type FieldState from '../field-state';
 import {
   CHANGE_USERNAME,
@@ -71,9 +71,9 @@ export function changeName(names: { playerOne: string; playerTwo: string }): {
   };
 }
 
-export function setWinner(winnerColor: FigureColor): {
+export function setWinner(winnerColor: FigureColor | null): {
   type: string;
-  payload: { winnerColor: FigureColor };
+  payload: { winnerColor: FigureColor | null };
 } {
   return {
     type: SET_WINNER,

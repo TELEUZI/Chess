@@ -1,5 +1,6 @@
 import type { ParsedQs } from 'qs';
 import type WebSocket from 'ws';
+import type { RoomsMessageData } from '@chess/game-common';
 import { GameAction } from '@chess/game-common';
 import type { PlayerTokenInfo } from '../../services/player/player-tokenify';
 import { verifyDecodeToken } from '../../services/player/player-tokenify';
@@ -13,7 +14,6 @@ import {
   submitDraw,
   suggestDraw,
 } from '../../controllers/rooms/ws';
-import type { RoomsMessageData } from '../../entities/message/message-interfaces';
 
 function checkData(data: RoomsMessageData): void {
   if (data.action == null || !(data.action in GameAction)) {
@@ -21,7 +21,7 @@ function checkData(data: RoomsMessageData): void {
   }
 }
 
-function handleSocketAction(ws: WebSocket, token: PlayerTokenInfo, data: RoomsMessageData) {
+function handleSocketAction(ws: WebSocket, token: PlayerTokenInfo, data: RoomsMessageData): void {
   switch (data.action) {
     case GameAction.joinRoom:
       joinGame(ws, token);
@@ -43,7 +43,7 @@ function handleSocketAction(ws: WebSocket, token: PlayerTokenInfo, data: RoomsMe
       suggestDraw(token);
       break;
     case GameAction.drawResponse:
-      if (data.payload?.isDraw) {
+      if (data.payload?.isDraw === true) {
         submitDraw(token);
       } else {
         declineDraw(token);

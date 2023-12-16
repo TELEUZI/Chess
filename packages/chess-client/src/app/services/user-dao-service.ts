@@ -22,12 +22,12 @@ export default class UserDaoService {
     return UserDaoService.instance;
   }
 
-  setData(user: User): void {
+  public setData(user: User): void {
     this.currentUser = user;
     this.dao.create(user);
   }
 
-  async getAvatar(): Promise<ArrayBuffer | string> {
+  public async getAvatar(): Promise<ArrayBuffer | string> {
     return (await this.findCurrentByEmail(this.currentUser))?.avatar ?? '';
   }
 

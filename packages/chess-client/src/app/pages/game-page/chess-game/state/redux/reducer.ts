@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import { INIT_FIELD_STATE } from '@client/app/config';
-import FigureColor from '@client/app/enums/figure-colors';
 import GameMode from '@client/app/enums/game-mode';
+import { FigureColor } from '@chess/game-common';
 import createFieldFromStrings from '../../fabrics/field-fabric';
 import type FieldState from '../field-state';
 
@@ -21,7 +21,7 @@ function fieldReducer(
     type: MOVE,
     payload: createFieldFromStrings(INIT_FIELD_STATE),
   },
-) {
+): FieldState {
   switch (action.type) {
     case MOVE: {
       return action.payload;
@@ -40,7 +40,7 @@ function playerReducer(
     type: CHANGE_USERNAME,
     payload: { playerOne: 'Player 1', playerTwo: 'Player 2' },
   },
-) {
+): { playerOne: string; playerTwo: string } {
   switch (action.type) {
     case CHANGE_USERNAME:
       return {
@@ -58,7 +58,7 @@ function playerColorReducer(
     type: SET_USER_COLOR,
     payload: { color: FigureColor.WHITE },
   },
-) {
+): { color: FigureColor } {
   switch (action.type) {
     case SET_USER_COLOR:
       return {
@@ -75,7 +75,7 @@ function winnerReducer(
     type: SET_WINNER,
     payload: { winnerColor: FigureColor.WHITE },
   },
-) {
+): { winnerColor: FigureColor } {
   switch (action.type) {
     case SET_WINNER:
       return {
@@ -92,7 +92,7 @@ function currentPlayerColorReducer(
     type: SET_CURRENT_USER_COLOR,
     payload: { currentUserColor: FigureColor.WHITE },
   },
-) {
+): { currentUserColor: FigureColor } {
   switch (action.type) {
     case SET_CURRENT_USER_COLOR:
       return {
@@ -110,7 +110,7 @@ function gameModeReducer(
     type: SET_GAME_MODE,
     payload: { currentGameMode: GameMode.SINGLE },
   },
-) {
+): { currentGameMode: GameMode } {
   switch (action.type) {
     case SET_GAME_MODE:
       return {
@@ -127,7 +127,7 @@ function replayStateReducer(
     type: SET_REPLAY_STATE,
     payload: { replayDate: 0 },
   },
-) {
+): { currentReplayDate: number } {
   switch (action.type) {
     case SET_REPLAY_STATE:
       return {

@@ -1,3 +1,4 @@
+import { FigureColor } from '@chess/game-common';
 import BaseComponent from '../../components/base-component';
 import type PageController from '../../interfaces/page';
 import store from '../game-page/chess-game/state/redux/store';
@@ -5,7 +6,6 @@ import GameMode from '../../enums/game-mode';
 import { setGameMode, setReplayState } from '../game-page/chess-game/state/redux/action-creators';
 import ReplayDaoService from '../../services/replay-dao-service';
 import Card from '../../components/card/card';
-import FigureColor from '../../enums/figure-colors';
 import type { Winner } from '../../interfaces/winner';
 import AppRoutes from '../../enums/app-routes';
 import type { GameResult } from '../../interfaces/replay';
@@ -28,7 +28,7 @@ export default class BestScorePage implements PageController {
     this.replayModel = ReplayDaoService.getInstance();
   }
 
-  async createPage(): Promise<void> {
+  public async createPage(): Promise<void> {
     const cards = await this.replayModel.getAll();
     const cardContainer = new BaseComponent({ tag: 'div', className: 'card-container' });
     cards.forEach((card) => {

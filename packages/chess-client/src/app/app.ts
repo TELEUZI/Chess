@@ -10,7 +10,7 @@ class App {
     this.root = root;
   }
 
-  start(): void {
+  public start(): void {
     this.root.append(this.controller.getNode());
   }
 }

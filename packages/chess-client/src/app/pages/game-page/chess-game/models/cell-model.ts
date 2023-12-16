@@ -1,5 +1,5 @@
-import type FigureColor from '@client/app/enums/figure-colors';
 import type FigureType from '@client/app/enums/figure-type';
+import type { FigureColor } from '@chess/game-common';
 import type { FigureInfo } from './figures/figure-model';
 import type FigureModel from './figures/figure-model';
 

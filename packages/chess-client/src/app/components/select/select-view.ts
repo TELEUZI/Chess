@@ -20,16 +20,16 @@ export default class SelectView extends BaseComponent<'select'> {
     this.setAttribute('multiple', 'true');
   }
 
-  getValue(): string {
+  public getValue(): string {
     return this.node.value;
   }
 
-  public handleEvent = (): void => {
-    this.onChange();
-  };
-
-  override destroy(): void {
+  public override destroy(): void {
     super.destroy();
     this.node.removeEventListener('change', this.handleEvent);
   }
+
+  private readonly handleEvent = (): void => {
+    this.onChange();
+  };
 }

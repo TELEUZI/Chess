@@ -27,14 +27,14 @@ export default class PlayerContainer extends BaseComponent {
     }
   }
 
-  edit(): void {
+  public edit(): void {
     this.player.setUpdateMode();
     this.updateButton.getNode().remove();
     this.updateButton = new Button('Submit', this.submit.bind(this), ['button_edit']);
     this.node.append(this.updateButton.getNode());
   }
 
-  submit(): void {
+  public submit(): void {
     const updatedName = this.player.getValue();
     this.onSubmit?.(updatedName);
     this.player.setUpdateMode();
@@ -47,7 +47,7 @@ export default class PlayerContainer extends BaseComponent {
     this.node.append(this.updateButton.getNode());
   }
 
-  getUserName(): string {
+  public getUserName(): string {
     return this.player.getName();
   }
 }

@@ -3,9 +3,9 @@ import Button from '@components/button/button';
 import PlayerContainer from './reg-page__components/player-control';
 
 export default class StartPageView extends BaseComponent {
-  playerOne: PlayerContainer;
+  public playerOne: PlayerContainer;
 
-  playerTwo: PlayerContainer;
+  public playerTwo: PlayerContainer;
 
   private readonly startGameWithBot: Button;
 

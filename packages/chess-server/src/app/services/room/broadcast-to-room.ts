@@ -1,5 +1,5 @@
 import WebSocket from 'ws';
-import type { WsMessage } from '../../entities/message/message-interfaces';
+import type { WsMessage } from '@chess/game-common';
 import { rooms } from '../../entities/room/room';
 
 export default function broadcastToRoom(

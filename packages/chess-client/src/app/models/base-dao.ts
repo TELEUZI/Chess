@@ -16,26 +16,7 @@ export default abstract class BaseDao<T> {
     this.createStores();
   }
 
-  createStores(): void {
-    const openRequest = window.indexedDB.open(INDEXED_DB_NAME, INDEXED_DB_VERSION + 1);
-    openRequest.onupgradeneeded = () => {
-      this.response = openRequest.result;
-      this.response.createObjectStore(IndexedDBStores.USERS, {
-        keyPath: 'name',
-        autoIncrement: true,
-      });
-      this.response.createObjectStore(IndexedDBStores.GAME_CONFIG, {
-        autoIncrement: true,
-      });
-      this.response.createObjectStore(IndexedDBStores.REPLAY_STORE, {
-        keyPath: 'date',
-        autoIncrement: true,
-      });
-      this.response.close();
-    };
-  }
-
-  create(entity: T): void {
+  public create(entity: T): void {
     const openRequest = window.indexedDB.open(INDEXED_DB_NAME, INDEXED_DB_VERSION + 1);
     openRequest.onupgradeneeded = () => {
       this.response = openRequest.result;
@@ -61,7 +42,7 @@ export default abstract class BaseDao<T> {
     const list: T[] = [];
     return new Promise<T[]>((resolve, reject) => {
       openRequest.onerror = () => {
-        reject();
+        reject(new Error('Request error'));
       };
       openRequest.onsuccess = () => {
         this.response = openRequest.result;
@@ -83,7 +64,7 @@ export default abstract class BaseDao<T> {
     });
   }
 
-  async get(): Promise<T> {
+  public async get(): Promise<T> {
     const openRequest = window.indexedDB.open('Teleuzi', INDEXED_DB_VERSION + 1);
     return new Promise<T>((resolve) => {
       openRequest.onsuccess = () => {
@@ -98,5 +79,24 @@ export default abstract class BaseDao<T> {
         };
       };
     });
+  }
+
+  private createStores(): void {
+    const openRequest = window.indexedDB.open(INDEXED_DB_NAME, INDEXED_DB_VERSION + 1);
+    openRequest.onupgradeneeded = () => {
+      this.response = openRequest.result;
+      this.response.createObjectStore(IndexedDBStores.USERS, {
+        keyPath: 'name',
+        autoIncrement: true,
+      });
+      this.response.createObjectStore(IndexedDBStores.GAME_CONFIG, {
+        autoIncrement: true,
+      });
+      this.response.createObjectStore(IndexedDBStores.REPLAY_STORE, {
+        keyPath: 'date',
+        autoIncrement: true,
+      });
+      this.response.close();
+    };
   }
 }

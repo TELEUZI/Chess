@@ -8,9 +8,9 @@ const BASE_CONFIG = {
 const OBJECT_STORE_KEY = 0;
 const OBJECT_STORE_NAME = 'GameConfig';
 export default class ConfigDaoService {
-  private readonly dao: ConfigDao;
-
   private static instance: ConfigDaoService | null = null;
+
+  private readonly dao: ConfigDao;
 
   private constructor() {
     this.dao = new ConfigDao(OBJECT_STORE_NAME, undefined, OBJECT_STORE_KEY);
@@ -24,11 +24,11 @@ export default class ConfigDaoService {
     return ConfigDaoService.instance;
   }
 
-  setData(gameDifficulty: GameDifficultyOptions): void {
+  public setData(gameDifficulty: GameDifficultyOptions): void {
     this.dao.create({ GameDifficulty: gameDifficulty });
   }
 
-  async getData(): Promise<GameConfig> {
+  public async getData(): Promise<GameConfig> {
     return this.dao.get();
   }
 }

@@ -1,5 +1,5 @@
-import FigureColor from '@client/app/enums/figure-colors';
 import FigureType from '@client/app/enums/figure-type';
+import { FigureColor } from '@chess/game-common';
 import Bishop from '../models/figures/bishop';
 import type FigureModel from '../models/figures/figure-model';
 import King from '../models/figures/king';

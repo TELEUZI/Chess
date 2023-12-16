@@ -5,15 +5,15 @@ class Observable<ListenerType> {
     this.listeners = [];
   }
 
-  subscribe(listener: (params: ListenerType) => void): void {
+  public subscribe(listener: (params: ListenerType) => void): void {
     this.listeners.push(listener);
   }
 
-  unsubscribe(listener: (params: ListenerType) => void): void {
+  public unsubscribe(listener: (params: ListenerType) => void): void {
     this.listeners = this.listeners.filter((elem) => elem !== listener);
   }
 
-  notify(params: ListenerType): void {
+  public notify(params: ListenerType): void {
     this.listeners.forEach((listener) => {
       listener(params);
     });

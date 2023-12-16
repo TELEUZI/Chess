@@ -26,7 +26,7 @@ class ModalContent extends BaseComponent {
     const submitButton = new Button('OK', () => {
       this.onModalClick();
     });
-    if (config.secondButtonText) {
+    if (config.secondButtonText != null) {
       const declineButton = new Button(config.secondButtonText, () => {
         this.onDeclineClick();
       });

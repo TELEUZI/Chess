@@ -26,11 +26,11 @@ export default class SettingsPage implements PageController {
     this.selectWrapper.appendChildren([this.selectDifficulty]);
   }
 
-  createPage(): void {
+  public createPage(): void {
     this.root.append(this.selectWrapper.getNode());
   }
 
-  onChangeHandler(): void {
+  private onChangeHandler(): void {
     const selectValue = this.selectDifficulty.getSelectValue();
     this.model.setData(
       [GameDifficultyOptions.easy, GameDifficultyOptions.medium, GameDifficultyOptions.hard].find(

@@ -1,9 +1,9 @@
 import type WebSocket from 'ws';
+import type { MoveMessage } from '@chess/game-common';
 import { GameAction } from '@chess/game-common';
 import { rooms } from '../../entities/room/room';
 import broadcastToRoom from '../../services/room/broadcast-to-room';
 import type { PlayerTokenInfo } from '../../services/player/player-tokenify';
-import type { MoveMessage } from '../../entities/game/game-interfaces';
 import isReadyWS from '../../utils/ws-alive-check';
 
 export function disconnectFromGame(
@@ -25,7 +25,7 @@ export function disconnectFromGame(
       return;
     }
 
-    if (closeClient) {
+    if (closeClient === true) {
       const client = room.clients.get(token.playerName);
       client?.close();
     }
@@ -124,11 +124,7 @@ export function setMove(
 
 export function suggestDraw(token: PlayerTokenInfo): void {
   try {
-    broadcastToRoom(
-      token.roomName,
-      { action: GameAction.drawSuggest, payload: { isDraw: null } },
-      token.playerName,
-    );
+    broadcastToRoom(token.roomName, { action: GameAction.drawSuggest }, token.playerName);
   } catch (error) {
     if (error instanceof Error) {
       broadcastToRoom(token.roomName, { error: error.message });

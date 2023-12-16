@@ -32,7 +32,7 @@ export default class StartPage implements PageController {
     );
   }
 
-  createPage(): void {
+  public createPage(): void {
     this.root.append(this.view.getNode());
   }
 }

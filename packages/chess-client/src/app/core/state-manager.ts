@@ -10,7 +10,10 @@ export default class HeaderStateManager {
     this.header = new Header(new RegisterState(), onRegisterUser);
   }
 
-  transitionToRegisteredState(onStartGame: () => void, avatarImage: ArrayBuffer | string): void {
+  public transitionToRegisteredState(
+    onStartGame: () => void,
+    avatarImage: ArrayBuffer | string,
+  ): void {
     this.header.transitionTo(new StartGameState());
     this.header.createButton({
       onFirstButtonClick: onStartGame,
@@ -18,7 +21,7 @@ export default class HeaderStateManager {
     });
   }
 
-  transitionToStopGameState(onLoose: () => void, onDraw: () => void): void {
+  public transitionToStopGameState(onLoose: () => void, onDraw: () => void): void {
     this.header.transitionTo(new StopGameState());
     this.header.createButton({
       onFirstButtonClick: onLoose,
@@ -26,7 +29,7 @@ export default class HeaderStateManager {
     });
   }
 
-  getHeaderNode(): HTMLElement {
+  public getHeaderNode(): HTMLElement {
     return this.header.getNode();
   }
 }

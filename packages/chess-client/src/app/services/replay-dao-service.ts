@@ -4,9 +4,9 @@ import ReplayDao from '../models/replay-dao';
 const OBJECT_STORE_KEY = 'date';
 const OBJECT_STORE_NAME = 'ReplaysStore';
 export default class ReplayDaoService {
-  private readonly dao: ReplayDao;
-
   private static instance: ReplayDaoService | null = null;
+
+  private readonly dao: ReplayDao;
 
   private constructor() {
     this.dao = new ReplayDao(OBJECT_STORE_NAME, OBJECT_STORE_KEY, undefined);
@@ -26,7 +26,7 @@ export default class ReplayDaoService {
   //   this.dao.create({ date, mode, players, history, moves, result });
   // }
 
-  createReplayFromObject(replay: Replay): void {
+  public createReplayFromObject(replay: Replay): void {
     this.dao.create(replay);
   }
 
@@ -40,7 +40,7 @@ export default class ReplayDaoService {
   //   this.setData(last);
   // }
 
-  async getByDate(date: number): Promise<Replay | undefined> {
+  public async getByDate(date: number): Promise<Replay | undefined> {
     return (await this.dao.findAll()).find((replay) => replay.date === date);
   }
   //
@@ -49,7 +49,7 @@ export default class ReplayDaoService {
   //   return usersArray[usersArray.length - 1];
   // }
 
-  async getAll(): Promise<Replay[]> {
+  public async getAll(): Promise<Replay[]> {
     return this.dao.findAll();
   }
 

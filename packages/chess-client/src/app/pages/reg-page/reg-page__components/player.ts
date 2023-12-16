@@ -16,21 +16,21 @@ export default class PlayerView extends BaseComponent {
     this.append(userInfoWrapper);
   }
 
-  setName(name: string): void {
+  public setName(name: string): void {
     this.name = name;
     this.userName.setContent(name);
   }
 
-  getName(): string {
+  public getName(): string {
     return this.name;
   }
 
-  setUpdateMode(): void {
+  public setUpdateMode(): void {
     this.userName.toggleClass('hidden');
     this.userNameUpdate.toggleClass('hidden');
   }
 
-  getValue(): string {
+  public getValue(): string {
     return this.userNameUpdate.getValue();
   }
 }

@@ -20,11 +20,11 @@ export default class RegFormModal extends BaseComponent {
     this.toggleModal();
   }
 
-  toggleModal(): void {
+  public toggleModal(): void {
     this.toggleClass('hidden');
   }
 
-  async getFormData(str: string[], avatar: File | null): Promise<void> {
+  private async getFormData(str: string[], avatar: File | null): Promise<void> {
     const avatarBase64 = await toBase64(avatar);
     const currentUser = {
       name: str[0],

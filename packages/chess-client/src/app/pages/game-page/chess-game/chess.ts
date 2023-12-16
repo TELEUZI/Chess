@@ -1,10 +1,10 @@
 import type { Coordinate } from '@coordinate';
-import FigureColor from '@client/app/enums/figure-colors';
 import FigureColorText from '@client/app/enums/figure-color-text';
 import { ModalWindow } from '@components/modal';
 import BaseComponent from '@components/base-component';
 import Timer from '@components/timer/timer';
 import ModalContent from '@components/modal/modal-content';
+import { FigureColor } from '@chess/game-common';
 import ChessField from './field/field-controller';
 import PlayerContainer from '../../reg-page/reg-page__components/player-control';
 import store from './state/redux/store';
@@ -95,12 +95,45 @@ class Chess extends BaseComponent {
     };
   }
 
+  public setPlayerLeave(): void {
+    const result = getNextFigureColor(store.getState().currentPlayer.currentUserColor);
+    this.setWinner(result);
+    const winContent = new ModalContent({
+      header: 'User leaves!',
+      text: `Player of ${
+        result === FigureColor.WHITE ? FigureColorText.WHITE : FigureColorText.BLACK
+      } has won!`,
+      buttonText: 'Ok',
+    });
+    const modalWindow = new ModalWindow(winContent);
+    this.node.append(modalWindow.getNode());
+  }
+
+  public async makeMove(from: Coordinate, to: Coordinate): Promise<void> {
+    await this.chessBoard.makeMove(from.x, from.y, to.x, to.y);
+  }
+
+  public stopTimer(): void {
+    this.timer.toggle();
+  }
+
   private pushMoveToHistory(turnInfo: TurnInfo): void {
     this.history.push({
       from: turnInfo.move.from,
       to: turnInfo.move.to,
       time: this.timer.getSeconds(),
     });
+  }
+
+  private setDraw(): void {
+    const winContent = new ModalContent({
+      header: 'Stalemate!',
+      text: `It isn't win, just a draw, bro.`,
+      buttonText: "It's a pity!",
+    });
+    const modalWindow = new ModalWindow(winContent);
+    this.node.append(modalWindow.getNode());
+    this.setWinner('draw');
   }
 
   private showDrawProposalModal(): void {
@@ -146,35 +179,6 @@ class Chess extends BaseComponent {
     this.node.append(modalWindow.getNode());
   }
 
-  public setPlayerLeave(): void {
-    const result = getNextFigureColor(store.getState().currentPlayer.currentUserColor);
-    this.setWinner(result);
-    const winContent = new ModalContent({
-      header: 'User leaves!',
-      text: `Player of ${
-        result === FigureColor.WHITE ? FigureColorText.WHITE : FigureColorText.BLACK
-      } has won!`,
-      buttonText: 'Ok',
-    });
-    const modalWindow = new ModalWindow(winContent);
-    this.node.append(modalWindow.getNode());
-  }
-
-  private setDraw(): void {
-    const winContent = new ModalContent({
-      header: 'Stalemate!',
-      text: `It isn't win, just a draw, bro.`,
-      buttonText: "It's a pity!",
-    });
-    const modalWindow = new ModalWindow(winContent);
-    this.node.append(modalWindow.getNode());
-    this.setWinner('draw');
-  }
-
-  public async makeMove(from: Coordinate, to: Coordinate): Promise<void> {
-    await this.chessBoard.makeMove(from.x, from.y, to.x, to.y);
-  }
-
   private setWinner(result: GameResult): void {
     if (!this.replay) {
       return;
@@ -206,10 +210,6 @@ class Chess extends BaseComponent {
       result: null,
       moves: 0,
     };
-  }
-
-  public stopTimer(): void {
-    this.timer.toggle();
   }
 
   private nextTurnHandler(): void {

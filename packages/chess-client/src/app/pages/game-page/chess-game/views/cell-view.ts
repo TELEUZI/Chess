@@ -1,6 +1,6 @@
 import FigureColorLetter from '@client/app/enums/figure-color-letter';
-import FigureColor from '@client/app/enums/figure-colors';
 import BaseComponent from '@client/app/components/base-component';
+import { FigureColor } from '@chess/game-common';
 import Figure from './figure-view';
 
 export default class CellView extends BaseComponent {
@@ -18,7 +18,7 @@ export default class CellView extends BaseComponent {
     };
   }
 
-  highlightSelectedCell(state: boolean): void {
+  public highlightSelectedCell(state: boolean): void {
     if (state) {
       this.addClass('cell__selected');
     } else {
@@ -26,7 +26,7 @@ export default class CellView extends BaseComponent {
     }
   }
 
-  highlightAllowedMoves(state: boolean): void {
+  public highlightAllowedMoves(state: boolean): void {
     if (state) {
       this.addClass('cell__allowed');
     } else {
@@ -34,7 +34,7 @@ export default class CellView extends BaseComponent {
     }
   }
 
-  highlightCheck(state: boolean): void {
+  public highlightCheck(state: boolean): void {
     if (state) {
       this.addClass('cell__check');
     } else {
@@ -42,7 +42,7 @@ export default class CellView extends BaseComponent {
     }
   }
 
-  highlightMate(state: boolean): void {
+  public highlightMate(state: boolean): void {
     if (state) {
       this.addClass('cell__mate');
     } else {
@@ -50,7 +50,7 @@ export default class CellView extends BaseComponent {
     }
   }
 
-  refresh(type: string, color: FigureColor): void {
+  public refresh(type: string, color: FigureColor): void {
     this.setFigure(type, color);
     if (!type) {
       return;
@@ -62,6 +62,14 @@ export default class CellView extends BaseComponent {
       this.addClass('cell__figureWhite');
       this.removeClass('cell__figureBlack');
     }
+  }
+
+  public rotate(): void {
+    this.toggleClass('rotate');
+  }
+
+  public destroyFigure(): void {
+    this.figure.destroy();
   }
 
   private setFigure(type: string, color: FigureColor): void {
@@ -77,13 +85,5 @@ export default class CellView extends BaseComponent {
     } else {
       this.figure.setClassname('');
     }
-  }
-
-  rotate(): void {
-    this.toggleClass('rotate');
-  }
-
-  destroyFigure(): void {
-    this.figure.destroy();
   }
 }

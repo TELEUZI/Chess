@@ -1,5 +1,5 @@
-import FigureColor from '@client/app/enums/figure-colors';
 import type { Strategy } from '@client/app/interfaces/bot-strategy';
+import { FigureColor } from '@chess/game-common';
 import type FieldState from '../state/field-state';
 import type FieldModel from './field-model';
 import { forEachPlayerFigure } from '../services/field-service/field-service';
@@ -31,7 +31,7 @@ export default class ChessBot {
     this.strategy = strategy ?? new RandomMoveStrategy();
   }
 
-  makeBotMove(state: FieldState, color: FigureColor): void {
+  public makeBotMove(state: FieldState, color: FigureColor): void {
     const bestMove = this.strategy.getBestMove({
       state,
       color,
@@ -40,8 +40,10 @@ export default class ChessBot {
     if (!bestMove) {
       return;
     }
-    this.model.makeMove(bestMove.from.x, bestMove.from.y, bestMove.to.x, bestMove.to.y).then(() => {
-      this.model.checkGameSituation();
-    });
+    void this.model
+      .makeMove(bestMove.from.x, bestMove.from.y, bestMove.to.x, bestMove.to.y)
+      .then(() => {
+        this.model.checkGameSituation();
+      });
   }
 }

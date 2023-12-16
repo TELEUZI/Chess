@@ -1,9 +1,12 @@
-import { GameStatus } from '@chess/game-common';
+import type {
+  PlayerSerializable,
+  GameExternalInfo,
+  GameInfo,
+  MoveMessage,
+} from '@chess/game-common';
+import { FigureColor, GameStatus, Player, PlayerState } from '@chess/game-common';
+
 import shuffle from '../../utils/shuffle';
-import Player from '../player/player';
-import { PlayerColor, PlayerState } from '../player/player-enums';
-import type { PlayerSerializable } from '../player/player-interfaces';
-import type { GameExternalInfo, GameInfo, MoveMessage } from './game-interfaces';
 
 export default class Game {
   private state?: string;
@@ -132,13 +135,13 @@ export default class Game {
     return {
       fieldState: this.state,
       gameStatus: this.status,
-      currentPlayerColor: this.findPlayerColor(this.currentPlayer ?? '') ?? PlayerColor.white,
+      currentPlayerColor: this.findPlayerColor(this.currentPlayer ?? '') ?? FigureColor.WHITE,
       players: players ?? [],
       lastMove: this.lastMove,
     };
   }
 
-  private findPlayerColor(name: string): PlayerColor | null {
+  private findPlayerColor(name: string): FigureColor | null {
     return this.players.get(name)?.color ?? null;
   }
 }

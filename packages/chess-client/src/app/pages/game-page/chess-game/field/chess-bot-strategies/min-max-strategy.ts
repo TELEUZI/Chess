@@ -1,8 +1,8 @@
 import { BEST_VALUE_MOVE_FOR_BLACK } from '@client/app/config';
-import type FigureColor from '@client/app/enums/figure-colors';
 import type { BestMoveParams, Strategy } from '@client/app/interfaces/bot-strategy';
 import type { FigureTurn } from '@client/app/interfaces/move-message';
 import type MoveMessage from '@client/app/interfaces/move-message';
+import type { FigureColor } from '@chess/game-common';
 import { getStateAfterMove } from '../../services/field-service/field-service';
 import type FieldState from '../../state/field-state';
 import { evaluateBoard } from '../chess-bot';
@@ -21,7 +21,13 @@ export default class MinMaxBotStrategy implements Strategy {
           moveTo.x,
           moveTo.y,
         );
-        const boardValue = this.minimax(SEARCH_DEPTH, newState, color, availableMoves, !!color);
+        const boardValue = this.minimax(
+          SEARCH_DEPTH,
+          newState,
+          color,
+          availableMoves,
+          Boolean(color),
+        );
         if (boardValue >= bestValue) {
           bestValue = boardValue;
           bestMove = { from: newGameMove.from, to: moveTo };
