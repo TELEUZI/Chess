@@ -44,6 +44,15 @@ function getMovesAtPoint(fromX: number, fromY: number, state?: FieldState): Coor
     fromY,
   );
 }
+function getEnemyFigures(state: FieldState, color: number): { x: number; y: number }[] {
+  const res: { x: number; y: number }[] = [];
+  forEachPlayerFigure(state, color, (_, pos) => {
+    if (getMovesAtPoint(pos.x, pos.y, state).length) {
+      res.push(pos);
+    }
+  });
+  return res;
+}
 
 export default class FieldModel {
   public state: FieldState;
@@ -238,16 +247,6 @@ export default class FieldModel {
     this.currentColor = store.getState().currentPlayer.currentUserColor;
   }
 
-  private getEnemyFigures(state: FieldState, color: number): { x: number; y: number }[] {
-    const res: { x: number; y: number }[] = [];
-    forEachPlayerFigure(state, color, (_, pos) => {
-      if (getMovesAtPoint(pos.x, pos.y, state).length) {
-        res.push(pos);
-      }
-    });
-    return res;
-  }
-
   private getCheckedKing(state: FieldState): boolean {
     const kingPos = getKingPosition(state, this.currentColor);
     if (!kingPos) {
@@ -263,7 +262,7 @@ export default class FieldModel {
   ): { isChecked: boolean; attackingFigure: null } {
     let res = false;
     let enemyCell: Coordinate | null = null;
-    const enemies = this.getEnemyFigures(state, getNextFigureColor(this.currentColor));
+    const enemies = getEnemyFigures(state, getNextFigureColor(this.currentColor));
     enemies.forEach((enemy) => {
       const allowed = getMovesAtPoint(enemy.x, enemy.y, state);
       allowed.forEach((al) => {
