@@ -13,7 +13,7 @@
       },
       "rules": {
         "import/prefer-default-export": 0,
-        "class-methods-use-this": 1,
+        "class-methods-use-this": 2,
         "@typescript-eslint/no-misused-promises": [
           "error",
           {
