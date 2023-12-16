@@ -35,7 +35,7 @@ export default function buildWsRouting(wss: WebSocket.Server): void {
   });
 
   const interval = setInterval(
-    function ping() {
+    () => {
       (wss.clients as Set<ExtentedWebsocket>).forEach((ws: ExtentedWebsocket) => {
         if (!ws.isAlive) {
           ws.terminate();
