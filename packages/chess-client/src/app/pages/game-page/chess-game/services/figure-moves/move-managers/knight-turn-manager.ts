@@ -1,4 +1,4 @@
-import { Coordinate } from '@coordinate';
+import { Coordinate } from '@chess/coordinate';
 import type FigureModel from '../../../models/figures/figure-model';
 import * as MultipleStepFigure from '../../../models/multiple-step-figure';
 import type FieldState from '../../../state/field-state';

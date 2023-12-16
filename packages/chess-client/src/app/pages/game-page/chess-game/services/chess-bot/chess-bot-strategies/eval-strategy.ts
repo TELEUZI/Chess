@@ -1,7 +1,7 @@
 import { BEST_VALUE_MOVE_FOR_BLACK } from '@client/app/config';
 import type { BestMoveParams, Strategy } from '@client/app/interfaces/bot-strategy';
 import type MoveMessage from '@client/app/interfaces/move-message';
-import { getStateAfterMove } from '../../services/field-service/field-service';
+import { getStateAfterMove } from '../../field-service/field-service';
 import { evaluateBoard } from '../chess-bot';
 
 function getBestMove({ state, availableMoves }: BestMoveParams): MoveMessage | null {

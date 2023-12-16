@@ -1,4 +1,4 @@
-import type { Coordinate } from '@coordinate';
+import type { Coordinate } from '@chess/coordinate';
 
 export default interface MoveMessage {
   from: Coordinate;

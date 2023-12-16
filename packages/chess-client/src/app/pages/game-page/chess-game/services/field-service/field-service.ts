@@ -1,10 +1,10 @@
-import { Coordinate } from '@coordinate';
+import { Coordinate } from '@chess/coordinate';
 import FigureType from '@client/app/enums/figure-type';
 import type { FigureColor } from '@chess/game-common';
 import type CellModel from '../../models/cell-model';
 import type FigureModel from '../../models/figures/figure-model';
 import type FieldState from '../../state/field-state';
-import store from '../../state/redux/store';
+import { isInField } from '../../state/field-state';
 
 export function forEachCell(
   state: FieldState,
@@ -17,12 +17,27 @@ export function forEachCell(
   });
 }
 
-export function getFigureFromState(fromX: number, fromY: number): FigureModel | null {
-  return store.getState().field.getFigure(fromX, fromY);
+export function getFigureFromState(
+  fieldState: FieldState,
+  fromX: number,
+  fromY: number,
+): FigureModel | null {
+  return fieldState.getFigure(fromX, fromY);
 }
 
 export function exchangePositions(state: FieldState, from: Coordinate, to: Coordinate): void {
-  state.getCellAt(to.x, to.y)?.setFigure(state.getFigure(from.x, from.y));
+  const fromFigure = state.getFigure(from.x, from.y);
+  if (fromFigure == null) {
+    return;
+  }
+  const toFigure = state.getFigure(to.x, to.y);
+  if (
+    !isInField(to.x, to.y) ||
+    (toFigure != null && toFigure.getColor() === fromFigure.getColor())
+  ) {
+    return;
+  }
+  state.getCellAt(to.x, to.y)?.setFigure(fromFigure);
   state.getCellAt(from.x, from.y)?.setFigure(null);
 }
 export function forEachPlayerFigure(

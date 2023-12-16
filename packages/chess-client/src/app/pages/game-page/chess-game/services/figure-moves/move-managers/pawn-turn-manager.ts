@@ -1,4 +1,4 @@
-import { Coordinate } from '@coordinate';
+import { Coordinate } from '@chess/coordinate';
 import { FigureColor } from '@chess/game-common';
 import type Pawn from '../../../models/figures/pawn';
 import * as OneStepFigure from '../../../models/one-step-figure';

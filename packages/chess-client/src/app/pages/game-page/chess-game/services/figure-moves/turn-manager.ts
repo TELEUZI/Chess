@@ -1,4 +1,4 @@
-import type { Coordinate } from '@coordinate';
+import type { Coordinate } from '@chess/coordinate';
 import FigureType from '@client/app/enums/figure-type';
 import type FigureModel from '../../models/figures/figure-model';
 import type FieldState from '../../state/field-state';

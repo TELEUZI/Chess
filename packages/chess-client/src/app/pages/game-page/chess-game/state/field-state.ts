@@ -5,7 +5,7 @@ import type FigureModel from '../models/figures/figure-model';
 import { createFigureFromString } from '../fabrics/figure-fabric';
 
 export function isInField(x: number, y: number): boolean {
-  return x >= 0 && x < TABLE_SIZE && y >= 0 && y < TABLE_SIZE;
+  return x >= 0 && x < TABLE_SIZE && y >= 0 && y < TABLE_SIZE && x % 1 === 0 && y % 1 === 0;
 }
 export function emptyBoard(): string[][] {
   const board = [];

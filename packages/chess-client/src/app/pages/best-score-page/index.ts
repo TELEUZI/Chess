@@ -1,9 +1,8 @@
 import { FigureColor } from '@chess/game-common';
+import { storeService } from '@client/app/pages/game-page/chess-game/state/store-service';
 import BaseComponent from '../../components/base-component';
 import type PageController from '../../interfaces/page';
-import store from '../game-page/chess-game/state/redux/store';
 import GameMode from '../../enums/game-mode';
-import { setGameMode, setReplayState } from '../game-page/chess-game/state/redux/action-creators';
 import ReplayDaoService from '../../services/replay-dao-service';
 import Card from '../../components/card/card';
 import type { Winner } from '../../interfaces/winner';
@@ -40,8 +39,8 @@ export default class BestScorePage implements PageController {
         card.moves,
         gameResult,
         () => {
-          store.dispatch(setGameMode(GameMode.REPLAY));
-          store.dispatch(setReplayState(card.date));
+          storeService.setGameMode(GameMode.REPLAY);
+          storeService.setReplayStateDate(card.date);
           window.location.hash = AppRoutes.WATCH;
         },
       );

@@ -1,6 +1,6 @@
 import BaseComponent from '@components/base-component';
+import { storeService } from '@client/app/pages/game-page/chess-game/state/store-service';
 import RegFormModal from '../pages/reg-page/regform-window';
-import store from '../pages/game-page/chess-game/state/redux/store';
 import type GamePage from '../pages/game-page';
 import type PageController from '../interfaces/page';
 import type User from '../interfaces/user';
@@ -106,7 +106,7 @@ export default class Controller extends BaseComponent {
 
   private async offerLooseGame(): Promise<void> {
     window.location.hash = '#default';
-    if (store.getState().gameMode.currentGameMode === GameMode.MULTIPLAYER) {
+    if (storeService.getGameMode() === GameMode.MULTIPLAYER) {
       await socketService.endGame('end');
     }
     (await this.gamePage).endGame();
@@ -117,7 +117,7 @@ export default class Controller extends BaseComponent {
   }
 
   private async offerDraw(): Promise<void> {
-    if (store.getState().gameMode.currentGameMode === GameMode.MULTIPLAYER) {
+    if (storeService.getGameMode() === GameMode.MULTIPLAYER) {
       await socketService.suggestDraw();
     }
     this.headerStateManager.transitionToRegisteredState(

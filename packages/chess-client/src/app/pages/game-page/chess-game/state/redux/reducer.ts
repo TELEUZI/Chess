@@ -44,7 +44,6 @@ function playerReducer(
   switch (action.type) {
     case CHANGE_USERNAME:
       return {
-        ...state,
         playerOne: action.payload.playerOne,
         playerTwo: action.payload.playerTwo,
       };
@@ -62,7 +61,6 @@ function playerColorReducer(
   switch (action.type) {
     case SET_USER_COLOR:
       return {
-        ...state,
         color: action.payload.color,
       };
     default:
@@ -79,7 +77,6 @@ function winnerReducer(
   switch (action.type) {
     case SET_WINNER:
       return {
-        ...state,
         winnerColor: action.payload.winnerColor,
       };
     default:
@@ -96,7 +93,6 @@ function currentPlayerColorReducer(
   switch (action.type) {
     case SET_CURRENT_USER_COLOR:
       return {
-        ...state,
         currentUserColor: action.payload.currentUserColor,
       };
     default:
@@ -114,7 +110,6 @@ function gameModeReducer(
   switch (action.type) {
     case SET_GAME_MODE:
       return {
-        ...state,
         currentGameMode: action.payload.currentGameMode,
       };
     default:
@@ -131,7 +126,6 @@ function replayStateReducer(
   switch (action.type) {
     case SET_REPLAY_STATE:
       return {
-        ...state,
         currentReplayDate: action.payload.replayDate,
       };
     default:
@@ -142,7 +136,7 @@ function replayStateReducer(
 const rootReducer = combineReducers({
   field: fieldReducer,
   players: playerReducer,
-  color: playerColorReducer,
+  user: playerColorReducer,
   currentPlayer: currentPlayerColorReducer,
   gameMode: gameModeReducer,
   replayDate: replayStateReducer,

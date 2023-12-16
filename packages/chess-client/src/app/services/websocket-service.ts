@@ -9,13 +9,8 @@ import type {
   WsMessage,
 } from '@chess/game-common';
 import { GameStatus, GameAction } from '@chess/game-common';
-import {
-  changeName,
-  setCurrentUserColor,
-  setUserColor,
-  setWinner,
-} from '../pages/game-page/chess-game/state/redux/action-creators';
-import store from '../pages/game-page/chess-game/state/redux/store';
+import { storeService } from '@client/app/pages/game-page/chess-game/state/store-service';
+
 import { api, SERVER_ENDPOINT, wsProtocol, baseURL } from '../config';
 
 import GameMode from '../enums/game-mode';
@@ -142,13 +137,13 @@ class SocketService {
     redirectToGameWithMode(GameMode.MULTIPLAYER);
     const [playerOne, playerTwo] = payload.players.map((player) => player.name);
     this.onStart?.();
-    store.dispatch(changeName({ playerOne, playerTwo }));
-    store.dispatch(setCurrentUserColor(payload.currentPlayerColor));
+    storeService.updateUserNames(playerOne, playerTwo);
+    storeService.setCurrentUserColor(payload.currentPlayerColor);
   }
 
   private handleFigureMove(payload: GameInfo): void {
     this.onMove?.(payload.fieldState, payload.currentPlayerColor, payload.lastMove);
-    store.dispatch(setCurrentUserColor(payload.currentPlayerColor));
+    storeService.setCurrentUserColor(payload.currentPlayerColor);
   }
 
   private gameStateUpdater(event: MessageEvent<string>): void {
@@ -162,14 +157,14 @@ class SocketService {
           this.handleFigureMove(response.payload as unknown as GameInfo);
           break;
         case GameAction.disconnect:
-          store.dispatch(setWinner((response.payload as unknown as GameInfo).players[0].color));
+          storeService.setWinner((response.payload as unknown as GameInfo).players[0].color);
           this.onPlayerLeave?.();
           break;
         case GameAction.drawSuggest:
           this.onPlayerDrawSuggest?.();
           break;
         case GameAction.setUserColor:
-          store.dispatch(setUserColor((response.payload as ColorMessage).color));
+          storeService.setUserColor((response.payload as ColorMessage).color);
           this.onStart?.();
           break;
         case GameAction.drawResponse:

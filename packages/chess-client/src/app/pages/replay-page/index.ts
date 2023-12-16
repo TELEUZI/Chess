@@ -1,8 +1,8 @@
+import { storeService } from '@client/app/pages/game-page/chess-game/state/store-service';
 import type PageController from '../../interfaces/page';
 import ReplayDaoService from '../../services/replay-dao-service';
 import delay from '../../utils/delay';
 import Chess from '../game-page/chess-game/chess';
-import store from '../game-page/chess-game/state/redux/store';
 
 export default class ReplayPage implements PageController {
   private readonly root: HTMLElement;
@@ -24,7 +24,7 @@ export default class ReplayPage implements PageController {
 
   private async startGame(): Promise<void> {
     this.game = new Chess(this.root, true);
-    const replay = await this.replayModel.getByDate(store.getState().replayDate.currentReplayDate);
+    const replay = await this.replayModel.getByDate(storeService.getCurrentReplayDate());
     if (!replay) {
       return;
     }

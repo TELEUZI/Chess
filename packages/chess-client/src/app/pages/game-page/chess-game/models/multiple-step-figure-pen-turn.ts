@@ -1,7 +1,7 @@
-import { Coordinate } from '@coordinate';
+import { Coordinate } from '@chess/coordinate';
+import { storeService } from '@client/app/pages/game-page/chess-game/state/store-service';
 import type FigureModel from './figures/figure-model';
 import type FieldState from '../state/field-state';
-import store from '../state/redux/store';
 import * as MultipleStepFigure from './multiple-step-figure';
 
 export const getMoves = (
@@ -23,7 +23,7 @@ export const getMoves = (
       }
     } while (
       MultipleStepFigure.isRightMove(state, figure, posX, posY) &&
-      !store.getState().field.getCellAt(posX, posY)?.getFigure()
+      !storeService.getFieldState().getCellAt(posX, posY)?.getFigure()
     );
   });
   return moves;

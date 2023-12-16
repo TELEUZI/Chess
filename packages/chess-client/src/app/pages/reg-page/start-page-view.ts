@@ -1,6 +1,6 @@
 import BaseComponent from '@components/base-component';
 import Button from '@components/button/button';
-import PlayerContainer from './reg-page__components/player-control';
+import PlayerContainer from '@client/app/pages/reg-page/components/player-control';
 
 export default class StartPageView extends BaseComponent {
   public playerOne: PlayerContainer;

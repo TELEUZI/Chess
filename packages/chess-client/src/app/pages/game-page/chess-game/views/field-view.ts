@@ -1,4 +1,4 @@
-import type { Coordinate } from '@coordinate';
+import type { Coordinate } from '@chess/coordinate';
 import BaseComponent from '@client/app/components/base-component';
 import { TABLE_SIZE } from '@client/app/config';
 import CellView from './cell-view';
