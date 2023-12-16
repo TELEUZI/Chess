@@ -18,7 +18,7 @@ import type CellModel from '../models/cell-model';
 import type FieldState from '../state/field-state';
 import store from '../state/redux/store';
 import createFieldFromStrings from '../fabrics/field-fabric';
-import TurnManager from '../services/figure-moves/turn-manager';
+import * as TurnManager from '../services/figure-moves/turn-manager';
 import { createFigureFromString } from '../fabrics/figure-fabric';
 import {
   getKingPosition,
