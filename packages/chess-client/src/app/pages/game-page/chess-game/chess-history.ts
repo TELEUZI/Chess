@@ -35,7 +35,7 @@ export default class ChessHistory extends BaseComponent {
     this.lastTurn = coords;
     const { move, figure } = coords;
     const figureView = new FigureView(this.node, [
-      `chess__figure`,
+      'chess__figure',
       `chess-field__${
         figure?.color === FigureColor.BLACK ? FigureColorLetter.BLACK : FigureColorLetter.WHITE
       }${figure?.type ?? ''}`,

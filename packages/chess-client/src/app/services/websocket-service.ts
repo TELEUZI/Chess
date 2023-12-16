@@ -24,7 +24,7 @@ import type { GameInfo, Room } from '../interfaces/response';
 import redirectToGameWithMode from '../utils/start-game-utils';
 
 export async function getFreeRoom(): Promise<[string, Room] | undefined> {
-  const rooms = await api.get<Record<string, Room>>(`/rooms/`);
+  const rooms = await api.get<Record<string, Room>>('/rooms/');
   return Object.entries(rooms.data).find(
     (room) => room[1].clients.size < 2 && room[1].game.gameStatus === GameStatus.waitingRoom,
   );

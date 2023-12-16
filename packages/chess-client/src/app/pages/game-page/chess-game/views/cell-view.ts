@@ -76,7 +76,7 @@ export default class CellView extends BaseComponent {
     if (type && type !== ' ') {
       this.figure.destroy();
       this.figure = new Figure(this.node, [
-        `chess__figure`,
+        'chess__figure',
         `chess-field__${
           color === FigureColor.BLACK ? FigureColorLetter.BLACK : FigureColorLetter.WHITE
         }${type}`,
