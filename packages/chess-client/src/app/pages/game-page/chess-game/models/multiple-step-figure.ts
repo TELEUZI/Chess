@@ -1,17 +1,15 @@
 import type FieldState from '../state/field-state';
 import type FigureModel from './figures/figure-model';
 
-export default abstract class MultipleStepFigure {
-  public static isRightMove(
-    state: FieldState,
-    figure: FigureModel,
-    posX: number,
-    posY: number,
-  ): boolean {
-    return !!(
-      state.getCellAt(posX, posY) &&
-      (state.getCellAt(posX, posY)?.getFigure() === null ||
-        state.getFigureColor(posX, posY) !== figure.getColor())
-    );
-  }
-}
+export const isRightMove = (
+  state: FieldState,
+  figure: FigureModel,
+  posX: number,
+  posY: number,
+): boolean => {
+  return !!(
+    state.getCellAt(posX, posY) &&
+    (state.getCellAt(posX, posY)?.getFigure() === null ||
+      state.getFigureColor(posX, posY) !== figure.getColor())
+  );
+};

@@ -1,6 +1,6 @@
 import { Coordinate } from '@coordinate';
 import type FigureModel from '../../../models/figures/figure-model';
-import MultipleStepFigure from '../../../models/multiple-step-figure';
+import * as MultipleStepFigure from '../../../models/multiple-step-figure';
 import type FieldState from '../../../state/field-state';
 import MOVES from '../../../models/figure-actions';
 
