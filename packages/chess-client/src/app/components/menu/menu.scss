@@ -1,0 +1,9 @@
+@import "../variables";
+
+.menu {
+  list-style: none;
+  display: flex;
+  color: $white;
+  padding: 0;
+  gap: 50px;
+}
