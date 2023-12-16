@@ -1,7 +1,7 @@
 import { Coordinate } from '@coordinate';
 import { FigureColor } from '@chess/game-common';
 import type Pawn from '../../../models/figures/pawn';
-import OneStepFigure from '../../../models/one-step-figure';
+import * as OneStepFigure from '../../../models/one-step-figure';
 import type FieldState from '../../../state/field-state';
 
 export const getMoves = (
