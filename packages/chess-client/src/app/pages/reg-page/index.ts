@@ -25,7 +25,7 @@ export default class StartPage implements PageController {
     this.view = new StartPageView(
       redirectToGameWithMode.bind(null, GameMode.SINGLE),
       redirectToGameWithMode.bind(null, GameMode.BOT),
-      async () => addUserToGame(this.view.playerOne.getUserName()),
+      () => addUserToGame(this.view.playerOne.getUserName()),
       (firstUserName: string, secondUserName: string) => {
         onUserNameChanged(firstUserName, secondUserName);
       },

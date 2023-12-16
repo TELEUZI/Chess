@@ -129,8 +129,8 @@ export default class Controller extends BaseComponent {
   private startGame(): void {
     window.location.hash = '#game';
     this.headerStateManager.transitionToStopGameState(
-      async () => this.offerLooseGame(),
-      async () => this.offerDraw(),
+      () => this.offerLooseGame(),
+      () => this.offerDraw(),
     );
   }
 }

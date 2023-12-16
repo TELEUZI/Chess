@@ -37,7 +37,7 @@ export default abstract class BaseDao<T> {
     };
   }
 
-  public async findAll(): Promise<T[]> {
+  public findAll(): Promise<T[]> {
     const openRequest = window.indexedDB.open(INDEXED_DB_NAME, INDEXED_DB_VERSION + 1);
     const list: T[] = [];
     return new Promise<T[]>((resolve, reject) => {
@@ -64,7 +64,7 @@ export default abstract class BaseDao<T> {
     });
   }
 
-  public async get(): Promise<T> {
+  public get(): Promise<T> {
     const openRequest = window.indexedDB.open('Teleuzi', INDEXED_DB_VERSION + 1);
     return new Promise<T>((resolve) => {
       openRequest.onsuccess = () => {

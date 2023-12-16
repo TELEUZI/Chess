@@ -28,7 +28,7 @@ export default class ConfigDaoService {
     this.dao.create({ GameDifficulty: gameDifficulty });
   }
 
-  public async getData(): Promise<GameConfig> {
+  public getData(): Promise<GameConfig> {
     return this.dao.get();
   }
 }

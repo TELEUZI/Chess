@@ -29,11 +29,9 @@ export default class ReplayPage implements PageController {
       return;
     }
     await Promise.all(
-      replay.history.map(async (move) => {
-        return delay(move.time * 1000).then(async () => {
-          return this.game?.makeMove(move.from, move.to);
-        });
-      }),
+      replay.history.map((move) =>
+        delay(move.time * 1000).then(() => this.game?.makeMove(move.from, move.to)),
+      ),
     ).then(() => {
       this.game?.stopTimer();
     });
