@@ -1,4 +1,4 @@
-import type { Coordinate } from '@coordinate';
+import type { Coordinate } from '@chess/coordinate';
 import GameMode from '@client/app/enums/game-mode';
 import FigureType from '@client/app/enums/figure-type';
 import { socketService } from '@client/app/services/websocket-service';
@@ -7,15 +7,14 @@ import { BLACK_ROW_INDEX, WHITE_ROW_INDEX } from '@client/app/config';
 import type { Strategy } from '@client/app/interfaces/bot-strategy';
 import type TurnInfo from '@client/app/interfaces/turn-info';
 import { FigureColor } from '@chess/game-common';
+import { storeService } from '@client/app/pages/game-page/chess-game/state/store-service';
 import type CellModel from '../models/cell-model';
 import type CellView from '../views/cell-view';
 import type FieldState from '../state/field-state';
 import FieldView from '../views/field-view';
-import store from '../state/redux/store';
 import FieldModel from './field-model';
-import ChessBot from './chess-bot';
+import ChessBot from '../services/chess-bot/chess-bot';
 import forEachCell from '../utils/cells-iterator';
-import { setCurrentUserColor } from '../state/redux/action-creators';
 import createStrategy from '../fabrics/bot-strategy-fabric';
 
 export default class ChessField {
@@ -38,6 +37,8 @@ export default class ChessField {
   private readonly onEnd: () => void;
 
   private readonly onFieldUpdate: (turnInfo: TurnInfo) => void;
+
+  private readonly unsubscribe: (() => void) | null = null;
 
   constructor({
     parentNode,
@@ -78,7 +79,7 @@ export default class ChessField {
         this.bot?.makeBotMove(this.model.state, FigureColor.BLACK);
       },
       onReset: () => {
-        store.dispatch(setCurrentUserColor(1));
+        storeService.setCurrentUserColor(FigureColor.WHITE);
       },
       onStalemate: () => {
         this.onStalemate();
@@ -96,12 +97,12 @@ export default class ChessField {
     this.view = new FieldView(parentNode, async (cell: CellView, i: number, j: number) => {
       await this.cellClickHandler(cell, i, j);
     });
-    this.view.refresh(store.getState().field);
-    store.subscribe(() => {
-      this.view.refresh(store.getState().field);
+    this.view.refresh(storeService.getFieldState());
+    this.unsubscribe = storeService.subscribeToFieldState(() => {
+      this.view.refresh(storeService.getFieldState());
     });
     socketService.onStart = () => {
-      if (store.getState().color.color === FigureColor.BLACK) {
+      if (storeService.getUserColor() === FigureColor.BLACK) {
         this.view.rotate();
         forEachCell(this.view.getCells(), (cell) => {
           cell.rotate();
@@ -133,13 +134,19 @@ export default class ChessField {
     return this.model.makeMove(fromX, fromY, toX, toY);
   }
 
+  public destroy(): void {
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
+  }
+
   private async getBotStrategy(): Promise<Strategy | null> {
     return createStrategy(await this.botConfigService.getData());
   }
 
   private async cellClickHandler(cell: CellView, i: number, j: number): Promise<void> {
     if (
-      store.getState().currentPlayer.currentUserColor !== store.getState().color.color &&
+      storeService.getCurrentPlayerColor() !== storeService.getUserColor() &&
       this.model.getGameMode() === GameMode.MULTIPLAYER
     ) {
       return;

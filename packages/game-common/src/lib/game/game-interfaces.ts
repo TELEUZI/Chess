@@ -1,6 +1,6 @@
-import type { Coordinate } from '@coordinate';
-import type { GameStatus, FigureColor, GameAction } from '@chess/game-common';
-import type { PlayerSerializable } from '../player';
+import type { Coordinate } from '@chess/coordinate';
+import type { GameStatus, GameAction } from '@chess/game-common';
+import type { PlayerSerializable, FigureColor } from '../player';
 
 export interface GameInfo {
   gameStatus: GameStatus;

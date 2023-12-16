@@ -10,17 +10,31 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2017", "dom"],
-    "typeRoots": ["node_modules/@types", "node_modules"],
+    "lib": [
+      "es2017",
+      "dom"
+    ],
+    "typeRoots": [
+      "node_modules/@types",
+      "node_modules"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "@chess/game-common": ["packages/game-common/src/index.ts"],
-      "@client/*": ["packages/chess-client/src/*"],
-      "@coordinate": ["packages/coordinate/src/index.ts"],
-      "@components/*": ["packages/chess-client/src/app/components/*"]
+      "@chess/coordinate": [
+        "packages/coordinate/src/index.ts"
+      ],
+      "@chess/game-common": [
+        "packages/game-common/src/index.ts"
+      ],
+      "@client/*": [
+        "packages/chess-client/src/*"
+      ],
+      "@components/*": [
+        "packages/chess-client/src/app/components/*"
+      ]
     },
     "plugins": [
       {
@@ -28,5 +42,8 @@
       }
     ]
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }

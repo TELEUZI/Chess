@@ -1,9 +1,9 @@
 import GameDifficultyOptions from '@client/app/enums/game-difficulty-options';
 import type { Strategy } from '@client/app/interfaces/bot-strategy';
 import type GameConfig from '@client/app/interfaces/game-config';
-import EvaluationStrategy from '../field/chess-bot-strategies/eval-strategy';
-import MinMaxBotStrategy from '../field/chess-bot-strategies/min-max-strategy';
-import RandomMoveStrategy from '../field/chess-bot-strategies/random-move-strategy';
+import EvaluationStrategy from '@client/app/pages/game-page/chess-game/services/chess-bot/chess-bot-strategies/eval-strategy';
+import MinMaxBotStrategy from '@client/app/pages/game-page/chess-game/services/chess-bot/chess-bot-strategies/min-max-strategy';
+import RandomMoveStrategy from '@client/app/pages/game-page/chess-game/services/chess-bot/chess-bot-strategies/random-move-strategy';
 
 const gameDifficultyOptions: Record<GameDifficultyOptions, Strategy> = {
   [GameDifficultyOptions.easy]: new RandomMoveStrategy(),
