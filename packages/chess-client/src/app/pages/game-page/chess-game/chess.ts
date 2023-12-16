@@ -128,7 +128,7 @@ class Chess extends BaseComponent {
   private setDraw(): void {
     const winContent = new ModalContent({
       header: 'Stalemate!',
-      text: `It isn't win, just a draw, bro.`,
+      text: "It isn't win, just a draw, bro.",
       buttonText: "It's a pity!",
     });
     const modalWindow = new ModalWindow(winContent);
@@ -139,7 +139,7 @@ class Chess extends BaseComponent {
   private showDrawProposalModal(): void {
     const winContent = new ModalContent({
       header: 'Are you ok with draw?',
-      text: `...`,
+      text: '...',
       buttonText: 'Ok',
     });
     const modalWindow = new ModalWindow(
@@ -158,7 +158,7 @@ class Chess extends BaseComponent {
   private showStalemateModal(): void {
     const winContent = new ModalContent({
       header: 'Stalemate!',
-      text: `It isn't win, just a draw, bro.`,
+      text: "It isn't win, just a draw, bro.",
       buttonText: "It's a pity!",
     });
     const modalWindow = new ModalWindow(winContent);

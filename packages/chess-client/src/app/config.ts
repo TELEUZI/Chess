@@ -22,7 +22,7 @@ export const INDEXED_DB_NAME = 'Teleuzi';
 export const TABLE_SIZE = 8;
 export const BEST_VALUE_MOVE_FOR_BLACK = -9999;
 export const TIMER_DELAY = 0;
-export const SERVER_ENDPOINT = `/rooms/`;
+export const SERVER_ENDPOINT = '/rooms/';
 export const baseURL =
   process.env.NODE_ENV === 'production' ? 'teleuzi-chess.herokuapp.com' : 'localhost:5000';
 

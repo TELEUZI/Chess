@@ -12,7 +12,7 @@ export default class SelectController<T = string> extends BaseComponent {
     private readonly onChange: () => void,
   ) {
     super({ className: 'select-controller' });
-    this.label = new BaseComponent({ tag: 'label', className: `label settings__label` });
+    this.label = new BaseComponent({ tag: 'label', className: 'label settings__label' });
     this.label.setContent(label);
     this.select = new SelectView(options, () => {
       this.onChange();
