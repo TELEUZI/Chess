@@ -49,7 +49,7 @@ export default class ReplayDaoService {
   //   return usersArray[usersArray.length - 1];
   // }
 
-  public async getAll(): Promise<Replay[]> {
+  public getAll(): Promise<Replay[]> {
     return this.dao.findAll();
   }
 

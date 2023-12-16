@@ -65,8 +65,7 @@ class SocketService {
     if (resp == null) {
       return;
     }
-    const { playerToken, playerInfo } = resp.data.creator;
-    console.log(playerInfo);
+    const { playerToken } = resp.data.creator;
     this.socket = this.joinBuildWSClient(playerToken ?? '');
   }
 
@@ -82,12 +81,11 @@ class SocketService {
     if (resp == null) {
       return;
     }
-    const { playerToken, playerInfo } = resp.data;
-    console.log(playerInfo);
+    const { playerToken } = resp.data;
     this.socket = this.joinBuildWSClient(playerToken ?? '');
   }
 
-  public async move(fieldState: string, moveMessage: MoveMessage): Promise<boolean> {
+  public move(fieldState: string, moveMessage: MoveMessage): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       try {
         this.socket?.send(
@@ -100,7 +98,7 @@ class SocketService {
     });
   }
 
-  public async suggestDraw(): Promise<boolean> {
+  public suggestDraw(): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       try {
         this.socket?.send(JSON.stringify({ action: GameAction.drawSuggest }));
@@ -111,7 +109,7 @@ class SocketService {
     });
   }
 
-  public async answerDraw(response: DrawResult): Promise<boolean> {
+  public answerDraw(response: DrawResult): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       try {
         this.socket?.send(
@@ -124,7 +122,7 @@ class SocketService {
     });
   }
 
-  public async endGame(reason: string): Promise<void> {
+  public endGame(reason: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       try {
         this.socket?.send(

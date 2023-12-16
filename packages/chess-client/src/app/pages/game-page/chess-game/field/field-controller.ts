@@ -129,7 +129,7 @@ export default class ChessField {
     });
   }
 
-  public async makeMove(fromX: number, fromY: number, toX: number, toY: number): Promise<void> {
+  public makeMove(fromX: number, fromY: number, toX: number, toY: number): Promise<void> {
     return this.model.makeMove(fromX, fromY, toX, toY);
   }
 
