@@ -36,6 +36,14 @@ interface FieldModelProps {
   onReset: () => void;
   onCheckPromotion: (cell: CellModel) => void;
 }
+function getMovesAtPoint(fromX: number, fromY: number, state?: FieldState): Coordinate[] {
+  return TurnManager.getMoves(
+    state ?? store.getState().field,
+    state?.getFigure(fromX, fromY) ?? getFigureFromState(fromX, fromY),
+    fromX,
+    fromY,
+  );
+}
 
 export default class FieldModel {
   public state: FieldState;
@@ -184,8 +192,8 @@ export default class FieldModel {
     const moves: FigureTurn[] = [];
     const kingPos = getKingPosition(state, color);
     forEachPlayerFigure(state, color, (_, pos) => {
-      if (this.getMovesAtPoint(pos.x, pos.y, state).length) {
-        moves.push({ from: pos, to: this.getMovesAtPoint(pos.x, pos.y, state) });
+      if (getMovesAtPoint(pos.x, pos.y, state).length) {
+        moves.push({ from: pos, to: getMovesAtPoint(pos.x, pos.y, state) });
       }
     });
     return moves.filter((move) => {
@@ -204,7 +212,7 @@ export default class FieldModel {
       (this.gameMode === GameMode.SINGLE ||
         store.getState().currentPlayer.currentUserColor === store.getState().color.color)
     ) {
-      let moves: Coordinate[] = this.getMovesAtPoint(fromX, fromY);
+      let moves: Coordinate[] = getMovesAtPoint(fromX, fromY);
       moves = moves.filter((move) => {
         const nextState = getStateAfterMove(this.state, fromX, fromY, move.x, move.y);
         return (
@@ -233,7 +241,7 @@ export default class FieldModel {
   private getEnemyFigures(state: FieldState, color: number): { x: number; y: number }[] {
     const res: { x: number; y: number }[] = [];
     forEachPlayerFigure(state, color, (_, pos) => {
-      if (this.getMovesAtPoint(pos.x, pos.y, state).length) {
+      if (getMovesAtPoint(pos.x, pos.y, state).length) {
         res.push(pos);
       }
     });
@@ -257,7 +265,7 @@ export default class FieldModel {
     let enemyCell: Coordinate | null = null;
     const enemies = this.getEnemyFigures(state, getNextFigureColor(this.currentColor));
     enemies.forEach((enemy) => {
-      const allowed = this.getMovesAtPoint(enemy.x, enemy.y, state);
+      const allowed = getMovesAtPoint(enemy.x, enemy.y, state);
       allowed.forEach((al) => {
         if (al.x === posX && al.y === posY) {
           res = true;
@@ -266,15 +274,6 @@ export default class FieldModel {
       });
     });
     return { isChecked: res, attackingFigure: enemyCell };
-  }
-
-  private getMovesAtPoint(fromX: number, fromY: number, state?: FieldState): Coordinate[] {
-    return TurnManager.getMoves(
-      state ?? store.getState().field,
-      state?.getFigure(fromX, fromY) ?? getFigureFromState(fromX, fromY),
-      fromX,
-      fromY,
-    );
   }
 
   private setState(newState: FieldState): void {
