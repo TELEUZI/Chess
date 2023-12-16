@@ -1,5 +1,4 @@
 import { Coordinate } from '@coordinate';
-import FigureColor from '@client/app/enums/figure-colors';
 import GameMode from '@client/app/enums/game-mode';
 import { socketService } from '@client/app/services/websocket-service';
 import getNextFigureColor from '@client/app/utils/get-next-figure-color';
@@ -13,6 +12,7 @@ import FigureType from '@client/app/enums/figure-type';
 import { INIT_FIELD_STATE } from '@client/app/config';
 import { Subject } from '@client/app/services/subject';
 import type ChessOpening from '@client/app/interfaces/chess-opening';
+import { FigureColor } from '@chess/game-common';
 import type CellModel from '../models/cell-model';
 
 import type FieldState from '../state/field-state';
@@ -40,12 +40,6 @@ interface FieldModelProps {
 export default class FieldModel {
   public state: FieldState;
 
-  private currentColor = FigureColor.WHITE;
-
-  private readonly gameMode: GameMode = GameMode.SINGLE;
-
-  private gameResult?: GameResult;
-
   public onChange = new Observable<FieldState>();
 
   public onCheck = new Subject<Coordinate | null>(null);
@@ -55,6 +49,12 @@ export default class FieldModel {
   public onMove = new Observable<TurnInfo>();
 
   public onNextTurn = new Observable<void>();
+
+  private currentColor = FigureColor.WHITE;
+
+  private readonly gameMode: GameMode = GameMode.SINGLE;
+
+  private gameResult?: GameResult;
 
   private readonly onStalemate: () => void;
 
@@ -98,16 +98,7 @@ export default class FieldModel {
     };
   }
 
-  setNextPlayerColor(): void {
-    if (this.gameMode === GameMode.SINGLE) {
-      store.dispatch(
-        setCurrentUserColor(getNextFigureColor(store.getState().currentPlayer.currentUserColor)),
-      );
-    }
-    this.currentColor = store.getState().currentPlayer.currentUserColor;
-  }
-
-  promote(i: number, j: number): void {
+  public promote(i: number, j: number): void {
     this.state.setFigureAtCell(
       createFigureFromString(
         this.getCellAt(new Coordinate(i, j))?.getFigureColor() === FigureColor.WHITE
@@ -120,7 +111,7 @@ export default class FieldModel {
     store.dispatch(makeMove(this.state));
   }
 
-  checkGameSituation(): void {
+  public checkGameSituation(): void {
     const isMoves = this.getAllValidMoves(this.state, this.currentColor).length !== 0;
     const kingPosition = getKingPosition(this.state, this.currentColor);
     if (!isMoves && this.getCheckedKing(this.state)) {
@@ -136,7 +127,7 @@ export default class FieldModel {
     }
   }
 
-  async moveFigure(fromX: number, fromY: number, toX: number, toY: number): Promise<void> {
+  public async moveFigure(fromX: number, fromY: number, toX: number, toY: number): Promise<void> {
     const allowed = this.getAllowedMovesFromPoint(fromX, fromY);
     const isAllowed = allowed.findIndex((it) => {
       return it.x === toX && it.y === toY;
@@ -164,7 +155,7 @@ export default class FieldModel {
     this.checkGameSituation();
   }
 
-  async makeMove(fromX: number, fromY: number, toX: number, toY: number): Promise<void> {
+  public async makeMove(fromX: number, fromY: number, toX: number, toY: number): Promise<void> {
     const fromCell = this.state.getCellAt(fromX, fromY);
     const toCell = this.state.getCellAt(toX, toY);
     if (fromCell === null || toCell === null) {
@@ -185,29 +176,11 @@ export default class FieldModel {
     this.onMove.notify(move);
   }
 
-  private getEnemyFigures(state: FieldState, color: number): { x: number; y: number }[] {
-    const res: { x: number; y: number }[] = [];
-    forEachPlayerFigure(state, color, (_, pos) => {
-      if (this.getMovesAtPoint(pos.x, pos.y, state).length) {
-        res.push(pos);
-      }
-    });
-    return res;
-  }
-
-  getCellAt(to: Coordinate): CellModel | null {
+  public getCellAt(to: Coordinate): CellModel | null {
     return this.state.getCellAt(to.x, to.y);
   }
 
-  private getCheckedKing(state: FieldState): boolean {
-    const kingPos = getKingPosition(state, this.currentColor);
-    if (!kingPos) {
-      return false;
-    }
-    return this.getCheckedStatus(state, kingPos.x, kingPos.y).isChecked;
-  }
-
-  getAllValidMoves(state: FieldState, color: FigureColor): FigureTurn[] {
+  public getAllValidMoves(state: FieldState, color: FigureColor): FigureTurn[] {
     const moves: FigureTurn[] = [];
     const kingPos = getKingPosition(state, color);
     forEachPlayerFigure(state, color, (_, pos) => {
@@ -224,23 +197,7 @@ export default class FieldModel {
     });
   }
 
-  private getCheckedStatus(state: FieldState, posX: number, posY: number) {
-    let res = false;
-    let enemyCell: Coordinate | null = null;
-    const enemies = this.getEnemyFigures(state, getNextFigureColor(this.currentColor));
-    enemies.forEach((enemy) => {
-      const allowed = this.getMovesAtPoint(enemy.x, enemy.y, state);
-      allowed.forEach((al) => {
-        if (al.x === posX && al.y === posY) {
-          res = true;
-          enemyCell = new Coordinate(enemy.x, enemy.y);
-        }
-      });
-    });
-    return { isChecked: res, attackingFigure: enemyCell };
-  }
-
-  getAllowedMovesFromPoint = (fromX: number, fromY: number): Coordinate[] => {
+  public getAllowedMovesFromPoint = (fromX: number, fromY: number): Coordinate[] => {
     if (
       this.state.getFigure(fromX, fromY) &&
       this.state.getFigureColor(fromX, fromY) === store.getState().currentPlayer.currentUserColor &&
@@ -260,6 +217,57 @@ export default class FieldModel {
     return [];
   };
 
+  public getGameMode(): GameMode {
+    return this.gameMode;
+  }
+
+  private setNextPlayerColor(): void {
+    if (this.gameMode === GameMode.SINGLE) {
+      store.dispatch(
+        setCurrentUserColor(getNextFigureColor(store.getState().currentPlayer.currentUserColor)),
+      );
+    }
+    this.currentColor = store.getState().currentPlayer.currentUserColor;
+  }
+
+  private getEnemyFigures(state: FieldState, color: number): { x: number; y: number }[] {
+    const res: { x: number; y: number }[] = [];
+    forEachPlayerFigure(state, color, (_, pos) => {
+      if (this.getMovesAtPoint(pos.x, pos.y, state).length) {
+        res.push(pos);
+      }
+    });
+    return res;
+  }
+
+  private getCheckedKing(state: FieldState): boolean {
+    const kingPos = getKingPosition(state, this.currentColor);
+    if (!kingPos) {
+      return false;
+    }
+    return this.getCheckedStatus(state, kingPos.x, kingPos.y).isChecked;
+  }
+
+  private getCheckedStatus(
+    state: FieldState,
+    posX: number,
+    posY: number,
+  ): { isChecked: boolean; attackingFigure: null } {
+    let res = false;
+    let enemyCell: Coordinate | null = null;
+    const enemies = this.getEnemyFigures(state, getNextFigureColor(this.currentColor));
+    enemies.forEach((enemy) => {
+      const allowed = this.getMovesAtPoint(enemy.x, enemy.y, state);
+      allowed.forEach((al) => {
+        if (al.x === posX && al.y === posY) {
+          res = true;
+          enemyCell = new Coordinate(enemy.x, enemy.y);
+        }
+      });
+    });
+    return { isChecked: res, attackingFigure: enemyCell };
+  }
+
   private getMovesAtPoint(fromX: number, fromY: number, state?: FieldState): Coordinate[] {
     return TurnManager.getMoves(
       state ?? store.getState().field,
@@ -273,9 +281,5 @@ export default class FieldModel {
     this.state = newState;
     this.onChange.notify(newState);
     store.dispatch(makeMove(newState));
-  }
-
-  getGameMode(): GameMode {
-    return this.gameMode;
   }
 }

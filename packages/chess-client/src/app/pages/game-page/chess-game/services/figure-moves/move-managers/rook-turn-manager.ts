@@ -3,5 +3,8 @@ import MultipleStepsPerTurnFigure from '@client/app/pages/game-page/chess-game/m
 import MOVES from '../../../models/figure-actions';
 
 export default class RookTurnManager {
-  static getMoves = MultipleStepsPerTurnFigure.getMoves.bind(null, MOVES.ROOK as Coordinate[]);
+  public static getMoves = MultipleStepsPerTurnFigure.getMoves.bind(
+    null,
+    MOVES.ROOK as Coordinate[],
+  );
 }

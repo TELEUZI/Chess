@@ -5,7 +5,7 @@ import type FieldState from '../../../state/field-state';
 import MOVES from '../../../models/figure-actions';
 
 export default class KnightTurnManager {
-  static getMoves(
+  public static getMoves(
     state: FieldState,
     figure: FigureModel,
     fromX: number,

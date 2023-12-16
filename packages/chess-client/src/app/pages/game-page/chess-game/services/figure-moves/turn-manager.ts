@@ -10,7 +10,7 @@ import QueenTurnManager from './move-managers/queen-turn-manager';
 import RookTurnManager from './move-managers/rook-turn-manager';
 
 export default class TurnManager {
-  static getMoves(
+  public static getMoves(
     state: FieldState,
     figure: FigureModel | null,
     fromX: number,

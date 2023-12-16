@@ -1,12 +1,12 @@
 import type { Coordinate } from '@coordinate';
 import GameMode from '@client/app/enums/game-mode';
 import FigureType from '@client/app/enums/figure-type';
-import FigureColor from '@client/app/enums/figure-colors';
 import { socketService } from '@client/app/services/websocket-service';
 import ConfigDaoService from '@client/app/services/config-dao-service';
 import { BLACK_ROW_INDEX, WHITE_ROW_INDEX } from '@client/app/config';
 import type { Strategy } from '@client/app/interfaces/bot-strategy';
 import type TurnInfo from '@client/app/interfaces/turn-info';
+import { FigureColor } from '@chess/game-common';
 import type CellModel from '../models/cell-model';
 import type CellView from '../views/cell-view';
 import type FieldState from '../state/field-state';
@@ -85,9 +85,11 @@ export default class ChessField {
         this.onEnd();
       },
     });
-    this.getBotStrategy().then((strategy) => {
-      this.bot = new ChessBot(this.model, strategy);
-    });
+    void this.getBotStrategy()
+      .then((strategy) => {
+        this.bot = new ChessBot(this.model, strategy);
+      })
+      .catch();
     this.model.onNextTurn.subscribe(() => {
       this.onNextTurn();
     });
@@ -125,6 +127,10 @@ export default class ChessField {
     this.model.onMove.subscribe((turnInfo: TurnInfo) => {
       this.onFieldUpdate(turnInfo);
     });
+  }
+
+  public async makeMove(fromX: number, fromY: number, toX: number, toY: number): Promise<void> {
+    return this.model.makeMove(fromX, fromY, toX, toY);
   }
 
   private async getBotStrategy(): Promise<Strategy | null> {
@@ -196,9 +202,5 @@ export default class ChessField {
       }
     }
     return false;
-  }
-
-  async makeMove(fromX: number, fromY: number, toX: number, toY: number): Promise<void> {
-    return this.model.makeMove(fromX, fromY, toX, toY);
   }
 }

@@ -25,7 +25,7 @@ export default class BaseComponent<T extends keyof HTMLElementTagNameMap = 'div'
     }
   }
 
-  append(child: BaseComponent<keyof HTMLElementTagNameMap> | HTMLElement): void {
+  public append(child: BaseComponent<keyof HTMLElementTagNameMap> | HTMLElement): void {
     if (child instanceof BaseComponent) {
       this.node.append(child.getNode());
     } else {
@@ -33,59 +33,61 @@ export default class BaseComponent<T extends keyof HTMLElementTagNameMap = 'div'
     }
   }
 
-  prepend(child: BaseComponent): void {
+  public prepend(child: BaseComponent): void {
     this.node.prepend(child.getNode());
   }
 
-  appendChildren(children: BaseComponent<keyof HTMLElementTagNameMap>[] | HTMLElement[]): void {
+  public appendChildren(
+    children: BaseComponent<keyof HTMLElementTagNameMap>[] | HTMLElement[],
+  ): void {
     children.forEach((el) => {
       this.append(el);
     });
   }
 
-  getNode(): HTMLElementTagNameMap[T] {
+  public getNode(): HTMLElementTagNameMap[T] {
     return this.node;
   }
 
-  addClass(className: string): void {
+  public addClass(className: string): void {
     this.node.classList.add(className);
   }
 
-  setContent(content: string): void {
+  public setContent(content: string): void {
     this.node.textContent = content;
   }
 
-  setInnerHTML(html: string): void {
+  public setInnerHTML(html: string): void {
     this.node.innerHTML = html;
   }
 
-  setAttribute(attribute: string, value: string): void {
+  public setAttribute(attribute: string, value: string): void {
     this.node.setAttribute(attribute, value);
   }
 
-  removeAttribute(attribute: string): void {
+  public removeAttribute(attribute: string): void {
     this.node.removeAttribute(attribute);
   }
 
-  toggleClass(className: string): void {
+  public toggleClass(className: string): void {
     this.node.classList.toggle(className);
   }
 
-  setClasses(className: string): void {
+  public setClasses(className: string): void {
     className.split(' ').forEach((name) => {
       this.addClass(name);
     });
   }
 
-  setClassname(className: string): void {
+  public setClassname(className: string): void {
     this.node.className = className;
   }
 
-  removeClass(className: string): void {
+  public removeClass(className: string): void {
     this.node.classList.remove(className);
   }
 
-  addListener(
+  public addListener(
     event: string,
     listener: (e?: Event) => void,
     options: AddEventListenerOptions | boolean = false,
@@ -93,7 +95,7 @@ export default class BaseComponent<T extends keyof HTMLElementTagNameMap = 'div'
     this.node.addEventListener(event, listener, options);
   }
 
-  destroy(): void {
+  public destroy(): void {
     this.node.remove();
   }
 }

@@ -6,11 +6,11 @@ enum ValidType {
   invalid = 'invalid',
 }
 export default class Input extends BaseComponent<'input'> {
+  public onInput?: (input: HTMLInputElement) => boolean;
+
+  public isValid = true;
+
   protected input: HTMLInputElement;
-
-  onInput?: (input: HTMLInputElement) => boolean;
-
-  isValid = true;
 
   constructor(type: string, classlist: string[], placeholder = '', value?: number | string) {
     super({ tag: 'input', className: ['input', ...classlist].join(' ') });
@@ -19,11 +19,11 @@ export default class Input extends BaseComponent<'input'> {
     this.createListeners();
   }
 
-  setHandler(handler: (input: HTMLInputElement) => boolean): void {
+  public setHandler(handler: (input: HTMLInputElement) => boolean): void {
     this.onInput = handler;
   }
 
-  checkValidation(): void {
+  public checkValidation(): void {
     if (this.onInput) {
       this.input.reportValidity();
       this.isValid = this.onInput(this.input);
@@ -32,26 +32,26 @@ export default class Input extends BaseComponent<'input'> {
     }
   }
 
-  setAttributes(type: string, placeholder: string, value?: number | string): void {
+  public setAttributes(type: string, placeholder: string, value?: number | string): void {
     this.setAttribute('type', type);
     this.setAttribute('placeholder', placeholder);
-    if (value) {
+    if (value != null) {
       this.setAttribute('value', value.toString());
     }
   }
 
-  createListeners(): void {
+  public createListeners(): void {
     this.input.addEventListener('input', () => {
       this.checkValidation();
     });
     this.input.addEventListener('invalid', () => {}, false);
   }
 
-  getValue(): string {
+  public getValue(): string {
     return this.input.value;
   }
 
-  setValue(value: string): void {
+  public setValue(value: string): void {
     this.input.value = value;
   }
 }

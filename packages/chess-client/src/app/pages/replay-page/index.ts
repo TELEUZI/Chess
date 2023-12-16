@@ -15,22 +15,22 @@ export default class ReplayPage implements PageController {
     this.root = root;
   }
 
-  createPage(): void {
+  public createPage(): void {
     this.root.innerHTML = '';
     this.startGame().catch(() => {
       console.error('Failed to start game');
     });
   }
 
-  async startGame(): Promise<void> {
+  private async startGame(): Promise<void> {
     this.game = new Chess(this.root, true);
     const replay = await this.replayModel.getByDate(store.getState().replayDate.currentReplayDate);
     if (!replay) {
       return;
     }
-    Promise.all(
+    await Promise.all(
       replay.history.map(async (move) => {
-        return delay(move.time * 1000).then(() => {
+        return delay(move.time * 1000).then(async () => {
           return this.game?.makeMove(move.from, move.to);
         });
       }),

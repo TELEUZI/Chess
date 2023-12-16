@@ -19,7 +19,7 @@ export default class MenuItem extends BaseComponent<'li'> {
     this.append(this.link);
   }
 
-  getHref(): string {
+  public getHref(): string {
     return this.href;
   }
 }

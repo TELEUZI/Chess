@@ -1,5 +1,5 @@
-import FigureColor from '@client/app/enums/figure-colors';
 import { TABLE_SIZE } from '@client/app/config';
+import { FigureColor } from '@chess/game-common';
 import CellModel from '../models/cell-model';
 import type FigureModel from '../models/figures/figure-model';
 import { createFigureFromString } from '../fabrics/figure-fabric';
@@ -16,40 +16,40 @@ export function emptyBoard(): string[][] {
 }
 
 export default class FieldState {
-  state: CellModel[][];
+  public state: CellModel[][];
 
   constructor(initState: CellModel[][]) {
     this.state = initState;
   }
 
-  getCellAt(x: number, y: number): CellModel | null {
+  public getCellAt(x: number, y: number): CellModel | null {
     if (isInField(x, y)) {
       return this.state[x][y];
     }
     return null;
   }
 
-  setFigureAtCell(figure: FigureModel | null, x: number, y: number): void {
+  public setFigureAtCell(figure: FigureModel | null, x: number, y: number): void {
     if (isInField(x, y)) {
       this.state[x][y].setFigure(figure);
     }
   }
 
-  getFigure(x: number, y: number): FigureModel | null {
+  public getFigure(x: number, y: number): FigureModel | null {
     if (isInField(x, y)) {
       return this.getCellAt(x, y)?.getFigure() ?? null;
     }
     return null;
   }
 
-  getFigureColor(x: number, y: number): number | null {
+  public getFigureColor(x: number, y: number): number | null {
     if (isInField(x, y)) {
       return this.getCellAt(x, y)?.getFigureColor() ?? null;
     }
     return null;
   }
 
-  getPlainState(): string[][] {
+  public getPlainState(): string[][] {
     const state = emptyBoard();
     for (let i = 0; i < TABLE_SIZE; i += 1) {
       for (let j = 0; j < TABLE_SIZE; j += 1) {
@@ -64,7 +64,7 @@ export default class FieldState {
     return state;
   }
 
-  clone(): FieldState {
+  public clone(): FieldState {
     const newState = this.state.map((it) => {
       return it.map((jt) => {
         const figure = jt.getFigure();

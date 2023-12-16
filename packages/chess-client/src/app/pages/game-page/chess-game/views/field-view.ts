@@ -16,10 +16,6 @@ type SvgInHtml = HTMLElement & SVGElement;
 export default class FieldView extends BaseComponent {
   private readonly cells: CellView[] = [];
 
-  getCells(): CellView[] {
-    return this.cells;
-  }
-
   constructor(
     parentNode: HTMLElement,
     private readonly onCellClick: (cell: CellView, i: number, j: number) => Promise<void>,
@@ -34,8 +30,8 @@ export default class FieldView extends BaseComponent {
         parent: this.node,
       });
       for (let j = 0; j < TABLE_SIZE; j += 1) {
-        const cell = new CellView(row.getNode(), getCellColorClass(i, j), () => {
-          this.onCellClick(cell, i, j);
+        const cell = new CellView(row.getNode(), getCellColorClass(i, j), async () => {
+          await this.onCellClick(cell, i, j);
         });
 
         this.cells.push(cell);
@@ -46,7 +42,11 @@ export default class FieldView extends BaseComponent {
     numbers.outerHTML = TABLE_COORDINATES;
   }
 
-  refresh(field: FieldState): void {
+  public getCells(): CellView[] {
+    return this.cells;
+  }
+
+  public refresh(field: FieldState): void {
     forEachCell<CellView>(this.cells, (cell, pos) => {
       const cellTo = field.getCellAt(pos.x, pos.y);
       const figureType = cellTo?.getFigureType();
@@ -59,14 +59,14 @@ export default class FieldView extends BaseComponent {
     });
   }
 
-  setSelection(selection: CellView | null): void {
+  public setSelection(selection: CellView | null): void {
     forEachCell(this.cells, (cell) => {
       const isSameCell = selection && selection === cell;
-      cell.highlightSelectedCell(!!isSameCell);
+      cell.highlightSelectedCell(Boolean(isSameCell));
     });
   }
 
-  setCheck(selection: Coordinate | null): void {
+  public setCheck(selection: Coordinate | null): void {
     if (!selection) {
       forEachCell<CellView>(this.cells, (cell) => {
         cell.highlightCheck(false);
@@ -79,7 +79,7 @@ export default class FieldView extends BaseComponent {
     });
   }
 
-  setMate(selection: Coordinate | null): void {
+  public setMate(selection: Coordinate | null): void {
     if (!selection) {
       forEachCell<CellView>(this.cells, (cell) => {
         cell.highlightMate(false);
@@ -92,14 +92,14 @@ export default class FieldView extends BaseComponent {
     });
   }
 
-  setAllowedMoves(selection: Coordinate[]): void {
+  public setAllowedMoves(selection: Coordinate[]): void {
     forEachCell<CellView>(this.cells, (cell, pos) => {
       const isAllowed = selection.findIndex((move) => move.equals(pos)) !== -1;
       cell.highlightAllowedMoves(isAllowed);
     });
   }
 
-  rotate(): void {
+  public rotate(): void {
     this.node.classList.toggle('rotate');
   }
 

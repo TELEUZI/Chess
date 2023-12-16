@@ -20,7 +20,7 @@ export default class SelectController<T = string> extends BaseComponent {
     this.appendChildren([this.select, this.label]);
   }
 
-  getSelectValue(): T {
+  public getSelectValue(): T {
     return this.select.getValue() as T;
   }
 }

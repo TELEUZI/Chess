@@ -12,7 +12,10 @@ import GameMode from '../enums/game-mode';
 import { socketService } from '../services/websocket-service';
 import AppRoutes from '../enums/app-routes';
 
-function createAppRoutes(root: HTMLElement, gamePage: Promise<GamePage>) {
+function createAppRoutes(
+  root: HTMLElement,
+  gamePage: Promise<GamePage>,
+): { name: AppRoutes; controller: Promise<PageController> }[] {
   return [
     {
       name: AppRoutes.DEFAULT,
@@ -74,25 +77,25 @@ export default class Controller extends BaseComponent {
     router.hashChanged();
   }
 
-  toggleModal(): void {
+  private toggleModal(): void {
     this.modal.toggleClass('hidden');
   }
 
-  moveToPage(page: PageController): void {
+  private moveToPage(page: PageController): void {
     this.render(page);
   }
 
-  render(page: PageController): void {
+  private render(page: PageController): void {
     this.appRoot.getNode().innerHTML = '';
     this.getNode().prepend(this.headerStateManager.getHeaderNode());
     page.createPage();
   }
 
-  getAppRoot(): HTMLElement {
+  private getAppRoot(): HTMLElement {
     return this.appRoot.getNode();
   }
 
-  async onRegister(user: User): Promise<void> {
+  private async onRegister(user: User): Promise<void> {
     this.userModel.setData(user);
     this.modal.toggleModal();
     this.headerStateManager.transitionToRegisteredState(
@@ -101,7 +104,7 @@ export default class Controller extends BaseComponent {
     );
   }
 
-  async offerLooseGame(): Promise<void> {
+  private async offerLooseGame(): Promise<void> {
     window.location.hash = '#default';
     if (store.getState().gameMode.currentGameMode === GameMode.MULTIPLAYER) {
       await socketService.endGame('end');
@@ -113,7 +116,7 @@ export default class Controller extends BaseComponent {
     );
   }
 
-  async offerDraw(): Promise<void> {
+  private async offerDraw(): Promise<void> {
     if (store.getState().gameMode.currentGameMode === GameMode.MULTIPLAYER) {
       await socketService.suggestDraw();
     }
@@ -123,11 +126,11 @@ export default class Controller extends BaseComponent {
     );
   }
 
-  startGame(): void {
+  private startGame(): void {
     window.location.hash = '#game';
     this.headerStateManager.transitionToStopGameState(
-      () => this.offerLooseGame(),
-      () => this.offerDraw(),
+      async () => this.offerLooseGame(),
+      async () => this.offerDraw(),
     );
   }
 }

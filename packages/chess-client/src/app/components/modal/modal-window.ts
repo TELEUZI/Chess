@@ -32,11 +32,11 @@ export class ModalWindow extends BaseComponent {
     this.appendChildren([this.modalContent, this.modalWrapper]);
   }
 
-  toggleModal(): void {
-    this.toggleClass('hidden');
+  public getModalWrapper(): BaseComponent {
+    return this.modalWrapper;
   }
 
-  getModalWrapper(): BaseComponent {
-    return this.modalWrapper;
+  private toggleModal(): void {
+    this.toggleClass('hidden');
   }
 }

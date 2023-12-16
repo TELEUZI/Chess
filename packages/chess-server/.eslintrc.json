@@ -21,9 +21,8 @@
             "checksVoidReturn": false
           }
         ],
-        "@typescript-eslint/no-floating-promises": 0,
         "@typescript-eslint/explicit-member-accessibility": [
-          0,
+          2,
           {
             "accessibility": "explicit",
             "overrides": {
@@ -31,15 +30,7 @@
             }
           }
         ],
-        "@typescript-eslint/no-parameter-properties": 0,
         "@typescript-eslint/prefer-readonly-parameter-types": 0,
-        "@typescript-eslint/promise-function-async": 0,
-        "@typescript-eslint/explicit-function-return-type": 0,
-        "@typescript-eslint/no-unsafe-assignment": 0,
-        "@typescript-eslint/strict-boolean-expressions": 0,
-        "@typescript-eslint/no-extraneous-class": 0,
-        "@typescript-eslint/no-unsafe-return": 0,
-        "import/no-extraneous-dependencies": 0,
         "@typescript-eslint/no-magic-numbers": 0
       }
     },

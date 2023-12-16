@@ -2,7 +2,12 @@ import type FieldState from '../state/field-state';
 import type FigureModel from './figures/figure-model';
 
 export default abstract class MultipleStepFigure {
-  static isRightMove(state: FieldState, figure: FigureModel, posX: number, posY: number): boolean {
+  public static isRightMove(
+    state: FieldState,
+    figure: FigureModel,
+    posX: number,
+    posY: number,
+  ): boolean {
     return !!(
       state.getCellAt(posX, posY) &&
       (state.getCellAt(posX, posY)?.getFigure() === null ||

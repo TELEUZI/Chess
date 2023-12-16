@@ -13,15 +13,15 @@ const createAvatar = (): HTMLImageElement => {
 };
 
 export default class Header extends BaseComponent<'header'> {
+  public firstControlButton?: Button;
+
+  public secondControlButton: Button;
+
   private state: State<Header>;
 
   private readonly menu: Menu;
 
   private readonly avatar: HTMLImageElement;
-
-  public firstControlButton?: Button;
-
-  public secondControlButton: Button;
 
   constructor(state: State<Header>, onButtonClick?: () => void) {
     super({ tag: 'header', className: s.header });
@@ -43,7 +43,7 @@ export default class Header extends BaseComponent<'header'> {
     this.state.setContext(this);
   }
 
-  createButton({
+  public createButton({
     onFirstButtonClick,
     onSecondButtonClick,
     avatar,
@@ -55,11 +55,11 @@ export default class Header extends BaseComponent<'header'> {
     this.state.createButton({ onFirstButtonClick, onSecondButtonClick, avatar });
   }
 
-  setAvatarSrc(src: string): void {
+  public setAvatarSrc(src: string): void {
     this.avatar.src = src;
   }
 
-  removeButtons(): void {
+  public removeButtons(): void {
     this.firstControlButton?.destroy();
     this.secondControlButton.destroy();
   }

@@ -1,5 +1,13 @@
 import type { AxiosResponse } from 'axios';
 import { AxiosError } from 'axios';
+import type {
+  PlayerAddResponse,
+  RoomCreateResponse,
+  FigureColor,
+  ColorMessage,
+  DrawResult,
+  WsMessage,
+} from '@chess/game-common';
 import { GameStatus, GameAction } from '@chess/game-common';
 import {
   changeName,
@@ -10,18 +18,9 @@ import {
 import store from '../pages/game-page/chess-game/state/redux/store';
 import { api, SERVER_ENDPOINT, wsProtocol, baseURL } from '../config';
 
-import type FigureColor from '../enums/figure-colors';
 import GameMode from '../enums/game-mode';
 import type MoveMessage from '../interfaces/move-message';
-import type {
-  Room,
-  GameMessage,
-  GameInfo,
-  ColorMessage,
-  DrawResult,
-  PlayerAddResponse,
-  RoomCreateResponse,
-} from '../interfaces/response';
+import type { GameInfo, Room } from '../interfaces/response';
 import redirectToGameWithMode from '../utils/start-game-utils';
 
 export async function getFreeRoom(): Promise<[string, Room] | undefined> {
@@ -32,21 +31,21 @@ export async function getFreeRoom(): Promise<[string, Room] | undefined> {
 }
 
 class SocketService {
+  public onMove?: (fieldState: string, currentColor: FigureColor, lastMove: MoveMessage) => void;
+
+  public onStart?: () => void;
+
+  public onPlayerLeave?: () => void;
+
+  public onPlayerDrawResponse?: (result: boolean) => void;
+
+  public onPlayerDrawSuggest?: () => void;
+
   private socket?: WebSocket;
 
   private roomName?: string;
 
-  onMove?: (fieldState: string, currentColor: FigureColor, lastMove: MoveMessage) => void;
-
-  onStart?: () => void;
-
-  onPlayerLeave?: () => void;
-
-  onPlayerDrawResponse?: (result: boolean) => void;
-
-  onPlayerDrawSuggest?: () => void;
-
-  async createRoom(playerName: string): Promise<void> {
+  public async createRoom(playerName: string): Promise<void> {
     this.roomName = 't'.repeat(Math.floor(Math.random() * 14));
     let resp: AxiosResponse<RoomCreateResponse> | null = null;
     try {
@@ -71,7 +70,7 @@ class SocketService {
     this.socket = this.joinBuildWSClient(playerToken ?? '');
   }
 
-  async joinRoom(room: string, playerName: string): Promise<void> {
+  public async joinRoom(room: string, playerName: string): Promise<void> {
     let resp: AxiosResponse<PlayerAddResponse> | null = null;
     try {
       resp = await api.put(`${SERVER_ENDPOINT}${room}/players?playerName=${playerName}`);
@@ -88,55 +87,7 @@ class SocketService {
     this.socket = this.joinBuildWSClient(playerToken ?? '');
   }
 
-  handleGameStart(payload: GameInfo) {
-    redirectToGameWithMode(GameMode.MULTIPLAYER);
-    const [playerOne, playerTwo] = payload.players.map((player) => player.name);
-    this.onStart?.();
-    store.dispatch(changeName({ playerOne, playerTwo }));
-    store.dispatch(setCurrentUserColor(payload.currentPlayerColor));
-  }
-
-  handleFigureMove(payload: GameInfo) {
-    this.onMove?.(payload.fieldState, payload.currentPlayerColor, payload.lastMove);
-    store.dispatch(setCurrentUserColor(payload.currentPlayerColor));
-  }
-
-  gameStateUpdater(event: MessageEvent<string>): void {
-    try {
-      const response: GameMessage = JSON.parse(event.data);
-      switch (response.action) {
-        case GameAction.startGame:
-          this.handleGameStart(response.payload as GameInfo);
-          break;
-        case GameAction.moveFigure:
-          this.handleFigureMove(response.payload as GameInfo);
-          break;
-        case GameAction.disconnect:
-          store.dispatch(setWinner((response.payload as GameInfo).players[0].color));
-          this.onPlayerLeave?.();
-          break;
-        case GameAction.drawSuggest:
-          this.onPlayerDrawSuggest?.();
-          break;
-        case GameAction.setUserColor:
-          store.dispatch(setUserColor((response.payload as ColorMessage).color));
-          this.onStart?.();
-          break;
-        case GameAction.drawResponse:
-          this.onPlayerDrawResponse?.((response.payload as DrawResult).isDraw);
-          break;
-        default:
-          break;
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(error.message);
-      }
-      console.error(error);
-    }
-  }
-
-  async move(fieldState: string, moveMessage: MoveMessage): Promise<boolean> {
+  public async move(fieldState: string, moveMessage: MoveMessage): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       try {
         this.socket?.send(
@@ -149,7 +100,7 @@ class SocketService {
     });
   }
 
-  async suggestDraw(): Promise<boolean> {
+  public async suggestDraw(): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       try {
         this.socket?.send(JSON.stringify({ action: GameAction.drawSuggest }));
@@ -160,7 +111,7 @@ class SocketService {
     });
   }
 
-  async answerDraw(response: DrawResult): Promise<boolean> {
+  public async answerDraw(response: DrawResult): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       try {
         this.socket?.send(
@@ -173,7 +124,7 @@ class SocketService {
     });
   }
 
-  async endGame(reason: string): Promise<void> {
+  public async endGame(reason: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
       try {
         this.socket?.send(
@@ -189,7 +140,55 @@ class SocketService {
     });
   }
 
-  joinBuildWSClient(playerToken: string): WebSocket {
+  private handleGameStart(payload: GameInfo): void {
+    redirectToGameWithMode(GameMode.MULTIPLAYER);
+    const [playerOne, playerTwo] = payload.players.map((player) => player.name);
+    this.onStart?.();
+    store.dispatch(changeName({ playerOne, playerTwo }));
+    store.dispatch(setCurrentUserColor(payload.currentPlayerColor));
+  }
+
+  private handleFigureMove(payload: GameInfo): void {
+    this.onMove?.(payload.fieldState, payload.currentPlayerColor, payload.lastMove);
+    store.dispatch(setCurrentUserColor(payload.currentPlayerColor));
+  }
+
+  private gameStateUpdater(event: MessageEvent<string>): void {
+    try {
+      const response: WsMessage = JSON.parse(event.data) as WsMessage;
+      switch (response.action) {
+        case GameAction.startGame:
+          this.handleGameStart(response.payload as unknown as GameInfo);
+          break;
+        case GameAction.moveFigure:
+          this.handleFigureMove(response.payload as unknown as GameInfo);
+          break;
+        case GameAction.disconnect:
+          store.dispatch(setWinner((response.payload as unknown as GameInfo).players[0].color));
+          this.onPlayerLeave?.();
+          break;
+        case GameAction.drawSuggest:
+          this.onPlayerDrawSuggest?.();
+          break;
+        case GameAction.setUserColor:
+          store.dispatch(setUserColor((response.payload as ColorMessage).color));
+          this.onStart?.();
+          break;
+        case GameAction.drawResponse:
+          this.onPlayerDrawResponse?.((response.payload as DrawResult).isDraw || false);
+          break;
+        default:
+          break;
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message);
+      }
+      console.error(error);
+    }
+  }
+
+  private joinBuildWSClient(playerToken: string): WebSocket {
     const ws = new WebSocket(`${wsProtocol}://${baseURL}/rooms?accessToken=${playerToken}`);
     let connected = false;
     ws.onopen = (): void => {

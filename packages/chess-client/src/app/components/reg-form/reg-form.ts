@@ -4,15 +4,15 @@ import { validateFirstName } from '../../utils/validator';
 import FileInput from '../input/file-input';
 
 export default class RegForm extends BaseComponent<'form'> {
-  nameInput: Input;
+  private readonly nameInput: Input;
 
-  submit: Input;
+  private readonly submit: Input;
 
-  inputs: Input[] = [];
+  private readonly inputs: Input[] = [];
 
-  reset: Input;
+  private readonly reset: Input;
 
-  image: FileInput;
+  private readonly image: FileInput;
 
   constructor(
     classlist: string[],
@@ -39,7 +39,7 @@ export default class RegForm extends BaseComponent<'form'> {
     this.addUserInputListeners();
   }
 
-  addUserInputListeners(): void {
+  private addUserInputListeners(): void {
     this.addListener('input', () => {
       this.onValidate();
     });
@@ -52,7 +52,7 @@ export default class RegForm extends BaseComponent<'form'> {
     });
   }
 
-  onValidate(): void {
+  private onValidate(): void {
     if (this.inputs.every((el) => el.isValid)) {
       this.submit.removeAttribute('disabled');
     }

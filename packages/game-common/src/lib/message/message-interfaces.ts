@@ -1,6 +1,4 @@
-import type { GameAction } from '@chess/game-common';
-import type { GameInfo, MoveMessage } from '../game/game-interfaces';
-import type { PlayerSerializable } from '../player/player-interfaces';
+import type { GameAction, MoveMessage, PlayerSerializable } from '@chess/game-common';
 
 export interface RoomsMessageData {
   action: GameAction | null;
@@ -18,12 +16,4 @@ export interface RoomCreateResponse {
 export interface PlayerAddResponse {
   playerInfo: PlayerSerializable;
   playerToken?: string;
-}
-
-export interface UserSuggest {
-  isDraw: boolean | null;
-}
-export interface WsMessage {
-  action: GameAction;
-  payload: GameInfo | UserSuggest;
 }

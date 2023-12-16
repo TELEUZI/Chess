@@ -17,6 +17,34 @@ export default class Timer {
     this.model = new TimerModel(this.updateView.bind(this));
   }
 
+  public start(delay: number): void {
+    setTimeout(() => {
+      this.model.start();
+    }, delay);
+  }
+
+  public getNode(): HTMLElement {
+    return this.view.getNode();
+  }
+
+  public toggle(): void {
+    if (this.isRunning) {
+      this.isRunning = false;
+      this.model.stop();
+    } else {
+      this.isRunning = true;
+      this.model.start();
+    }
+  }
+
+  public getSeconds(): number {
+    return this.model.getCurrentTimeInSeconds();
+  }
+
+  public getTime(): string {
+    return this.currentTime;
+  }
+
   private getCurrentTime(currentTime: Time): string {
     this.currentTime = `${
       currentTime.minutes <= LAST_SINGLE_DIGIT_WITH_LEADING_ZERO
@@ -30,35 +58,7 @@ export default class Timer {
     return this.currentTime;
   }
 
-  updateView(currentTime: Time): void {
+  private updateView(currentTime: Time): void {
     this.view.setTime(this.getCurrentTime(currentTime));
-  }
-
-  start(delay: number): void {
-    setTimeout(() => {
-      this.model.start();
-    }, delay);
-  }
-
-  getNode(): HTMLElement {
-    return this.view.getNode();
-  }
-
-  toggle(): void {
-    if (this.isRunning) {
-      this.isRunning = false;
-      this.model.stop();
-    } else {
-      this.isRunning = true;
-      this.model.start();
-    }
-  }
-
-  getSeconds(): number {
-    return this.model.getSeconds();
-  }
-
-  getTime(): string {
-    return this.currentTime;
   }
 }
