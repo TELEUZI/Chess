@@ -31,6 +31,6 @@
   ],
   "paths": {
     "@client/*": ["packages/chess-client/src/*"],
-    "@components/*": ["packages/chess-client/src/app/components/*"],
+    "@components/*": ["packages/chess-client/src/app/components/*"]
   }
 }

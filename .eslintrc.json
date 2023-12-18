@@ -42,8 +42,6 @@
         "plugin:prettier/recommended"
       ],
       "rules": {
-        "no-unused-vars": ["error", { "varsIgnorePattern": "modalWindow" }],
-        "@typescript-eslint/no-unused-vars": ["error", { "varsIgnorePattern": "modalWindow" }],
         "import/no-extraneous-dependencies": [
           "error",
           { "includeInternal": true, "includeTypes": true }

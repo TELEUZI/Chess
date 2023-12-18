@@ -9,7 +9,10 @@
     {
       "files": ["*.ts", "*.tsx"],
       "parserOptions": {
-        "project": ["packages/chess-client/tsconfig.app.json"]
+        "project": [
+          "packages/chess-client/tsconfig.app.json",
+          "packages/chess-client/tsconfig.spec.json"
+        ]
       },
       "rules": {
         "import/prefer-default-export": 0,
