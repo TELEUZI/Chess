@@ -14,9 +14,9 @@ function deepEqual<T>(object: T, value: T): boolean {
 }
 
 export default class ChessHistory extends BaseComponent {
-  private readonly historyWrapper: BaseComponent;
+  public readonly historyWrapper: BaseComponent;
 
-  private lastTurn: TurnInfo | null = null;
+  public lastTurn: TurnInfo | null = null;
 
   constructor(parentNode: HTMLElement) {
     super({ className: 'chess__history', parent: parentNode });
@@ -29,7 +29,7 @@ export default class ChessHistory extends BaseComponent {
   }
 
   public setHistoryMove(coords: TurnInfo, time: string): void {
-    if (deepEqual(this.lastTurn, coords)) {
+    if (deepEqual(this.lastTurn, coords) || coords.figure == null) {
       return;
     }
     this.lastTurn = coords;
@@ -37,8 +37,8 @@ export default class ChessHistory extends BaseComponent {
     const figureView = new FigureView(this.node, [
       'chess__figure',
       `chess-field__${
-        figure?.color === FigureColor.BLACK ? FigureColorLetter.BLACK : FigureColorLetter.WHITE
-      }${figure?.type ?? ''}`,
+        figure.color === FigureColor.BLACK ? FigureColorLetter.BLACK : FigureColorLetter.WHITE
+      }${figure.type ?? ''}`,
     ]);
     const { comment } = coords;
     const historyItem = new BaseComponent({
