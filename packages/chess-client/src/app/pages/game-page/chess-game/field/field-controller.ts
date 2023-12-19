@@ -4,7 +4,7 @@ import FigureType from '@client/app/enums/figure-type';
 import { socketService } from '@client/app/services/websocket-service';
 import ConfigDaoService from '@client/app/services/config-dao-service';
 import { BLACK_ROW_INDEX, WHITE_ROW_INDEX } from '@client/app/config';
-import type { Strategy } from '@client/app/interfaces/bot-strategy';
+import type { Strategy } from '@client/app/pages/game-page/chess-game/services/chess-bot/bot-strategy';
 import type TurnInfo from '@client/app/interfaces/turn-info';
 import { FigureColor } from '@chess/game-common';
 import { storeService } from '@client/app/pages/game-page/chess-game/state/store-service';

@@ -1,4 +1,4 @@
-import type { Strategy } from '@client/app/interfaces/bot-strategy';
+import type { Strategy } from '@client/app/pages/game-page/chess-game/services/chess-bot/bot-strategy';
 import { FigureColor } from '@chess/game-common';
 import type FieldState from '../../state/field-state';
 import type FieldModel from '../../field/field-model';

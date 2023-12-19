@@ -1,4 +1,7 @@
-import type { BestMoveParams, Strategy } from '@client/app/interfaces/bot-strategy';
+import type {
+  BestMoveParams,
+  Strategy,
+} from '@client/app/pages/game-page/chess-game/services/chess-bot/bot-strategy';
 import type MoveMessage from '@client/app/interfaces/move-message';
 import getRandomIntegerInRange from '@client/app/utils/random-generator';
 
