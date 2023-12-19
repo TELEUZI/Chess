@@ -96,7 +96,7 @@ export default class Controller extends BaseComponent {
   }
 
   private async onRegister(user: User): Promise<void> {
-    this.userModel.setData(user);
+    await this.userModel.setData(user);
     this.modal.toggleModal();
     this.headerStateManager.transitionToRegisteredState(
       this.startGame.bind(this),

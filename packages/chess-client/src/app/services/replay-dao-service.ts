@@ -19,44 +19,15 @@ export default class ReplayDaoService {
     return ReplayDaoService.instance;
   }
 
-  // createReplay(date: number, mode: GameMode, players: Player[]): void {
-  //   const history: TimedMoveMessage[] = [];
-  //   const result: GameResult | null = null;
-  //   const moves = 0;
-  //   this.dao.create({ date, mode, players, history, moves, result });
-  // }
-
-  public createReplayFromObject(replay: Replay): void {
-    this.dao.create(replay);
+  public createReplayFromObject(replay: Replay): Promise<void> {
+    return this.dao.create(replay);
   }
-
-  // setData(replay: Replay): void {
-  //   this.dao.create(replay);
-  // }
-
-  // async setMove(move: TimedMoveMessage): Promise<void> {
-  //   const last = await this.getLast();
-  //   last.history.push(move);
-  //   this.setData(last);
-  // }
 
   public async getByDate(date: number): Promise<Replay | undefined> {
     return (await this.dao.findAll()).find((replay) => replay.date === date);
   }
-  //
-  // async getLast(): Promise<Replay> {
-  //   const usersArray: Replay[] = await this.dao.findAll();
-  //   return usersArray[usersArray.length - 1];
-  // }
 
   public getAll(): Promise<Replay[]> {
     return this.dao.findAll();
   }
-
-  // async setNewMove(move: TimedMoveMessage): Promise<void> {
-  //   const last = await this.getLast();
-  //   last.history.push(move);
-  //   last.moves += 1;
-  //   this.setData(last);
-  // }
 }

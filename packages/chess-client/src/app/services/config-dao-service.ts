@@ -14,7 +14,7 @@ export default class ConfigDaoService {
 
   private constructor() {
     this.dao = new ConfigDao(OBJECT_STORE_NAME, undefined, OBJECT_STORE_KEY);
-    this.dao.create(BASE_CONFIG);
+    void this.dao.create(BASE_CONFIG);
   }
 
   public static getInstance(): ConfigDaoService {
@@ -24,8 +24,8 @@ export default class ConfigDaoService {
     return ConfigDaoService.instance;
   }
 
-  public setData(gameDifficulty: GameDifficultyOptions): void {
-    this.dao.create({ GameDifficulty: gameDifficulty });
+  public setData(gameDifficulty: GameDifficultyOptions): Promise<void> {
+    return this.dao.create({ GameDifficulty: gameDifficulty });
   }
 
   public getData(): Promise<GameConfig> {

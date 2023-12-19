@@ -22,9 +22,9 @@ export default class UserDaoService {
     return UserDaoService.instance;
   }
 
-  public setData(user: User): void {
+  public setData(user: User): Promise<void> {
     this.currentUser = user;
-    this.dao.create(user);
+    return this.dao.create(user);
   }
 
   public async getAvatar(): Promise<ArrayBuffer | string> {

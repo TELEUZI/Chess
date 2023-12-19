@@ -1,7 +1,6 @@
 import type FieldState from '@client/app/pages/game-page/chess-game/state/field-state';
-import type { FigureColor } from '@chess/game-common';
+import type { FigureColor, MoveMessage } from '@chess/game-common';
 import type { FigureTurn } from './move-message';
-import type MoveMessage from './move-message';
 
 export interface BestMoveParams {
   state: FieldState;
