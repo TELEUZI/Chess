@@ -1,6 +1,6 @@
 import { TABLE_SIZE } from '@client/app/config';
 
-export function getEmptyBoard(): string[][] {
+function getEmptyBoard(): string[][] {
   const board = [];
   for (let i = 0; i < TABLE_SIZE; i += 1) {
     board[i] = [];

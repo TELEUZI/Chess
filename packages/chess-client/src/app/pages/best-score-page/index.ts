@@ -5,9 +5,10 @@ import type PageController from '../../interfaces/page';
 import GameMode from '../../enums/game-mode';
 import ReplayDaoService from '../../services/replay-dao-service';
 import Card from '../../components/card/card';
-import type { Winner } from '../../interfaces/winner';
 import AppRoutes from '../../enums/app-routes';
 import type { GameResult } from '../../interfaces/replay';
+
+export type Winner = 'Black' | 'No one' | 'White';
 
 const getWinner = (result: GameResult | null): Winner => {
   switch (result) {
