@@ -187,7 +187,7 @@ class Chess extends BaseComponent {
     this.replay.history = [...this.history];
     this.replay.result = result;
     this.replay.moves = this.history.length;
-    this.replayModel.createReplayFromObject(this.replay);
+    void this.replayModel.createReplayFromObject(this.replay);
     this.replay = null;
   }
 

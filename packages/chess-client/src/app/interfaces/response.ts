@@ -1,13 +1,4 @@
-import type { GameStatus, IPlayer, FigureColor, GameExternalInfo } from '@chess/game-common';
-import type MoveMessage from './move-message';
-
-export interface GameInfo {
-  gameStatus: GameStatus;
-  currentPlayerColor: FigureColor;
-  fieldState: string;
-  players: IPlayer[];
-  lastMove: MoveMessage;
-}
+import type { GameExternalInfo } from '@chess/game-common';
 
 export interface Room {
   clients: Map<string, WebSocket>;
