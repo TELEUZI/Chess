@@ -16,7 +16,7 @@ import { storeService } from '@client/app/pages/game-page/chess-game/state/store
 import { api, SERVER_ENDPOINT, wsProtocol, baseURL } from '../config';
 
 import GameMode from '../enums/game-mode';
-import type { Room } from '../interfaces/response';
+import type { Room } from '../interfaces/room';
 import redirectToGameWithMode from '../utils/start-game-utils';
 
 export async function getFreeRoom(): Promise<[string, Room] | undefined> {
