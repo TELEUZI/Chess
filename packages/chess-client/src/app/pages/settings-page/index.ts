@@ -19,8 +19,8 @@ export default class SettingsPage implements PageController {
     this.selectDifficulty = new Select<GameDifficultyOptions>(
       'Choose Difficulty of AI',
       [GameDifficultyOptions.easy, GameDifficultyOptions.medium, GameDifficultyOptions.hard],
-      () => {
-        this.onChangeHandler();
+      async () => {
+        await this.onChangeHandler();
       },
     );
     this.selectWrapper.appendChildren([this.selectDifficulty]);
@@ -30,9 +30,9 @@ export default class SettingsPage implements PageController {
     this.root.append(this.selectWrapper.getNode());
   }
 
-  private onChangeHandler(): void {
+  private async onChangeHandler(): Promise<void> {
     const selectValue = this.selectDifficulty.getSelectValue();
-    this.model.setData(
+    await this.model.setData(
       [GameDifficultyOptions.easy, GameDifficultyOptions.medium, GameDifficultyOptions.hard].find(
         (option) => option === selectValue,
       ) ?? GameDifficultyOptions.easy,

@@ -1,13 +1,13 @@
-import type { Coordinate } from '@coordinate';
-import type { GameStatus, FigureColor, GameAction } from '@chess/game-common';
-import type { PlayerSerializable } from '../player';
+import type { Coordinate } from '@chess/coordinate';
+import type { GameStatus, GameAction } from '@chess/game-common';
+import type { PlayerSerializable, FigureColor } from '../player';
 
 export interface GameInfo {
   gameStatus: GameStatus;
   currentPlayerColor: FigureColor;
-  fieldState?: string;
+  fieldState: string;
   players: PlayerSerializable[];
-  lastMove?: MoveMessage;
+  lastMove: MoveMessage;
 }
 
 export interface GameExternalInfo {
@@ -24,9 +24,42 @@ export interface ColorMessage {
   color: FigureColor;
 }
 
-export interface WsMessage {
-  action: GameAction;
-  payload?: ColorMessage | DrawResult | GameInfo;
+export type WsMessage =
+  | DisconnectMessage
+  | DrawMessage
+  | DrawResponseMessage
+  | MoveFigureMessage
+  | SetUserColorMessage
+  | StartGameMessage;
+
+export interface StartGameMessage {
+  action: GameAction.startGame;
+  payload: GameInfo;
+}
+
+export interface MoveFigureMessage {
+  action: GameAction.moveFigure;
+  payload: GameInfo;
+}
+
+export interface DrawMessage {
+  action: GameAction.drawSuggest;
+  payload: null;
+}
+
+export interface DrawResponseMessage {
+  action: GameAction.drawResponse;
+  payload: DrawResult;
+}
+
+export interface DisconnectMessage {
+  action: GameAction.disconnect;
+  payload: GameInfo;
+}
+
+export interface SetUserColorMessage {
+  action: GameAction.setUserColor;
+  payload: ColorMessage;
 }
 
 export interface DrawResult {

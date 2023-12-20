@@ -1,6 +1,6 @@
 import { p } from '@client/app/components/utils/p';
 import { h4 } from '@client/app/components/utils';
-import PlayerContainer from '../../pages/reg-page/reg-page__components/player-control';
+import PlayerContainer from '@client/app/pages/reg-page/components/player-control';
 import BaseComponent from '../base-component';
 import Button from '../button/button';
 

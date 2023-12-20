@@ -1,8 +1,8 @@
-import type { Strategy } from '@client/app/interfaces/bot-strategy';
+import type { Strategy } from '@client/app/pages/game-page/chess-game/services/chess-bot/bot-strategy';
 import { FigureColor } from '@chess/game-common';
-import type FieldState from '../state/field-state';
-import type FieldModel from './field-model';
-import { forEachPlayerFigure } from '../services/field-service/field-service';
+import type FieldState from '../../state/field-state';
+import type FieldModel from '../../field/field-model';
+import { forEachPlayerFigure } from '../field-service/field-service';
 import RandomMoveStrategy from './chess-bot-strategies/random-move-strategy';
 
 export function evaluateBoard(chess: FieldState): number {
@@ -20,8 +20,6 @@ export function evaluateBoard(chess: FieldState): number {
 
 export default class ChessBot {
   private readonly model: FieldModel;
-
-  // private readonly currentColor: FigureColor = FigureColor.BLACK;
 
   private readonly strategy: Strategy;
 

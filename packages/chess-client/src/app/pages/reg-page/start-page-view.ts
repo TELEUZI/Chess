@@ -1,19 +1,19 @@
 import BaseComponent from '@components/base-component';
 import Button from '@components/button/button';
-import PlayerContainer from './reg-page__components/player-control';
+import PlayerContainer from '@client/app/pages/reg-page/components/player-control';
 
 export default class StartPageView extends BaseComponent {
-  public playerOne: PlayerContainer;
+  public readonly playerOne: PlayerContainer;
 
-  public playerTwo: PlayerContainer;
+  public readonly playerTwo: PlayerContainer;
 
-  private readonly startGameWithBot: Button;
+  public readonly startGameWithBot: Button;
 
-  private readonly startButton: Button;
+  public readonly startButton: Button;
 
-  private readonly gameModeButton: Button;
+  public readonly gameModeButton: Button;
 
-  private readonly gameControlButtons: BaseComponent;
+  public readonly gameControlButtons: BaseComponent;
 
   constructor(
     private readonly onStartSingleGame: () => void,

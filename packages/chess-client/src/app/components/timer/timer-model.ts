@@ -1,4 +1,4 @@
-import type Time from '../../interfaces/time';
+import type Time from './time';
 
 const SECONDS_PER_MINUTE = 60;
 const MILLISECONDS_IN_ONE_SECOND = 1000;

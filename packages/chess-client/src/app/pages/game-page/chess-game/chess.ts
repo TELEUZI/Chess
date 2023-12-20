@@ -1,18 +1,16 @@
-import type { Coordinate } from '@coordinate';
+import type { Coordinate } from '@chess/coordinate';
 import FigureColorText from '@client/app/enums/figure-color-text';
 import { ModalWindow } from '@components/modal';
 import BaseComponent from '@components/base-component';
 import Timer from '@components/timer/timer';
 import ModalContent from '@components/modal/modal-content';
 import { FigureColor } from '@chess/game-common';
+import PlayerContainer from '@client/app/pages/reg-page/components/player-control';
+import { storeService } from '@client/app/pages/game-page/chess-game/state/store-service';
 import ChessField from './field/field-controller';
-import PlayerContainer from '../../reg-page/reg-page__components/player-control';
-import store from './state/redux/store';
 import ChessHistory from './chess-history';
-import getNextFigureColor from '../../../utils/get-next-figure-color';
 import ReplayDaoService from '../../../services/replay-dao-service';
 import type { TimedMoveMessage } from '../../../interfaces/move-message';
-import { setWinner } from './state/redux/action-creators';
 import type { GameResult } from '../../../interfaces/replay';
 import type Replay from '../../../interfaces/replay';
 import { socketService } from '../../../services/websocket-service';
@@ -50,8 +48,8 @@ class Chess extends BaseComponent {
       parent: this.node,
     });
     const chessHead = new BaseComponent({ className: 'chess__head', parent: chessBoardWrapper });
-    this.playerOne = new PlayerContainer(store.getState().players.playerOne, false);
-    this.playerTwo = new PlayerContainer(store.getState().players.playerTwo, false);
+    this.playerOne = new PlayerContainer(storeService.getFirstPlayerName(), false);
+    this.playerTwo = new PlayerContainer(storeService.getSecondPlayerName(), false);
     const chessBody = new BaseComponent({ className: 'chess__body', parent: chessBoardWrapper });
     this.chessHistory = new ChessHistory(chessBody.getNode());
     this.chessBoard = new ChessField({
@@ -60,15 +58,13 @@ class Chess extends BaseComponent {
         this.timer.toggle();
       },
       onMate: () => {
-        store.dispatch(
-          setWinner(getNextFigureColor(store.getState().currentPlayer.currentUserColor)),
-        );
-        this.setWinner(store.getState().winner.winnerColor);
+        storeService.setWinner(storeService.getOpponentColor());
+        this.setWinner(storeService.getWinnerColor());
         this.showMateModal();
       },
       onStalemate: () => {
         this.showStalemateModal();
-        this.setWinner(store.getState().winner.winnerColor);
+        this.setWinner(storeService.getWinnerColor());
       },
       onFieldUpdate: (turnInfo: TurnInfo) => {
         this.chessHistory.setHistoryMove(turnInfo, this.timer.getTime());
@@ -96,7 +92,7 @@ class Chess extends BaseComponent {
   }
 
   public setPlayerLeave(): void {
-    const result = getNextFigureColor(store.getState().currentPlayer.currentUserColor);
+    const result = storeService.getOpponentColor();
     this.setWinner(result);
     const winContent = new ModalContent({
       header: 'User leaves!',
@@ -115,6 +111,11 @@ class Chess extends BaseComponent {
 
   public stopTimer(): void {
     this.timer.toggle();
+  }
+
+  public override destroy(): void {
+    super.destroy();
+    this.chessBoard.destroy();
   }
 
   private pushMoveToHistory(turnInfo: TurnInfo): void {
@@ -169,7 +170,7 @@ class Chess extends BaseComponent {
     const winContent = new ModalContent({
       header: 'Check and mate!',
       text: `Player of ${
-        store.getState().winner.winnerColor === FigureColor.BLACK
+        storeService.getWinnerColor() === FigureColor.BLACK
           ? FigureColorText.WHITE
           : FigureColorText.BLACK
       } has won!`,
@@ -186,7 +187,7 @@ class Chess extends BaseComponent {
     this.replay.history = [...this.history];
     this.replay.result = result;
     this.replay.moves = this.history.length;
-    this.replayModel.createReplayFromObject(this.replay);
+    void this.replayModel.createReplayFromObject(this.replay);
     this.replay = null;
   }
 
@@ -194,16 +195,16 @@ class Chess extends BaseComponent {
     this.replay = {
       date: new Date().getTime(),
       history: [],
-      mode: store.getState().gameMode.currentGameMode,
+      mode: storeService.getGameMode(),
       players: [
         {
-          name: store.getState().players.playerOne,
-          color: store.getState().color.color,
+          name: storeService.getFirstPlayerName(),
+          color: storeService.getUserColor(),
           avatar: '',
         },
         {
-          name: store.getState().players.playerTwo,
-          color: getNextFigureColor(store.getState().color.color),
+          name: storeService.getSecondPlayerName(),
+          color: storeService.getOpponentColor(),
           avatar: '',
         },
       ],

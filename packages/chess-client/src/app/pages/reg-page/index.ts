@@ -1,19 +1,13 @@
+import { storeService } from '@client/app/pages/game-page/chess-game/state/store-service';
 import GameMode from '../../enums/game-mode';
 import type PageController from '../../interfaces/page';
 import { addUserToGame } from '../../services/websocket-service';
 import redirectToGameWithMode from '../../utils/start-game-utils';
-import { changeName } from '../game-page/chess-game/state/redux/action-creators';
-import store from '../game-page/chess-game/state/redux/store';
 
 import StartPageView from './start-page-view';
 
 export function onUserNameChanged(firstUserName: string, secondUserName: string): void {
-  store.dispatch(
-    changeName({
-      playerOne: firstUserName,
-      playerTwo: secondUserName,
-    }),
-  );
+  storeService.updateUserNames(firstUserName, secondUserName);
 }
 export default class StartPage implements PageController {
   private readonly root: HTMLElement;

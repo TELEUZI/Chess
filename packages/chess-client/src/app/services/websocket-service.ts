@@ -1,26 +1,22 @@
+import { v4 as uuidv4 } from 'uuid';
 import type { AxiosResponse } from 'axios';
 import { AxiosError } from 'axios';
 import type {
   PlayerAddResponse,
   RoomCreateResponse,
   FigureColor,
-  ColorMessage,
   DrawResult,
   WsMessage,
+  MoveMessage,
+  GameInfo,
 } from '@chess/game-common';
 import { GameStatus, GameAction } from '@chess/game-common';
-import {
-  changeName,
-  setCurrentUserColor,
-  setUserColor,
-  setWinner,
-} from '../pages/game-page/chess-game/state/redux/action-creators';
-import store from '../pages/game-page/chess-game/state/redux/store';
+import { storeService } from '@client/app/pages/game-page/chess-game/state/store-service';
+
 import { api, SERVER_ENDPOINT, wsProtocol, baseURL } from '../config';
 
 import GameMode from '../enums/game-mode';
-import type MoveMessage from '../interfaces/move-message';
-import type { GameInfo, Room } from '../interfaces/response';
+import type { Room } from '../interfaces/room';
 import redirectToGameWithMode from '../utils/start-game-utils';
 
 export async function getFreeRoom(): Promise<[string, Room] | undefined> {
@@ -29,8 +25,16 @@ export async function getFreeRoom(): Promise<[string, Room] | undefined> {
     (room) => room[1].clients.size < 2 && room[1].game.gameStatus === GameStatus.waitingRoom,
   );
 }
+function serializeMessage<T>(action: GameAction, payload: T): string {
+  try {
+    return JSON.stringify({ action, payload });
+  } catch (err) {
+    console.error('Error serializing message:', err);
+    return '';
+  }
+}
 
-class SocketService {
+export class SocketService {
   public onMove?: (fieldState: string, currentColor: FigureColor, lastMove: MoveMessage) => void;
 
   public onStart?: () => void;
@@ -41,12 +45,27 @@ class SocketService {
 
   public onPlayerDrawSuggest?: () => void;
 
-  private socket?: WebSocket;
+  public socket?: WebSocket;
 
-  private roomName?: string;
+  public roomName?: string;
+
+  public sendSocketMessage(message: string): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+        try {
+          this.socket.send(message);
+          resolve(true);
+        } catch (err) {
+          reject(err);
+        }
+      } else {
+        reject(new Error('Socket is not open'));
+      }
+    });
+  }
 
   public async createRoom(playerName: string): Promise<void> {
-    this.roomName = 't'.repeat(Math.floor(Math.random() * 14));
+    this.roomName = uuidv4();
     let resp: AxiosResponse<RoomCreateResponse> | null = null;
     try {
       resp = await api.post(`${SERVER_ENDPOINT}${this.roomName}?creatorName=${playerName}`);
@@ -86,95 +105,74 @@ class SocketService {
   }
 
   public move(fieldState: string, moveMessage: MoveMessage): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
-      try {
-        this.socket?.send(
-          JSON.stringify({ action: GameAction.moveFigure, payload: { fieldState, moveMessage } }),
-        );
-        resolve(true);
-      } catch (err) {
-        reject(err);
-      }
-    });
+    const message = serializeMessage(GameAction.moveFigure, { fieldState, moveMessage });
+    return this.sendSocketMessage(message);
   }
 
   public suggestDraw(): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
-      try {
-        this.socket?.send(JSON.stringify({ action: GameAction.drawSuggest }));
-        resolve(true);
-      } catch (err) {
-        reject(err);
-      }
-    });
+    const message = serializeMessage(GameAction.drawSuggest, {});
+    return this.sendSocketMessage(message);
   }
 
   public answerDraw(response: DrawResult): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
-      try {
-        this.socket?.send(
-          JSON.stringify({ action: GameAction.drawResponse, payload: { isDraw: response.isDraw } }),
-        );
-        resolve(true);
-      } catch (err) {
-        reject(err);
-      }
-    });
+    const message = serializeMessage(GameAction.drawResponse, { isDraw: response.isDraw });
+    return this.sendSocketMessage(message);
   }
 
-  public endGame(reason: string): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      try {
-        this.socket?.send(
-          JSON.stringify({
-            action: GameAction.disconnect,
-            payload: { gameEnd: true, reason },
-          }),
-        );
-        resolve();
-      } catch (err) {
-        reject(err);
-      }
-    });
+  public endGame(reason: string): Promise<boolean> {
+    const message = serializeMessage(GameAction.disconnect, { gameEnd: true, reason });
+    return this.sendSocketMessage(message);
   }
 
   private handleGameStart(payload: GameInfo): void {
     redirectToGameWithMode(GameMode.MULTIPLAYER);
     const [playerOne, playerTwo] = payload.players.map((player) => player.name);
     this.onStart?.();
-    store.dispatch(changeName({ playerOne, playerTwo }));
-    store.dispatch(setCurrentUserColor(payload.currentPlayerColor));
+    storeService.updateUserNames(playerOne, playerTwo);
+    storeService.setCurrentUserColor(payload.currentPlayerColor);
   }
 
   private handleFigureMove(payload: GameInfo): void {
     this.onMove?.(payload.fieldState, payload.currentPlayerColor, payload.lastMove);
-    store.dispatch(setCurrentUserColor(payload.currentPlayerColor));
+    storeService.setCurrentUserColor(payload.currentPlayerColor);
   }
 
+  /**
+   * Handles different types of game actions received from the WebSocket server.
+   * @param event - The event object containing the received message from the WebSocket server.
+   */
   private gameStateUpdater(event: MessageEvent<string>): void {
     try {
       const response: WsMessage = JSON.parse(event.data) as WsMessage;
-      switch (response.action) {
+      const { payload, action } = response;
+
+      switch (action) {
         case GameAction.startGame:
-          this.handleGameStart(response.payload as unknown as GameInfo);
+          this.handleGameStart(payload);
           break;
         case GameAction.moveFigure:
-          this.handleFigureMove(response.payload as unknown as GameInfo);
+          this.handleFigureMove(payload);
           break;
-        case GameAction.disconnect:
-          store.dispatch(setWinner((response.payload as unknown as GameInfo).players[0].color));
+        case GameAction.disconnect: {
+          const winnerColor = payload.players[0].color;
+          storeService.setWinner(winnerColor);
           this.onPlayerLeave?.();
           break;
+        }
         case GameAction.drawSuggest:
           this.onPlayerDrawSuggest?.();
           break;
-        case GameAction.setUserColor:
-          store.dispatch(setUserColor((response.payload as ColorMessage).color));
+        case GameAction.setUserColor: {
+          const userColor = payload.color;
+          storeService.setUserColor(userColor);
           this.onStart?.();
           break;
-        case GameAction.drawResponse:
-          this.onPlayerDrawResponse?.((response.payload as DrawResult).isDraw || false);
+        }
+        case GameAction.drawResponse: {
+          const isDraw = payload.isDraw || false;
+          this.onPlayerDrawResponse?.(isDraw);
           break;
+        }
         default:
           break;
       }

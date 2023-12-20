@@ -1,4 +1,4 @@
-import { Coordinate } from '@coordinate';
+import { Coordinate } from '@chess/coordinate';
 import GameMode from '@client/app/enums/game-mode';
 import { socketService } from '@client/app/services/websocket-service';
 import getNextFigureColor from '@client/app/utils/get-next-figure-color';
@@ -13,10 +13,10 @@ import { INIT_FIELD_STATE } from '@client/app/config';
 import { Subject } from '@client/app/services/subject';
 import type ChessOpening from '@client/app/interfaces/chess-opening';
 import { FigureColor } from '@chess/game-common';
+import { storeService } from '@client/app/pages/game-page/chess-game/state/store-service';
 import type CellModel from '../models/cell-model';
 
 import type FieldState from '../state/field-state';
-import store from '../state/redux/store';
 import createFieldFromStrings from '../fabrics/field-fabric';
 import * as TurnManager from '../services/figure-moves/turn-manager';
 import { createFigureFromString } from '../fabrics/figure-fabric';
@@ -26,7 +26,6 @@ import {
   getStateAfterMove,
   getFigureFromState,
 } from '../services/field-service/field-service';
-import { setCurrentUserColor, makeMove } from '../state/redux/action-creators';
 import { getBoardFromFen, getFenFromStringBoard } from '../utils/fen-processor';
 
 interface FieldModelProps {
@@ -38,8 +37,9 @@ interface FieldModelProps {
 }
 function getMovesAtPoint(fromX: number, fromY: number, state?: FieldState): Coordinate[] {
   return TurnManager.getMoves(
-    state ?? store.getState().field,
-    state?.getFigure(fromX, fromY) ?? getFigureFromState(fromX, fromY),
+    state ?? storeService.getFieldState(),
+    state?.getFigure(fromX, fromY) ??
+      getFigureFromState(storeService.getFieldState(), fromX, fromY),
     fromX,
     fromY,
   );
@@ -98,9 +98,9 @@ export default class FieldModel {
     this.onReset = onReset;
     this.onCheckPromotion = onCheckPromotion;
     const initState = createFieldFromStrings(INIT_FIELD_STATE);
-    this.state = store.getState().field;
+    this.state = storeService.getFieldState();
     this.setState(initState);
-    this.gameMode = store.getState().gameMode.currentGameMode;
+    this.gameMode = storeService.getGameMode();
     socketService.onMove = (state: string, currentColor: FigureColor, lastMove: MoveMessage) => {
       this.onMove.notify({
         figure: {
@@ -125,7 +125,7 @@ export default class FieldModel {
       i,
       j,
     );
-    store.dispatch(makeMove(this.state));
+    storeService.makeMove(this.state);
   }
 
   public checkGameSituation(): void {
@@ -217,9 +217,9 @@ export default class FieldModel {
   public getAllowedMovesFromPoint = (fromX: number, fromY: number): Coordinate[] => {
     if (
       this.state.getFigure(fromX, fromY) &&
-      this.state.getFigureColor(fromX, fromY) === store.getState().currentPlayer.currentUserColor &&
+      this.state.getFigureColor(fromX, fromY) === storeService.getCurrentPlayerColor() &&
       (this.gameMode === GameMode.SINGLE ||
-        store.getState().currentPlayer.currentUserColor === store.getState().color.color)
+        storeService.getCurrentPlayerColor() === storeService.getUserColor())
     ) {
       let moves: Coordinate[] = getMovesAtPoint(fromX, fromY);
       moves = moves.filter((move) => {
@@ -240,11 +240,9 @@ export default class FieldModel {
 
   private setNextPlayerColor(): void {
     if (this.gameMode === GameMode.SINGLE) {
-      store.dispatch(
-        setCurrentUserColor(getNextFigureColor(store.getState().currentPlayer.currentUserColor)),
-      );
+      storeService.setCurrentUserColor(storeService.getOpponentColor());
     }
-    this.currentColor = store.getState().currentPlayer.currentUserColor;
+    this.currentColor = storeService.getCurrentPlayerColor();
   }
 
   private getCheckedKing(state: FieldState): boolean {
@@ -278,6 +276,6 @@ export default class FieldModel {
   private setState(newState: FieldState): void {
     this.state = newState;
     this.onChange.notify(newState);
-    store.dispatch(makeMove(newState));
+    storeService.makeMove(newState);
   }
 }

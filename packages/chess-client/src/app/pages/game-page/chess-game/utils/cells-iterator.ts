@@ -1,4 +1,4 @@
-import { Coordinate } from '@coordinate';
+import { Coordinate } from '@chess/coordinate';
 import { TABLE_SIZE } from '@client/app/config';
 
 export default function forEachCell<T>(
