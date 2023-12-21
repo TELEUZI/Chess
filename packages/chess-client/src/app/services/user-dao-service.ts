@@ -1,4 +1,4 @@
-import type User from '../interfaces/user';
+import type { User } from '@chess/game-common';
 import UserDao from '../models/user-dao';
 
 const OBJECT_STORE_KEY = 'name';

@@ -1,5 +1,5 @@
-import GameDifficultyOptions from '../enums/game-difficulty-options';
-import type GameConfig from '../interfaces/game-config';
+import type { GameConfig } from '@chess/game-common';
+import { GameDifficultyOptions } from '@chess/game-common';
 import ConfigDao from '../models/config-dao';
 
 const BASE_CONFIG = {

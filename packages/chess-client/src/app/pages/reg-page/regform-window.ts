@@ -1,8 +1,8 @@
 import { ModalWindow } from '@components/modal';
 import BaseComponent from '@components/base-component';
 import RegForm from '@components/reg-form/reg-form';
-import type User from '../../interfaces/user';
-import toBase64 from '../../utils/base64convertver';
+import type { User } from '@chess/game-common';
+import { toBase64 } from '@chess/utils';
 
 export default class RegFormModal extends BaseComponent {
   private readonly form: RegForm;

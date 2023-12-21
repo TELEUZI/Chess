@@ -1,21 +1,19 @@
+import { BLACK_ROW_INDEX, WHITE_ROW_INDEX } from '@chess/config';
 import type { Coordinate } from '@chess/coordinate';
-import GameMode from '@client/app/enums/game-mode';
-import FigureType from '@client/app/enums/figure-type';
-import { socketService } from '@client/app/services/websocket-service';
+import type { TurnInfo } from '@chess/game-common';
+import { FigureColor, GameMode, FigureType } from '@chess/game-common';
+import type { CellModel, FieldState, Strategy } from '@chess/game-engine';
+import {
+  FieldModel,
+  storeService,
+  createStrategy,
+  forEachCell,
+  ChessBot,
+  socketService,
+} from '@chess/game-engine';
 import ConfigDaoService from '@client/app/services/config-dao-service';
-import { BLACK_ROW_INDEX, WHITE_ROW_INDEX } from '@client/app/config';
-import type { Strategy } from '@client/app/pages/game-page/chess-game/services/chess-bot/bot-strategy';
-import type TurnInfo from '@client/app/interfaces/turn-info';
-import { FigureColor } from '@chess/game-common';
-import { storeService } from '@client/app/pages/game-page/chess-game/state/store-service';
-import type CellModel from '../models/cell-model';
 import type CellView from '../views/cell-view';
-import type FieldState from '../state/field-state';
 import FieldView from '../views/field-view';
-import FieldModel from './field-model';
-import ChessBot from '../services/chess-bot/chess-bot';
-import forEachCell from '../utils/cells-iterator';
-import createStrategy from '../fabrics/bot-strategy-fabric';
 
 export default class ChessField {
   private readonly model: FieldModel;
@@ -38,7 +36,7 @@ export default class ChessField {
 
   private readonly onFieldUpdate: (turnInfo: TurnInfo) => void;
 
-  private readonly unsubscribe: (() => void) | null = null;
+  private readonly unsubscribes: (() => void)[] = [];
 
   constructor({
     parentNode,
@@ -98,9 +96,11 @@ export default class ChessField {
       await this.cellClickHandler(cell, i, j);
     });
     this.view.refresh(storeService.getFieldState());
-    this.unsubscribe = storeService.subscribeToFieldState(() => {
-      this.view.refresh(storeService.getFieldState());
-    });
+    this.unsubscribes.push(
+      storeService.subscribeToFieldState(() => {
+        this.view.refresh(storeService.getFieldState());
+      }),
+    );
     socketService.onStart = () => {
       if (storeService.getUserColor() === FigureColor.BLACK) {
         this.view.rotate();
@@ -109,25 +109,33 @@ export default class ChessField {
         });
       }
     };
-    this.model.onChange.subscribe((state: FieldState) => {
-      this.view.refresh(state);
-    });
-    this.model.onCheck.subscribe((vector) => {
-      if (vector) {
-        this.view.setCheck(vector);
-      }
-    });
-    this.model.onMate.subscribe((attackingFigureCell) => {
-      if (!attackingFigureCell) {
-        return;
-      }
-      this.view.setMate(attackingFigureCell);
-      this.onMate();
-      this.onEnd();
-    });
-    this.model.onMove.subscribe((turnInfo: TurnInfo) => {
-      this.onFieldUpdate(turnInfo);
-    });
+    this.unsubscribes.push(
+      this.model.onChange.subscribe((state: FieldState) => {
+        this.view.refresh(state);
+      }),
+    );
+    this.unsubscribes.push(
+      this.model.onCheck.subscribe((vector) => {
+        if (vector) {
+          this.view.setCheck(vector);
+        }
+      }),
+    );
+    this.unsubscribes.push(
+      this.model.onMate.subscribe((attackingFigureCell) => {
+        if (!attackingFigureCell) {
+          return;
+        }
+        this.view.setMate(attackingFigureCell);
+        this.onMate();
+        this.onEnd();
+      }),
+    );
+    this.unsubscribes.push(
+      this.model.onMove.subscribe((turnInfo: TurnInfo) => {
+        this.onFieldUpdate(turnInfo);
+      }),
+    );
   }
 
   public makeMove(fromX: number, fromY: number, toX: number, toY: number): Promise<void> {
@@ -135,9 +143,9 @@ export default class ChessField {
   }
 
   public destroy(): void {
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
+    this.unsubscribes.forEach((unsub) => {
+      unsub();
+    });
   }
 
   private async getBotStrategy(): Promise<Strategy | null> {

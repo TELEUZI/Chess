@@ -1,6 +1,6 @@
+import { validateFirstName } from '@chess/utils';
 import BaseComponent from '../base-component';
 import Input from '../input/input';
-import { validateFirstName } from '../../utils/validator';
 import FileInput from '../input/file-input';
 
 export default class RegForm extends BaseComponent<'form'> {

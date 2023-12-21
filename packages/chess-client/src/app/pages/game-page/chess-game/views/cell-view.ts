@@ -1,6 +1,6 @@
-import FigureColorLetter from '@client/app/enums/figure-color-letter';
 import BaseComponent from '@client/app/components/base-component';
 import { FigureColor } from '@chess/game-common';
+import { FigureColorLetter } from '@chess/game-engine';
 import Figure from './figure-view';
 
 export default class CellView extends BaseComponent {
