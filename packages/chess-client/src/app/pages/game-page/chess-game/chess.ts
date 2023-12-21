@@ -8,7 +8,7 @@ import { FigureColor } from '@chess/game-common';
 import PlayerContainer from '@client/app/pages/reg-page/components/player-control';
 import { FigureColorText, socketService, storeService } from '@chess/game-engine';
 import { TIMER_DELAY } from '@chess/config';
-import ReplayDaoService from '@client/app/services/replay-dao-service';
+import { ReplayDaoService } from '@chess/dao';
 import ChessField from './field/field-controller';
 import { ChessHistory } from './chess-history';
 

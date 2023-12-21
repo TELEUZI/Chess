@@ -1,6 +1,6 @@
 import { IndexedDBStores, INDEXED_DB_NAME, INDEXED_DB_VERSION } from '@chess/config';
 
-export default abstract class BaseDao<T> {
+export class BaseDao<T> {
   private response: IDBDatabase | undefined;
 
   private readonly objectStorename: string;
@@ -18,7 +18,7 @@ export default abstract class BaseDao<T> {
 
   public create(entity: T): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      const openRequest = window.indexedDB.open(INDEXED_DB_NAME, INDEXED_DB_VERSION + 1);
+      const openRequest = indexedDB.open(INDEXED_DB_NAME, INDEXED_DB_VERSION + 1);
       openRequest.onupgradeneeded = () => {
         this.response = openRequest.result;
         this.response.createObjectStore(this.objectStorename, {
@@ -47,7 +47,7 @@ export default abstract class BaseDao<T> {
   }
 
   public findAll(): Promise<T[]> {
-    const openRequest = window.indexedDB.open(INDEXED_DB_NAME, INDEXED_DB_VERSION + 1);
+    const openRequest = indexedDB.open(INDEXED_DB_NAME, INDEXED_DB_VERSION + 1);
     const list: T[] = [];
     return new Promise<T[]>((resolve, reject) => {
       openRequest.onerror = () => {
@@ -77,7 +77,7 @@ export default abstract class BaseDao<T> {
   }
 
   public get(): Promise<T> {
-    const openRequest = window.indexedDB.open(INDEXED_DB_NAME, INDEXED_DB_VERSION + 1);
+    const openRequest = indexedDB.open(INDEXED_DB_NAME, INDEXED_DB_VERSION + 1);
     return new Promise<T>((resolve, reject) => {
       openRequest.onsuccess = () => {
         this.response = openRequest.result;
@@ -97,7 +97,7 @@ export default abstract class BaseDao<T> {
   }
 
   private createStores(): void {
-    const openRequest = window.indexedDB.open(INDEXED_DB_NAME, INDEXED_DB_VERSION + 1);
+    const openRequest = indexedDB.open(INDEXED_DB_NAME, INDEXED_DB_VERSION + 1);
     openRequest.onupgradeneeded = () => {
       this.response = openRequest.result;
       const stores = [

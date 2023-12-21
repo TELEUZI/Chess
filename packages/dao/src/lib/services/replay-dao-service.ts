@@ -1,9 +1,9 @@
 import type { Replay } from '@chess/game-common';
-import ReplayDao from '../models/replay-dao';
+import { ReplayDao } from '../models/replay-dao';
 
 const OBJECT_STORE_KEY = 'date';
 const OBJECT_STORE_NAME = 'ReplaysStore';
-export default class ReplayDaoService {
+export class ReplayDaoService {
   private static instance: ReplayDaoService | null = null;
 
   private readonly dao: ReplayDao;

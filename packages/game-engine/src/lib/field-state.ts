@@ -69,7 +69,7 @@ export class FieldState {
       return it.map((jt) => {
         const figure = jt.getFigure();
         const newCell = new CellModel(createFigureFromString(figure ? figure.getType() : ' '));
-        if (newCell.getFigure() && figure?.getColor()) {
+        if (newCell.getFigure() && figure?.getColor() != null) {
           newCell.setFigureColor(figure.getColor());
         }
         return newCell;

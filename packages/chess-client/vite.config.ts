@@ -1,13 +1,17 @@
 /// <reference types="vitest" />
 import { defineConfig } from 'vite';
 
-import viteTsConfigPaths from 'vite-tsconfig-paths';
+import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
 import eslint from 'vite-plugin-eslint';
 import checker from 'vite-plugin-checker';
 
 export default defineConfig({
+  root: __dirname,
   cacheDir: '../../node_modules/.vite/chess-client',
   build: {
+    outDir: '../../dist/packages/chess-client',
+    reportCompressedSize: true,
+    commonjsOptions: { transformMixedEsModules: true },
     sourcemap: true,
   },
   server: {
@@ -21,9 +25,7 @@ export default defineConfig({
   },
 
   plugins: [
-    viteTsConfigPaths({
-      root: '../../',
-    }),
+    nxViteTsPaths(),
     eslint({
       fix: true,
       failOnError: false,
@@ -45,6 +47,11 @@ export default defineConfig({
   // },
 
   test: {
+    reporters: ['default'],
+    coverage: {
+      reportsDirectory: '../../coverage/packages/chess-client',
+      provider: 'v8',
+    },
     globals: true,
     cache: {
       dir: '../../node_modules/.vitest',

@@ -29,6 +29,9 @@
       "@chess/coordinate": [
         "packages/coordinate/src/index.ts"
       ],
+      "@chess/dao": [
+        "packages/dao/src/index.ts"
+      ],
       "@chess/game-common": [
         "packages/game-common/src/index.ts"
       ],
