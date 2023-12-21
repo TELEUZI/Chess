@@ -1,13 +1,13 @@
 import type { GameConfig } from '@chess/game-common';
 import { GameDifficultyOptions } from '@chess/game-common';
-import ConfigDao from '../models/config-dao';
+import { ConfigDao } from '../models/config-dao';
 
 const BASE_CONFIG = {
   GameDifficulty: GameDifficultyOptions.easy,
 };
 const OBJECT_STORE_KEY = 0;
 const OBJECT_STORE_NAME = 'GameConfig';
-export default class ConfigDaoService {
+export class ConfigDaoService {
   private static instance: ConfigDaoService | null = null;
 
   private readonly dao: ConfigDao;

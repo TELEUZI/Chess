@@ -1,10 +1,10 @@
 import type { User } from '@chess/game-common';
-import UserDao from '../models/user-dao';
+import { UserDao } from '../models/user-dao';
 
 const OBJECT_STORE_KEY = 'name';
 const OBJECT_STORE_NAME = 'Users';
 
-export default class UserDaoService {
+export class UserDaoService {
   private static instance: UserDaoService | null = null;
 
   private readonly dao: UserDao;

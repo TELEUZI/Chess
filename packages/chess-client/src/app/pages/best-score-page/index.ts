@@ -1,8 +1,8 @@
 import type { GameResult, PageController } from '@chess/game-common';
 import { AppRoutes, FigureColor, GameMode } from '@chess/game-common';
 import { storeService } from '@chess/game-engine';
+import { ReplayDaoService } from '@chess/dao';
 import BaseComponent from '../../components/base-component';
-import ReplayDaoService from '../../services/replay-dao-service';
 import Card from '../../components/card/card';
 
 export type Winner = 'Black' | 'No one' | 'White';

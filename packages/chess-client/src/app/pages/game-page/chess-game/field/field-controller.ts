@@ -11,7 +11,7 @@ import {
   ChessBot,
   socketService,
 } from '@chess/game-engine';
-import ConfigDaoService from '@client/app/services/config-dao-service';
+import { ConfigDaoService } from '@chess/dao';
 import type CellView from '../views/cell-view';
 import FieldView from '../views/field-view';
 
