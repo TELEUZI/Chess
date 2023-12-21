@@ -1,4 +1,4 @@
-import { IndexedDBStores, INDEXED_DB_NAME, INDEXED_DB_VERSION } from '../config';
+import { IndexedDBStores, INDEXED_DB_NAME, INDEXED_DB_VERSION } from '@chess/config';
 
 export default abstract class BaseDao<T> {
   private response: IDBDatabase | undefined;

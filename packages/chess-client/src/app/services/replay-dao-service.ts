@@ -1,4 +1,4 @@
-import type Replay from '../interfaces/replay';
+import type { Replay } from '@chess/game-common';
 import ReplayDao from '../models/replay-dao';
 
 const OBJECT_STORE_KEY = 'date';

@@ -1,9 +1,9 @@
-import FigureColorLetter from '@client/app/enums/figure-color-letter';
 import { h3, p } from '@client/app/components/utils';
+import type { TurnInfo } from '@chess/game-common';
 import { FigureColor } from '@chess/game-common';
-import type TurnInfo from '../../../interfaces/turn-info';
-import BaseComponent from '../../../components/base-component';
+import { FigureColorLetter } from '@chess/game-engine';
 
+import BaseComponent from '@client/app/components/base-component';
 import FigureView from './views/figure-view';
 
 export const boardCoordsY = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
@@ -13,7 +13,7 @@ function deepEqual<T>(object: T, value: T): boolean {
   return JSON.stringify(object) === JSON.stringify(value);
 }
 
-export default class ChessHistory extends BaseComponent {
+export class ChessHistory extends BaseComponent {
   public readonly historyWrapper: BaseComponent;
 
   public lastTurn: TurnInfo | null = null;

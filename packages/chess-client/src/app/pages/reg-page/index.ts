@@ -1,8 +1,7 @@
-import { storeService } from '@client/app/pages/game-page/chess-game/state/store-service';
-import GameMode from '../../enums/game-mode';
-import type PageController from '../../interfaces/page';
-import { addUserToGame } from '../../services/websocket-service';
-import redirectToGameWithMode from '../../utils/start-game-utils';
+import { addUserToGame, storeService } from '@chess/game-engine';
+import type { PageController } from '@chess/game-common';
+import { GameMode } from '@chess/game-common';
+import { redirectToGameWithMode } from '@client/app/utils/start-game-utils';
 
 import StartPageView from './start-page-view';
 

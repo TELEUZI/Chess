@@ -1,4 +1,4 @@
-import type PageController from '../interfaces/page';
+import type { PageController } from '@chess/game-common';
 
 export interface RouteNames {
   name: string;
