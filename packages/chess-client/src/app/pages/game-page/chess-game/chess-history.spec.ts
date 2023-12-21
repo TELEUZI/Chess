@@ -1,7 +1,6 @@
-import { FigureColor } from '@chess/game-common';
-import FigureType from '@client/app/enums/figure-type';
+import { FigureColor, FigureType } from '@chess/game-common';
 import { Coordinate } from '@chess/coordinate';
-import ChessHistory from './chess-history';
+import { ChessHistory } from './chess-history';
 
 describe('setHistoryMove', () => {
   // Sets the lastTurn property to the given coords.

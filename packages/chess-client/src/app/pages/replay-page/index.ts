@@ -1,7 +1,7 @@
-import { storeService } from '@client/app/pages/game-page/chess-game/state/store-service';
-import type PageController from '../../interfaces/page';
-import ReplayDaoService from '../../services/replay-dao-service';
-import delay from '../../utils/delay';
+import { storeService } from '@chess/game-engine';
+import type { PageController } from '@chess/game-common';
+import { delay } from '@chess/utils';
+import { ReplayDaoService } from '@chess/dao';
 import Chess from '../game-page/chess-game/chess';
 
 export default class ReplayPage implements PageController {

@@ -1,16 +1,12 @@
+import type { PageController, User } from '@chess/game-common';
+import { AppRoutes, GameMode } from '@chess/game-common';
 import BaseComponent from '@components/base-component';
-import { storeService } from '@client/app/pages/game-page/chess-game/state/store-service';
-import RegFormModal from '../pages/reg-page/regform-window';
+import { socketService, storeService } from '@chess/game-engine';
+import { UserDaoService } from '@chess/dao';
 import type GamePage from '../pages/game-page';
-import type PageController from '../interfaces/page';
-import type User from '../interfaces/user';
-
-import Router from './router';
+import RegFormModal from '../pages/reg-page/regform-window';
 import HeaderStateManager from './state-manager';
-import UserDaoService from '../services/user-dao-service';
-import GameMode from '../enums/game-mode';
-import { socketService } from '../services/websocket-service';
-import AppRoutes from '../enums/app-routes';
+import Router from './router';
 
 function createAppRoutes(
   root: HTMLElement,

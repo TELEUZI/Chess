@@ -1,21 +1,16 @@
 import type { Coordinate } from '@chess/coordinate';
-import FigureColorText from '@client/app/enums/figure-color-text';
 import { ModalWindow } from '@components/modal';
 import BaseComponent from '@components/base-component';
 import Timer from '@components/timer/timer';
 import ModalContent from '@components/modal/modal-content';
+import type { GameResult, Replay, TimedMoveMessage, TurnInfo } from '@chess/game-common';
 import { FigureColor } from '@chess/game-common';
 import PlayerContainer from '@client/app/pages/reg-page/components/player-control';
-import { storeService } from '@client/app/pages/game-page/chess-game/state/store-service';
+import { FigureColorText, socketService, storeService } from '@chess/game-engine';
+import { TIMER_DELAY } from '@chess/config';
+import { ReplayDaoService } from '@chess/dao';
 import ChessField from './field/field-controller';
-import ChessHistory from './chess-history';
-import ReplayDaoService from '../../../services/replay-dao-service';
-import type { TimedMoveMessage } from '../../../interfaces/move-message';
-import type { GameResult } from '../../../interfaces/replay';
-import type Replay from '../../../interfaces/replay';
-import { socketService } from '../../../services/websocket-service';
-import { TIMER_DELAY } from '../../../config';
-import type TurnInfo from '../../../interfaces/turn-info';
+import { ChessHistory } from './chess-history';
 
 class Chess extends BaseComponent {
   private readonly timer: Timer;

@@ -1,12 +1,9 @@
-import { FigureColor } from '@chess/game-common';
-import { storeService } from '@client/app/pages/game-page/chess-game/state/store-service';
+import type { GameResult, PageController } from '@chess/game-common';
+import { AppRoutes, FigureColor, GameMode } from '@chess/game-common';
+import { storeService } from '@chess/game-engine';
+import { ReplayDaoService } from '@chess/dao';
 import BaseComponent from '../../components/base-component';
-import type PageController from '../../interfaces/page';
-import GameMode from '../../enums/game-mode';
-import ReplayDaoService from '../../services/replay-dao-service';
 import Card from '../../components/card/card';
-import AppRoutes from '../../enums/app-routes';
-import type { GameResult } from '../../interfaces/replay';
 
 export type Winner = 'Black' | 'No one' | 'White';
 

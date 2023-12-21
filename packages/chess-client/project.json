@@ -56,18 +56,15 @@
     },
     "test": {
       "executor": "@nx/vite:test",
-      "outputs": ["coverage/packages/chess-client"],
+      "outputs": ["{workspaceRoot}/coverage/packages/chess-client"],
       "options": {
         "passWithNoTests": true,
         "reportsDirectory": "../../coverage/packages/chess-client"
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["packages/chess-client/**/*.ts"]
-      }
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
     }
   }
 }

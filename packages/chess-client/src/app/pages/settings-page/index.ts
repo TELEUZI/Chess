@@ -1,8 +1,9 @@
+import type { PageController } from '@chess/game-common';
+import { GameDifficultyOptions } from '@chess/game-common';
+import { ConfigDaoService } from '@chess/dao';
 import BaseComponent from '../../components/base-component';
-import GameDifficultyOptions from '../../enums/game-difficulty-options';
-import type PageController from '../../interfaces/page';
+
 import Select from '../../components/select/select';
-import ConfigDaoService from '../../services/config-dao-service';
 
 export default class SettingsPage implements PageController {
   private readonly root: HTMLElement;

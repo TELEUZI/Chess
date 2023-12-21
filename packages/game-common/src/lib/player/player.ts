@@ -11,7 +11,7 @@ export class Player implements IPlayer {
 
   public disconnectionReason?: string;
 
-  public constructor(name: string) {
+  constructor(name: string) {
     this.name = name;
     this.color = null;
     this.state = PlayerState.joined;

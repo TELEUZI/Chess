@@ -1,4 +1,4 @@
-import type PageController from '../../interfaces/page';
+import type { PageController } from '@chess/game-common';
 import Chess from './chess-game/chess';
 
 export default class GamePage implements PageController {

@@ -23,11 +23,23 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
+      "@chess/config": [
+        "packages/config/src/index.ts"
+      ],
       "@chess/coordinate": [
         "packages/coordinate/src/index.ts"
       ],
+      "@chess/dao": [
+        "packages/dao/src/index.ts"
+      ],
       "@chess/game-common": [
         "packages/game-common/src/index.ts"
+      ],
+      "@chess/game-engine": [
+        "packages/game-engine/src/index.ts"
+      ],
+      "@chess/utils": [
+        "packages/utils/src/index.ts"
       ],
       "@client/*": [
         "packages/chess-client/src/*"

@@ -1,7 +1,7 @@
 import './menu.scss';
+import { AppRoutes } from '@chess/game-common';
 import BaseComponent from '../base-component';
 import MenuItem from './menu-item/menu-item';
-import AppRoutes from '../../enums/app-routes';
 
 export default class Menu extends BaseComponent<'ul'> {
   private readonly items: MenuItem[] = [];

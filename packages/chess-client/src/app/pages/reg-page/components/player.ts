@@ -1,5 +1,5 @@
-import BaseComponent from '../../../components/base-component';
-import Input from '../../../components/input/input';
+import BaseComponent from '@client/app/components/base-component';
+import Input from '@client/app/components/input/input';
 
 export default class PlayerView extends BaseComponent {
   private readonly userName: BaseComponent<'label'>;
