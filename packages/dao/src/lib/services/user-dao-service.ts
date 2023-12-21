@@ -1,8 +1,8 @@
 import type { User } from '@chess/game-common';
+import { IndexedDBStores } from '@chess/config';
 import { UserDao } from '../models/user-dao';
 
 const OBJECT_STORE_KEY = 'name';
-const OBJECT_STORE_NAME = 'Users';
 
 export class UserDaoService {
   private static instance: UserDaoService | null = null;
@@ -12,7 +12,7 @@ export class UserDaoService {
   private currentUser: User | null = null;
 
   private constructor() {
-    this.dao = new UserDao(OBJECT_STORE_NAME, OBJECT_STORE_KEY, undefined);
+    this.dao = new UserDao(IndexedDBStores.USERS, OBJECT_STORE_KEY, undefined);
   }
 
   public static getInstance(): UserDaoService {

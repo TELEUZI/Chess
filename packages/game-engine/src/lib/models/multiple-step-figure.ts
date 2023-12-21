@@ -1,6 +1,6 @@
 import type { FieldState, FigureModel } from '@chess/game-engine';
 
-export const isRightMove = (
+export const isMultipleStepRightMove = (
   state: FieldState,
   figure: FigureModel,
   posX: number,

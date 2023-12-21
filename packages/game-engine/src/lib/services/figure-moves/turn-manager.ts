@@ -24,13 +24,13 @@ export const getMoves = (
     return KnightTurnManager.getMoves(state, figure, fromX, fromY);
   }
   if (figureType === FigureType.BISHOP) {
-    return BishopTurnManager.getMoves(state, figure, fromX, fromY);
+    return BishopTurnManager.getMoves({ state, figure, fromX, fromY });
   }
   if (figureType === FigureType.KING) {
     return KingTurnManager.getMoves(state, figure, fromX, fromY);
   }
   if (figureType === FigureType.ROOK) {
-    return RookTurnManager.getMoves(state, figure, fromX, fromY);
+    return RookTurnManager.getMoves({ state, figure, fromX, fromY });
   }
-  return QueenTurnManager.getMoves(state, figure, fromX, fromY);
+  return QueenTurnManager.getMoves({ state, figure, fromX, fromY });
 };

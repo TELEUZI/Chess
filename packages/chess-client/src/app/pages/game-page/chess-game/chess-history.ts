@@ -1,4 +1,5 @@
-import { h3, p } from '@client/app/components/utils';
+import { h3 } from '@client/app/components/utils/h';
+import { p } from '@client/app/components/utils/p';
 import type { TurnInfo } from '@chess/game-common';
 import { FigureColor } from '@chess/game-common';
 import { FigureColorLetter } from '@chess/game-engine';

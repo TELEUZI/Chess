@@ -10,13 +10,13 @@ function getBestMove({ state, availableMoves }: BestMoveParams): MoveMessage | n
   let bestValue = BEST_VALUE_MOVE_FOR_BLACK;
   availableMoves.forEach((newGameMove) => {
     newGameMove.to.forEach((moveTo) => {
-      const newState = getStateAfterMove(
+      const newState = getStateAfterMove({
         state,
-        newGameMove.from.x,
-        newGameMove.from.y,
-        moveTo.x,
-        moveTo.y,
-      );
+        fromX: newGameMove.from.x,
+        fromY: newGameMove.from.y,
+        toX: moveTo.x,
+        toY: moveTo.y,
+      });
       const boardValue = evaluateBoard(newState);
       if (boardValue >= bestValue) {
         bestValue = boardValue;

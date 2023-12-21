@@ -13,15 +13,25 @@ export default class Card extends BaseComponent {
 
   private readonly gameDescription: BaseComponent;
 
-  constructor(
-    firstPlayerName: string,
-    secondPlayerName: string,
-    date: number,
-    moves: number,
-    result: string,
-    private readonly onViewClick: () => void,
-  ) {
+  private readonly onViewClick: () => void;
+
+  constructor({
+    firstPlayerName,
+    secondPlayerName,
+    date,
+    moves,
+    result,
+    onViewClick,
+  }: {
+    firstPlayerName: string;
+    secondPlayerName: string;
+    date: number;
+    moves: number;
+    result: string;
+    onViewClick: () => void;
+  }) {
     super({ className: 'card' });
+    this.onViewClick = onViewClick;
     const header = h4('headline', 'Replay');
     this.append(header);
     const contentWrapper = new BaseComponent({

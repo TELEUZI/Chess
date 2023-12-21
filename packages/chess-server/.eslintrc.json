@@ -9,7 +9,10 @@
     {
       "files": ["*.ts", "*.tsx"],
       "parserOptions": {
-        "project": ["packages/chess-server/tsconfig.app.json"]
+        "project": [
+          "packages/chess-server/tsconfig.app.json",
+          "packages/chess-server/tsconfig.spec.json"
+        ]
         // Specify it only for TypeScript files
       },
       "rules": {
@@ -31,7 +34,9 @@
           }
         ],
         "@typescript-eslint/prefer-readonly-parameter-types": 0,
-        "@typescript-eslint/no-magic-numbers": 0
+        "@typescript-eslint/no-magic-numbers": 0,
+        "max-params": ["error", 4],
+        "@typescript-eslint/max-params": 0
       }
     },
     {

@@ -64,7 +64,9 @@
             }
           }
         ],
-        "@typescript-eslint/parameter-properties": 0
+        "@typescript-eslint/parameter-properties": 0,
+        "max-params": ["error", 4],
+        "@typescript-eslint/max-params": 0
       }
     },
     {

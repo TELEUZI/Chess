@@ -8,6 +8,6 @@ const gameDifficultyOptions: Record<GameDifficultyOptions, Strategy> = {
   [GameDifficultyOptions.medium]: new EvaluationStrategy(),
   [GameDifficultyOptions.hard]: new MinMaxBotStrategy(),
 };
-export function createStrategy(config: GameConfig): Strategy | null {
-  return gameDifficultyOptions[config.GameDifficulty];
+export function createStrategy(config: GameConfig | null): Strategy | null {
+  return gameDifficultyOptions[config?.GameDifficulty ?? GameDifficultyOptions.easy];
 }

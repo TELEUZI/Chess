@@ -58,13 +58,19 @@ export function getKingPosition(state: FieldState, color: number): Coordinate | 
   });
   return kingPosition;
 }
-export function getStateAfterMove(
-  state: FieldState,
-  fromX: number,
-  fromY: number,
-  toX: number,
-  toY: number,
-): FieldState {
+export function getStateAfterMove({
+  state,
+  fromX,
+  fromY,
+  toX,
+  toY,
+}: {
+  state: FieldState;
+  fromX: number;
+  fromY: number;
+  toX: number;
+  toY: number;
+}): FieldState {
   const newState = state.clone();
   exchangePositions(newState, new Coordinate(fromX, fromY), new Coordinate(toX, toY));
   return newState;

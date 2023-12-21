@@ -3,13 +3,13 @@ import { IndexedDBStores, INDEXED_DB_NAME, INDEXED_DB_VERSION } from '@chess/con
 export class BaseDao<T> {
   private response: IDBDatabase | undefined;
 
-  private readonly objectStorename: string;
+  private readonly objectStorename: IndexedDBStores;
 
   private readonly keyPath?: string;
 
   private readonly key: number | undefined;
 
-  constructor(objectStorename: string, keyPath?: string, key?: number) {
+  constructor(objectStorename: IndexedDBStores, keyPath?: string, key?: number) {
     this.objectStorename = objectStorename;
     this.keyPath = keyPath;
     this.key = key;
@@ -76,9 +76,9 @@ export class BaseDao<T> {
     });
   }
 
-  public get(): Promise<T> {
+  public get(): Promise<NonNullable<T> | null> {
     const openRequest = indexedDB.open(INDEXED_DB_NAME, INDEXED_DB_VERSION + 1);
-    return new Promise<T>((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       openRequest.onsuccess = () => {
         this.response = openRequest.result;
         const store = this.response
@@ -90,7 +90,7 @@ export class BaseDao<T> {
         };
         request.onsuccess = () => {
           const cursor = request.result;
-          resolve(cursor?.value as T);
+          resolve((cursor?.value as T) ?? null);
         };
       };
     });

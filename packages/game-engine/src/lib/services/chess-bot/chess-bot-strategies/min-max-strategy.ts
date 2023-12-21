@@ -12,20 +12,20 @@ export class MinMaxBotStrategy implements Strategy {
     let bestValue = BEST_VALUE_MOVE_FOR_BLACK;
     availableMoves.forEach((newGameMove) => {
       newGameMove.to.forEach((moveTo) => {
-        const newState = getStateAfterMove(
+        const newState = getStateAfterMove({
           state,
-          newGameMove.from.x,
-          newGameMove.from.y,
-          moveTo.x,
-          moveTo.y,
-        );
-        const boardValue = this.minimax(
-          SEARCH_DEPTH,
-          newState,
+          fromX: newGameMove.from.x,
+          fromY: newGameMove.from.y,
+          toX: moveTo.x,
+          toY: moveTo.y,
+        });
+        const boardValue = this.minimax({
+          depth: SEARCH_DEPTH,
+          state: newState,
           color,
           availableMoves,
-          Boolean(color),
-        );
+          isMaximizingPlayer: Boolean(color),
+        });
         if (boardValue >= bestValue) {
           bestValue = boardValue;
           bestMove = { from: newGameMove.from, to: moveTo };
@@ -35,52 +35,80 @@ export class MinMaxBotStrategy implements Strategy {
     return bestMove;
   }
 
-  private minimax(
-    depth: number,
-    state: FieldState,
-    color: FigureColor,
-    availableMoves: FigureTurn[],
-    isMaximizingPlayer: boolean,
-  ): number {
+  private minimax({
+    depth,
+    state,
+    color,
+    availableMoves,
+    isMaximizingPlayer,
+  }: {
+    depth: number;
+    state: FieldState;
+    color: FigureColor;
+    availableMoves: FigureTurn[];
+    isMaximizingPlayer: boolean;
+  }): number {
     if (depth === 0) {
       return evaluateBoard(state);
     }
     if (isMaximizingPlayer) {
-      return this.findMinMax(
+      return this.findMinMax({
         depth,
         state,
         color,
         availableMoves,
         isMaximizingPlayer,
-        Math.max,
-        -9999,
-      );
+        extremumFunc: Math.max,
+        bestValue: -9999,
+      });
     }
-    return this.findMinMax(depth, state, color, availableMoves, isMaximizingPlayer, Math.min, 9999);
+    return this.findMinMax({
+      depth,
+      state,
+      color,
+      availableMoves,
+      isMaximizingPlayer,
+      extremumFunc: Math.min,
+      bestValue: 9999,
+    });
   }
 
-  private findMinMax(
-    depth: number,
-    state: FieldState,
-    color: FigureColor,
-    availableMoves: FigureTurn[],
-    isMaximizingPlayer: boolean,
-    extremumFunc: (...values: number[]) => number,
-    bestValue: number,
-  ): number {
+  private findMinMax({
+    depth,
+    state,
+    color,
+    availableMoves,
+    isMaximizingPlayer,
+    extremumFunc,
+    bestValue,
+  }: {
+    depth: number;
+    state: FieldState;
+    color: FigureColor;
+    availableMoves: FigureTurn[];
+    isMaximizingPlayer: boolean;
+    extremumFunc: (...values: number[]) => number;
+    bestValue: number;
+  }): number {
     let bestMove = bestValue;
     availableMoves.forEach((newGameMove) => {
       newGameMove.to.forEach((move) => {
-        const newState = getStateAfterMove(
+        const newState = getStateAfterMove({
           state,
-          newGameMove.from.x,
-          newGameMove.from.y,
-          move.x,
-          move.y,
-        );
+          fromX: newGameMove.from.x,
+          fromY: newGameMove.from.y,
+          toX: move.x,
+          toY: move.y,
+        });
         bestMove = extremumFunc(
           bestMove,
-          this.minimax(depth - 1, newState, color, availableMoves, !isMaximizingPlayer),
+          this.minimax({
+            depth: depth - 1,
+            state: newState,
+            color,
+            availableMoves,
+            isMaximizingPlayer: !isMaximizingPlayer,
+          }),
         );
       });
     });

@@ -30,18 +30,18 @@ export default class BestScorePage implements PageController {
     const cardContainer = new BaseComponent({ tag: 'div', className: 'card-container' });
     cards.forEach((card) => {
       const gameResult = getWinner(card.result);
-      const cardView = new Card(
-        card.players[0].name,
-        card.players[1].name,
-        card.date,
-        card.moves,
-        gameResult,
-        () => {
+      const cardView = new Card({
+        firstPlayerName: card.players[0].name,
+        secondPlayerName: card.players[1].name,
+        date: card.date,
+        moves: card.moves,
+        result: gameResult,
+        onViewClick: () => {
           storeService.setGameMode(GameMode.REPLAY);
           storeService.setReplayStateDate(card.date);
           window.location.hash = AppRoutes.WATCH;
         },
-      );
+      });
       cardContainer.append(cardView);
     });
     this.root.append(cardContainer.getNode());

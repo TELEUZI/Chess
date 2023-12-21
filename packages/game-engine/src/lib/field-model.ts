@@ -200,7 +200,13 @@ export class FieldModel {
     });
     return moves.filter((move) => {
       const to: Coordinate[] = move.to.filter((moveTo) => {
-        const nextState = getStateAfterMove(state, move.from.x, move.from.y, moveTo.x, moveTo.y);
+        const nextState = getStateAfterMove({
+          state,
+          fromX: move.from.x,
+          fromY: move.from.y,
+          toX: moveTo.x,
+          toY: moveTo.y,
+        });
         return !this.getCheckedKing(nextState) && !moveTo.equals(kingPos);
       });
       return to.length !== 0;
@@ -216,7 +222,13 @@ export class FieldModel {
     ) {
       let moves: Coordinate[] = getMovesAtPoint(fromX, fromY);
       moves = moves.filter((move) => {
-        const nextState = getStateAfterMove(this.state, fromX, fromY, move.x, move.y);
+        const nextState = getStateAfterMove({
+          state: this.state,
+          fromX,
+          fromY,
+          toX: move.x,
+          toY: move.y,
+        });
         return (
           !this.getCheckedKing(nextState) &&
           !move.equals(getKingPosition(this.state, this.currentColor))

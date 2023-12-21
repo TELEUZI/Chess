@@ -1,8 +1,6 @@
 import { Coordinate } from '@chess/coordinate';
 import { FigureColor } from '@chess/game-common';
-import type { FieldState, Pawn } from '@chess/game-engine';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import * as OneStepFigure from 'packages/game-engine/src/lib/models/one-step-figure';
+import { isRightMove, type FieldState, type Pawn, isEnemyOnDiagonal } from '@chess/game-engine';
 
 export const getMoves = (
   state: FieldState,
@@ -14,7 +12,7 @@ export const getMoves = (
   const direction = pawn.getColor() === FigureColor.WHITE ? -1 : 1;
   let posX = fromX + direction;
   let posY = fromY;
-  if (OneStepFigure.isRightMove(state, posX, posY)) {
+  if (isRightMove(state, posX, posY)) {
     res.push(new Coordinate(posX, posY));
   }
   if (
@@ -23,22 +21,22 @@ export const getMoves = (
   ) {
     posX = fromX + direction;
     posY = fromY;
-    if (OneStepFigure.isRightMove(state, posX, posY)) {
+    if (isRightMove(state, posX, posY)) {
       posX = fromX + direction * 2;
       posY = fromY;
-      if (OneStepFigure.isRightMove(state, posX, posY)) {
+      if (isRightMove(state, posX, posY)) {
         res.push(new Coordinate(posX, posY));
       }
     }
   }
   posX = fromX + direction;
   posY = fromY + 1;
-  if (OneStepFigure.isEnemyOnDiagonal(state, pawn, posX, posY)) {
+  if (isEnemyOnDiagonal(state, pawn, posX, posY)) {
     res.push(new Coordinate(posX, posY));
   }
   posX = fromX + direction;
   posY = fromY - 1;
-  if (OneStepFigure.isEnemyOnDiagonal(state, pawn, posX, posY)) {
+  if (isEnemyOnDiagonal(state, pawn, posX, posY)) {
     res.push(new Coordinate(posX, posY));
   }
   return res;

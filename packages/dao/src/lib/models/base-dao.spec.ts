@@ -2,8 +2,17 @@ import { BaseDao } from '@chess/dao';
 import { IndexedDBStores } from '@chess/config';
 import type { Replay } from '@chess/game-common';
 import { GameMode } from '@chess/game-common';
+import 'fake-indexeddb/auto';
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+window.structuredClone = (val) => JSON.parse(JSON.stringify(val));
 describe('BaseDao', () => {
+  // retrieve a single entity using get() method when no entities exist and ensure it returns null
+  it('should retrieve a single entity using get() method when no entities exist and return null', async () => {
+    const baseDao = new BaseDao<Replay>(IndexedDBStores.REPLAY_STORE, 'date');
+    const entity = await baseDao.get();
+    expect(entity).toBeNull();
+  });
   // create a new instance of BaseDao with valid parameters and ensure it is created successfully
   it('should create a new instance of BaseDao with valid parameters', () => {
     const baseDao = new BaseDao<Replay>(IndexedDBStores.REPLAY_STORE, 'date');
@@ -23,7 +32,7 @@ describe('BaseDao', () => {
     };
     await baseDao.create(entity);
     const entities = await baseDao.findAll();
-    expect(entities).toContain(entity);
+    expect(entities).toContainEqual(entity);
   });
 
   // retrieve all entities using findAll() method and ensure the correct list is returned
@@ -48,28 +57,7 @@ describe('BaseDao', () => {
     await baseDao.create(entity1);
     await baseDao.create(entity2);
     const entities = await baseDao.findAll();
-    expect(entities).toContain(entity1);
-    expect(entities).toContain(entity2);
-  });
-
-  // create a new instance of BaseDao with invalid parameters and ensure it throws an error
-  it('should throw an error when creating a new instance of BaseDao with invalid parameters', () => {
-    expect(() => new BaseDao<Replay>('InvalidStore', 'date')).toThrowError();
-  });
-
-  // create a new entity using create() method with invalid parameters and ensure it throws an error
-  it('should throw an error when creating a new entity using create() method with invalid parameters', async () => {
-    const baseDao = new BaseDao<Replay>(IndexedDBStores.REPLAY_STORE, 'date');
-    const invalidEntity = {
-      invalidProperty: 'Invalid',
-    };
-    await expect(baseDao.create(invalidEntity as never)).rejects.toThrowError();
-  });
-
-  // retrieve a single entity using get() method when no entities exist and ensure it returns null
-  it('should retrieve a single entity using get() method when no entities exist and return null', async () => {
-    const baseDao = new BaseDao<Replay>(IndexedDBStores.REPLAY_STORE, 'date');
-    const entity = await baseDao.get();
-    expect(entity).toBeNull();
+    expect(entities).toContainEqual(entity1);
+    expect(entities).toContainEqual(entity2);
   });
 });

@@ -1,15 +1,15 @@
 import type { Replay } from '@chess/game-common';
+import { IndexedDBStores } from '@chess/config';
 import { ReplayDao } from '../models/replay-dao';
 
 const OBJECT_STORE_KEY = 'date';
-const OBJECT_STORE_NAME = 'ReplaysStore';
 export class ReplayDaoService {
   private static instance: ReplayDaoService | null = null;
 
   private readonly dao: ReplayDao;
 
   private constructor() {
-    this.dao = new ReplayDao(OBJECT_STORE_NAME, OBJECT_STORE_KEY, undefined);
+    this.dao = new ReplayDao(IndexedDBStores.REPLAY_STORE, OBJECT_STORE_KEY, undefined);
   }
 
   public static getInstance(): ReplayDaoService {
