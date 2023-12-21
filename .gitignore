@@ -42,3 +42,4 @@ Thumbs.db
 chess
 
 .nx/cache
+.env
