@@ -1,6 +1,6 @@
 import { Coordinate } from '@chess/coordinate';
 import { storeService, type FieldState, type FigureModel } from '@chess/game-engine';
-import * as MultipleStepFigure from './multiple-step-figure';
+import { isMultipleStepRightMove } from './multiple-step-figure';
 
 export function getMultipleStepPerTurnMoves(
   initialMoves: Coordinate[],
@@ -23,11 +23,11 @@ export function getMultipleStepPerTurnMoves(
     do {
       posX += move.x;
       posY += move.y;
-      if (MultipleStepFigure.isMultipleStepRightMove(state, figure, posX, posY)) {
+      if (isMultipleStepRightMove(state, figure, posX, posY)) {
         moves.push(new Coordinate(posX, posY));
       }
     } while (
-      MultipleStepFigure.isMultipleStepRightMove(state, figure, posX, posY) &&
+      isMultipleStepRightMove(state, figure, posX, posY) &&
       !storeService.getFieldState().getCellAt(posX, posY)?.getFigure()
     );
   });

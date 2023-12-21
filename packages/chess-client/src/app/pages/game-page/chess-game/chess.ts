@@ -1,5 +1,4 @@
 import type { Coordinate } from '@chess/coordinate';
-import { ModalWindow } from '@components/modal';
 import BaseComponent from '@components/base-component';
 import Timer from '@components/timer/timer';
 import ModalContent from '@components/modal/modal-content';
@@ -9,6 +8,7 @@ import PlayerContainer from '@client/app/pages/reg-page/components/player-contro
 import { FigureColorText, socketService, storeService } from '@chess/game-engine';
 import { TIMER_DELAY } from '@chess/config';
 import { ReplayDaoService } from '@chess/dao';
+import { ModalWindow } from '@client/app/components/modal';
 import ChessField from './field/field-controller';
 import { ChessHistory } from './chess-history';
 
