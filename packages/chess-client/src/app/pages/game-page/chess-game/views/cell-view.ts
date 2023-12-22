@@ -1,4 +1,5 @@
 import BaseComponent from '@client/app/components/base-component';
+import type { FigureType } from '@chess/game-common';
 import { FigureColor } from '@chess/game-common';
 import { FigureColorLetter } from '@chess/game-engine';
 import Figure from './figure-view';
@@ -12,9 +13,7 @@ export default class CellView extends BaseComponent {
   ) {
     super({ className: `cell ${className}` });
     this.figure = new Figure(this.node, []);
-    this.node.onclick = () => {
-      this.onClick();
-    };
+    this.node.onclick = this.onClick;
   }
 
   public highlightSelectedCell(state: boolean): void {
@@ -49,11 +48,8 @@ export default class CellView extends BaseComponent {
     }
   }
 
-  public refresh(type: string, color: FigureColor): void {
+  public refresh(type: FigureType, color: FigureColor): void {
     this.setFigure(type, color);
-    if (!type) {
-      return;
-    }
     if (color === FigureColor.BLACK) {
       this.addClass('cell__figureBlack');
       this.removeClass('cell__figureWhite');
@@ -71,18 +67,14 @@ export default class CellView extends BaseComponent {
     this.figure.destroy();
   }
 
-  private setFigure(type: string, color: FigureColor): void {
-    if (type && type !== ' ') {
-      this.figure.destroy();
-      this.figure = new Figure(this.node, [
-        'chess__figure',
-        `chess-field__${
-          color === FigureColor.BLACK ? FigureColorLetter.BLACK : FigureColorLetter.WHITE
-        }${type}`,
-      ]);
-      this.figure.setAttribute('draggable', 'true');
-    } else {
-      this.figure.setClassname('');
-    }
+  private setFigure(type: FigureType, color: FigureColor): void {
+    this.figure.destroy();
+    this.figure = new Figure(this.node, [
+      'chess__figure',
+      `chess-field__${
+        color === FigureColor.BLACK ? FigureColorLetter.BLACK : FigureColorLetter.WHITE
+      }${type}`,
+    ]);
+    this.figure.setAttribute('draggable', 'true');
   }
 }
