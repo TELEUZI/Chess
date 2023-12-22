@@ -1,5 +1,5 @@
-import { p } from '@client/app/components/utils/p';
-import { h4 } from '@client/app/components/utils';
+import { p } from '@components/utils/p';
+import { h4 } from '@components/utils/h';
 import PlayerContainer from '@client/app/pages/reg-page/components/player-control';
 import BaseComponent from '../base-component';
 import Button from '../button/button';

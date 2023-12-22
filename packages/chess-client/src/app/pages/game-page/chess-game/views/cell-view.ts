@@ -7,11 +7,10 @@ export default class CellView extends BaseComponent {
   private figure: Figure;
 
   constructor(
-    parentNode: HTMLElement,
     className: string,
     private readonly onClick: () => void,
   ) {
-    super({ tag: 'div', className: `cell ${className}`, parent: parentNode });
+    super({ className: `cell ${className}` });
     this.figure = new Figure(this.node, []);
     this.node.onclick = () => {
       this.onClick();

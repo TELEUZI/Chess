@@ -82,7 +82,8 @@ export default class Controller extends BaseComponent {
   }
 
   private render(page: PageController): void {
-    this.appRoot.getNode().innerHTML = '';
+    this.appRoot.destroyChildren();
+    this.appRoot.setInnerHTML('');
     this.getNode().prepend(this.headerStateManager.getHeaderNode());
     page.createPage();
   }

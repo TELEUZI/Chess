@@ -8,7 +8,7 @@ import PlayerContainer from '@client/app/pages/reg-page/components/player-contro
 import { FigureColorText, socketService, storeService } from '@chess/game-engine';
 import { TIMER_DELAY } from '@chess/config';
 import { ReplayDaoService } from '@chess/dao';
-import { ModalWindow } from '@client/app/components/modal';
+import { ModalWindow } from '@components/modal/modal-window';
 import ChessField from './field/field-controller';
 import { ChessHistory } from './chess-history';
 

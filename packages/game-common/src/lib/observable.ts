@@ -10,7 +10,8 @@ export class Observable<ListenerType> {
   public subscribe(listener: (params: ListenerType) => void): Unsubscribe {
     this.listeners.push(listener);
     return () => {
-      this.listeners = this.listeners.filter((elem) => elem !== listener);
+      this.unsubscribe(listener);
+      console.log('unsubscribe', this.listeners);
     };
   }
 

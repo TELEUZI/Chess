@@ -27,22 +27,23 @@ export default class BestScorePage implements PageController {
 
   public async createPage(): Promise<void> {
     const cards = await this.replayModel.getAll();
-    const cardContainer = new BaseComponent({ tag: 'div', className: 'card-container' });
-    cards.forEach((card) => {
-      const gameResult = getWinner(card.result);
-      const cardView = new Card({
-        firstPlayerName: card.players[0].name,
-        secondPlayerName: card.players[1].name,
-        date: card.date,
-        moves: card.moves,
-        result: gameResult,
-        onViewClick: () => {
-          storeService.setGameMode(GameMode.REPLAY);
-          storeService.setReplayStateDate(card.date);
-          window.location.hash = AppRoutes.WATCH;
-        },
-      });
-      cardContainer.append(cardView);
+    const cardContainer = new BaseComponent({
+      className: 'card-container',
+      children: cards.map((card) => {
+        const gameResult = getWinner(card.result);
+        return new Card({
+          firstPlayerName: card.players[0].name,
+          secondPlayerName: card.players[1].name,
+          date: card.date,
+          moves: card.moves,
+          result: gameResult,
+          onViewClick: () => {
+            storeService.setGameMode(GameMode.REPLAY);
+            storeService.setReplayStateDate(card.date);
+            window.location.hash = AppRoutes.WATCH;
+          },
+        });
+      }),
     });
     this.root.append(cardContainer.getNode());
   }

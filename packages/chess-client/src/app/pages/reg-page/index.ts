@@ -16,16 +16,22 @@ export default class StartPage implements PageController {
   constructor(root: HTMLElement) {
     this.root = root;
     this.view = new StartPageView(
-      redirectToGameWithMode.bind(null, GameMode.SINGLE),
-      redirectToGameWithMode.bind(null, GameMode.BOT),
-      () => addUserToGame(this.view.playerOne.getUserName()),
-      (firstUserName: string, secondUserName: string) => {
-        onUserNameChanged(firstUserName, secondUserName);
+      () => {
+        redirectToGameWithMode(GameMode.SINGLE);
       },
+      () => {
+        redirectToGameWithMode(GameMode.BOT);
+      },
+      () => addUserToGame(this.view.playerOne.getUserName()),
+      onUserNameChanged,
     );
   }
 
   public createPage(): void {
     this.root.append(this.view.getNode());
+  }
+
+  public destroyPage(): void {
+    this.view.destroy();
   }
 }

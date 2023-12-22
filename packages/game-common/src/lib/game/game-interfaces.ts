@@ -4,9 +4,9 @@ import type { PlayerSerializable, FigureColor } from '../player';
 export interface GameInfo {
   gameStatus: GameStatus;
   currentPlayerColor: FigureColor;
-  fieldState: string;
+  fieldState?: string;
   players: PlayerSerializable[];
-  lastMove: MoveMessage;
+  lastMove?: MoveMessage;
 }
 
 export interface GameExternalInfo {
@@ -22,6 +22,7 @@ export type WsMessage =
   | DisconnectMessage
   | DrawMessage
   | DrawResponseMessage
+  | JoinRoomMessage
   | MoveFigureMessage
   | SetUserColorMessage
   | StartGameMessage;
@@ -38,7 +39,6 @@ export interface MoveFigureMessage {
 
 export interface DrawMessage {
   action: GameAction.drawSuggest;
-  payload: null;
 }
 
 export interface DrawResponseMessage {
@@ -58,4 +58,9 @@ export interface SetUserColorMessage {
 
 export interface DrawResult {
   isDraw: boolean;
+}
+
+export interface JoinRoomMessage {
+  action: GameAction.joinRoom;
+  payload: GameInfo;
 }

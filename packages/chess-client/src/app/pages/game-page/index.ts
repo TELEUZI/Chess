@@ -15,7 +15,10 @@ export default class GamePage implements PageController {
   }
 
   public createPage(): void {
-    this.root.innerHTML = '';
     this.game = new Chess(this.root, false);
+  }
+
+  public destroyPage(): void {
+    this.game?.destroy();
   }
 }

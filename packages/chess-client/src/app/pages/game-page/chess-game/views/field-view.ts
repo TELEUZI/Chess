@@ -30,9 +30,10 @@ export default class FieldView extends BaseComponent {
         parent: this.node,
       });
       for (let j = 0; j < TABLE_SIZE; j += 1) {
-        const cell = new CellView(row.getNode(), getCellColorClass(i, j), async () => {
+        const cell = new CellView(getCellColorClass(i, j), async () => {
           await this.onCellClick(cell, i, j);
         });
+        row.append(cell);
 
         this.cells.push(cell);
       }

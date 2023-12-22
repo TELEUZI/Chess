@@ -131,7 +131,8 @@ export class SocketService {
   }
 
   private handleFigureMove(payload: GameInfo): void {
-    this.onMove?.(payload.fieldState, payload.currentPlayerColor, payload.lastMove);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    this.onMove?.(payload.fieldState!, payload.currentPlayerColor, payload.lastMove!);
     storeService.setCurrentUserColor(payload.currentPlayerColor);
   }
 
@@ -142,17 +143,17 @@ export class SocketService {
   private gameStateUpdater(event: MessageEvent<string>): void {
     try {
       const response: WsMessage = JSON.parse(event.data) as WsMessage;
-      const { payload, action } = response;
+      const { action } = response;
 
       switch (action) {
         case GameAction.startGame:
-          this.handleGameStart(payload);
+          this.handleGameStart(response.payload);
           break;
         case GameAction.moveFigure:
-          this.handleFigureMove(payload);
+          this.handleFigureMove(response.payload);
           break;
         case GameAction.disconnect: {
-          const winnerColor = payload.players[0].color;
+          const winnerColor = response.payload.players[0].color;
           storeService.setWinner(winnerColor);
           this.onPlayerLeave?.();
           break;
@@ -161,13 +162,13 @@ export class SocketService {
           this.onPlayerDrawSuggest?.();
           break;
         case GameAction.setUserColor: {
-          const userColor = payload.color;
+          const userColor = response.payload.color;
           storeService.setUserColor(userColor);
           this.onStart?.();
           break;
         }
         case GameAction.drawResponse: {
-          const isDraw = payload.isDraw || false;
+          const isDraw = response.payload.isDraw || false;
           this.onPlayerDrawResponse?.(isDraw);
           break;
         }

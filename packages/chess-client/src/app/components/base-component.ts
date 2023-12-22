@@ -12,6 +12,8 @@ interface Component<K extends keyof HTMLElementTagNameMap, P extends keyof HTMLE
 export default class BaseComponent<T extends keyof HTMLElementTagNameMap = 'div'> {
   protected node: HTMLElementTagNameMap[T];
 
+  private readonly children: BaseComponent<keyof HTMLElementTagNameMap>[] = [];
+
   constructor({ parent, tag, className, content, children }: Component<T, 'div'>) {
     const node = document.createElement(tag ?? ('div' as T));
     node.className = className ?? '';
@@ -27,6 +29,7 @@ export default class BaseComponent<T extends keyof HTMLElementTagNameMap = 'div'
 
   public append(child: BaseComponent<keyof HTMLElementTagNameMap> | HTMLElement): void {
     if (child instanceof BaseComponent) {
+      this.children.push(child);
       this.node.append(child.getNode());
     } else {
       this.node.append(child);
@@ -47,6 +50,10 @@ export default class BaseComponent<T extends keyof HTMLElementTagNameMap = 'div'
 
   public getNode(): HTMLElementTagNameMap[T] {
     return this.node;
+  }
+
+  public getChildren(): BaseComponent<keyof HTMLElementTagNameMap>[] {
+    return this.children;
   }
 
   public addClass(className: string): void {
@@ -95,7 +102,15 @@ export default class BaseComponent<T extends keyof HTMLElementTagNameMap = 'div'
     this.node.addEventListener(event, listener, options);
   }
 
+  public destroyChildren(): void {
+    this.children.forEach((child) => {
+      child.destroy();
+    });
+    this.children.length = 0;
+  }
+
   public destroy(): void {
+    this.destroyChildren();
     this.node.remove();
   }
 }

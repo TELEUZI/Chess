@@ -12,6 +12,8 @@ export default class Router {
 
   private readonly onHashChange: (routeName: PageController) => void;
 
+  private currentPage: PageController | null = null;
+
   constructor(routes: RouteNames[], onHashChange: (page: PageController) => void) {
     this.onHashChange = onHashChange;
     this.routes = routes;
@@ -26,6 +28,11 @@ export default class Router {
     const actualRoute = this.routes.find((routeName) => routeName.name === route);
     if (actualRoute) {
       void actualRoute.controller.then((page) => {
+        if (this.currentPage) {
+          this.currentPage.destroyPage?.();
+        }
+        this.currentPage = page;
+
         this.onHashChange(page);
       });
     }
