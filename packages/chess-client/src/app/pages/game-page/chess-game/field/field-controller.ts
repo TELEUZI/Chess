@@ -13,7 +13,7 @@ import {
 } from '@chess/game-engine';
 import { ConfigDaoService } from '@chess/dao';
 import type CellView from '../views/cell-view';
-import FieldView from '../views/field-view';
+import FieldView from './field-view';
 
 export default class ChessField {
   private readonly model: FieldModel;
@@ -96,32 +96,27 @@ export default class ChessField {
       await this.cellClickHandler(cell, i, j);
     });
     this.view.refresh(storeService.getFieldState());
+
     this.unsubscribes.push(
       storeService.subscribeToFieldState(() => {
         this.view.refresh(storeService.getFieldState());
       }),
-    );
-    socketService.onStart = () => {
-      if (storeService.getUserColor() === FigureColor.BLACK) {
-        this.view.rotate();
-        forEachCell(this.view.getCells(), (cell) => {
-          cell.rotate();
-        });
-      }
-    };
-    this.unsubscribes.push(
+      socketService.start$.subscribe(() => {
+        if (storeService.getUserColor() === FigureColor.BLACK) {
+          this.view.rotate();
+          forEachCell(this.view.getCells(), (cell) => {
+            cell.rotate();
+          });
+        }
+      }),
       this.model.onChange.subscribe((state: FieldState) => {
         this.view.refresh(state);
       }),
-    );
-    this.unsubscribes.push(
       this.model.onCheck.subscribe((vector) => {
         if (vector) {
           this.view.setCheck(vector);
         }
       }),
-    );
-    this.unsubscribes.push(
       this.model.onMate.subscribe((attackingFigureCell) => {
         if (!attackingFigureCell) {
           return;
@@ -130,8 +125,6 @@ export default class ChessField {
         this.onMate();
         this.onEnd();
       }),
-    );
-    this.unsubscribes.push(
       this.model.onMove.subscribe((turnInfo: TurnInfo) => {
         this.onFieldUpdate(turnInfo);
       }),

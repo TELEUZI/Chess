@@ -16,13 +16,7 @@ import {
   createFieldFromStrings,
 } from '@chess/game-engine';
 import { INIT_FIELD_STATE } from '@chess/config';
-import type {
-  ChessOpening,
-  FigureTurn,
-  GameResult,
-  MoveMessage,
-  TurnInfo,
-} from '@chess/game-common';
+import type { FigureTurn, GameResult, TurnInfo } from '@chess/game-common';
 import { FigureColor, GameMode, FigureType, Observable, Subject } from '@chess/game-common';
 import { getNextFigureColor } from '@chess/utils';
 import { getOpeningName, getOpenings } from './chess-openings-service';
@@ -82,8 +76,6 @@ export class FieldModel {
 
   private readonly onCheckPromotion: (cell: CellModel) => void;
 
-  private readonly openings: Promise<ChessOpening[]> = getOpenings();
-
   constructor({
     onStalemate,
     onBotMove,
@@ -100,7 +92,7 @@ export class FieldModel {
     this.state = storeService.getFieldState();
     this.setState(initState);
     this.gameMode = storeService.getGameMode();
-    socketService.onMove = (state: string, currentColor: FigureColor, lastMove: MoveMessage) => {
+    socketService.move$.subscribe(({ fieldState, currentColor, lastMove }) => {
       this.onMove.notify({
         figure: {
           type: this.getCellAt(lastMove.to)?.getFigureType() ?? null,
@@ -108,10 +100,10 @@ export class FieldModel {
         },
         move: lastMove,
       });
-      const newState = getBoardFromFen(state);
+      const newState = getBoardFromFen(fieldState);
       this.setState(createFieldFromStrings(newState));
       this.currentColor = currentColor;
-    };
+    });
   }
 
   public promote(i: number, j: number): void {
@@ -176,7 +168,7 @@ export class FieldModel {
     this.setState(this.state);
     this.onNextTurn.notify();
     const fenState = getFenFromStringBoard(this.state.getPlainState());
-    const isOpening = getOpeningName(await this.openings, fenState);
+    const isOpening = getOpeningName(await getOpenings(), fenState);
     const move: TurnInfo = {
       figure: this.state.getCellAt(toX, toY)?.getFigureExternalInfo(),
       move: { from: new Coordinate(fromX, fromY), to: new Coordinate(toX, toY) },

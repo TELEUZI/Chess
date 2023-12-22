@@ -10,7 +10,7 @@ import { TIMER_DELAY } from '@chess/config';
 import { ReplayDaoService } from '@chess/dao';
 import { ModalWindow } from '@components/modal/modal-window';
 import ChessField from './field/field-controller';
-import { ChessHistory } from './chess-history';
+import { ChessHistory } from './history/chess-history';
 
 class Chess extends BaseComponent {
   private readonly timer: Timer;
@@ -28,6 +28,8 @@ class Chess extends BaseComponent {
   private readonly history: TimedMoveMessage[] = [];
 
   private replay: Replay | null = null;
+
+  private readonly unsubscribes: (() => void)[] = [];
 
   constructor(parentNode: HTMLElement, isReplay: boolean) {
     super({ tag: 'div', className: 'chess-wrapper', parent: parentNode });
@@ -73,17 +75,19 @@ class Chess extends BaseComponent {
     });
     this.playerOne.toggleClass('current');
     chessHead.appendChildren([this.playerOne, this.playerTwo]);
-    socketService.onPlayerLeave = () => {
-      this.setPlayerLeave();
-    };
-    socketService.onPlayerDrawSuggest = () => {
-      this.showDrawProposalModal();
-    };
-    socketService.onPlayerDrawResponse = (result: boolean) => {
-      if (result) {
-        this.setDraw();
-      }
-    };
+    this.unsubscribes.push(
+      socketService.playerLeave$.subscribe(() => {
+        this.setPlayerLeave();
+      }),
+      socketService.playerDrawResponse$.subscribe(() => {
+        this.showDrawProposalModal();
+      }),
+      socketService.playerDrawResponse$.subscribe((result: boolean) => {
+        if (result) {
+          this.setDraw();
+        }
+      }),
+    );
   }
 
   public setPlayerLeave(): void {

@@ -11,7 +11,7 @@ import type {
   GameInfo,
   Room,
 } from '@chess/game-common';
-import { GameStatus, GameAction, GameMode } from '@chess/game-common';
+import { GameStatus, GameAction, GameMode, Observable } from '@chess/game-common';
 
 import { SERVER_ENDPOINT, api, baseURL, wsProtocol } from '@chess/config';
 import { storeService } from '@chess/game-engine';
@@ -32,15 +32,19 @@ function serializeMessage<T>(action: GameAction, payload: T): string {
 }
 
 export class SocketService {
-  public onMove?: (fieldState: string, currentColor: FigureColor, lastMove: MoveMessage) => void;
+  public move$ = new Observable<{
+    fieldState: string;
+    currentColor: FigureColor;
+    lastMove: MoveMessage;
+  }>();
 
-  public onStart?: () => void;
+  public start$ = new Observable<void>();
 
-  public onPlayerLeave?: () => void;
+  public playerLeave$ = new Observable<void>();
 
-  public onPlayerDrawResponse?: (result: boolean) => void;
+  public playerDrawSuggest$ = new Observable<void>();
 
-  public onPlayerDrawSuggest?: () => void;
+  public playerDrawResponse$ = new Observable<boolean>();
 
   public socket?: WebSocket;
 
@@ -125,14 +129,19 @@ export class SocketService {
     storeService.setGameMode(GameMode.MULTIPLAYER);
     window.location.hash = '#game';
     const [playerOne, playerTwo] = payload.players.map((player) => player.name);
-    this.onStart?.();
+    this.start$.notify();
     storeService.updateUserNames(playerOne, playerTwo);
     storeService.setCurrentUserColor(payload.currentPlayerColor);
   }
 
   private handleFigureMove(payload: GameInfo): void {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.onMove?.(payload.fieldState!, payload.currentPlayerColor, payload.lastMove!);
+    this.move$.notify({
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      fieldState: payload.fieldState!,
+      currentColor: payload.currentPlayerColor,
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      lastMove: payload.lastMove!,
+    });
     storeService.setCurrentUserColor(payload.currentPlayerColor);
   }
 
@@ -155,21 +164,21 @@ export class SocketService {
         case GameAction.disconnect: {
           const winnerColor = response.payload.players[0].color;
           storeService.setWinner(winnerColor);
-          this.onPlayerLeave?.();
+          this.playerLeave$.notify();
           break;
         }
         case GameAction.drawSuggest:
-          this.onPlayerDrawSuggest?.();
+          this.playerDrawSuggest$.notify();
           break;
         case GameAction.setUserColor: {
           const userColor = response.payload.color;
           storeService.setUserColor(userColor);
-          this.onStart?.();
+          this.start$.notify();
           break;
         }
         case GameAction.drawResponse: {
-          const isDraw = response.payload.isDraw || false;
-          this.onPlayerDrawResponse?.(isDraw);
+          const { isDraw } = response.payload;
+          this.playerDrawResponse$.notify(isDraw);
           break;
         }
         default:
