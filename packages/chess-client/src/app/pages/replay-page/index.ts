@@ -16,10 +16,13 @@ export default class ReplayPage implements PageController {
   }
 
   public createPage(): void {
-    this.root.innerHTML = '';
     this.startGame().catch(() => {
       console.error('Failed to start game');
     });
+  }
+
+  public destroyPage(): void {
+    this.game?.destroy();
   }
 
   private async startGame(): Promise<void> {
