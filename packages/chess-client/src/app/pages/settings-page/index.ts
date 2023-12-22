@@ -1,5 +1,5 @@
 import type { PageController } from '@chess/game-common';
-import { GameDifficultyOptions } from '@chess/game-common';
+import { GameDifficultyOptions, gameDifficultyOptionsValues } from '@chess/game-common';
 import { ConfigDaoService } from '@chess/dao';
 import Select from '@components/select/select';
 import BaseComponent from '@components/base-component';
@@ -18,7 +18,7 @@ export default class SettingsPage implements PageController {
     this.selectWrapper = new BaseComponent({ className: 'settings-wrapper' });
     this.selectDifficulty = new Select<GameDifficultyOptions>(
       'Choose Difficulty of AI',
-      [GameDifficultyOptions.easy, GameDifficultyOptions.medium, GameDifficultyOptions.hard],
+      gameDifficultyOptionsValues,
       async () => {
         await this.onChangeHandler();
       },
@@ -33,9 +33,8 @@ export default class SettingsPage implements PageController {
   private async onChangeHandler(): Promise<void> {
     const selectValue = this.selectDifficulty.getSelectValue();
     await this.model.setData(
-      [GameDifficultyOptions.easy, GameDifficultyOptions.medium, GameDifficultyOptions.hard].find(
-        (option) => option === selectValue,
-      ) ?? GameDifficultyOptions.easy,
+      gameDifficultyOptionsValues.find((option) => option === selectValue) ??
+        GameDifficultyOptions.easy,
     );
   }
 }

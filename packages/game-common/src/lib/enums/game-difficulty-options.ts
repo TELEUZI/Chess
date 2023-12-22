@@ -3,3 +3,5 @@ export enum GameDifficultyOptions {
   medium = 'medium',
   hard = 'hard',
 }
+
+export const gameDifficultyOptionsValues = Object.values(GameDifficultyOptions);
