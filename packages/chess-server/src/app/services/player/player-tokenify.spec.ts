@@ -2,12 +2,11 @@ import jwt from 'jsonwebtoken';
 import type { PlayerTokenInfo } from './player-tokenify';
 import { buildToken } from './player-tokenify';
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-member-access
-require('dotenv').config({ path: 'packages/chess-server/.env' });
-
 describe('buildToken', () => {
   // Returns a string JWT token when given valid PlayerTokenInfo input
   it('should return a string JWT token when given valid PlayerTokenInfo input', () => {
+    process.env.JWT_SECRET = 'secret';
+    process.env.JWT_EXPIRES_IN = '1h';
     const info: PlayerTokenInfo = {
       roomName: 'room1',
       playerName: 'player1',
@@ -19,6 +18,7 @@ describe('buildToken', () => {
   // Uses the JWT_SECRET environment variable to sign the token
   it('should use the JWT_SECRET environment variable to sign the token', () => {
     process.env.JWT_SECRET = 'secret';
+    process.env.JWT_EXPIRES_IN = '1h';
     const info: PlayerTokenInfo = {
       roomName: 'room1',
       playerName: 'player1',
@@ -31,6 +31,7 @@ describe('buildToken', () => {
   // Sets the noTimestamp option to true when signing the token
   it('should set the noTimestamp option to true when signing the token', () => {
     process.env.JWT_SECRET = 'secret';
+    process.env.JWT_EXPIRES_IN = '1h';
     const info: PlayerTokenInfo = {
       roomName: 'room1',
       playerName: 'player1',
