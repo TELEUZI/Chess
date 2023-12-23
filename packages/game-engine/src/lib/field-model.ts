@@ -21,6 +21,7 @@ import { FigureColor, GameMode, FigureType, Observable, Subject } from '@chess/g
 import { getNextFigureColor } from '@chess/utils';
 import { getOpeningName, getOpenings } from './chess-openings-service';
 
+const openings = getOpenings();
 interface FieldModelProps {
   onStalemate: () => void;
   onBotMove: () => void;
@@ -168,7 +169,7 @@ export class FieldModel {
     this.setState(this.state);
     this.onNextTurn.notify();
     const fenState = getFenFromStringBoard(this.state.getPlainState());
-    const isOpening = getOpeningName(await getOpenings(), fenState);
+    const isOpening = getOpeningName(await openings, fenState);
     const move: TurnInfo = {
       figure: this.state.getCellAt(toX, toY)?.getFigureExternalInfo(),
       move: { from: new Coordinate(fromX, fromY), to: new Coordinate(toX, toY) },
