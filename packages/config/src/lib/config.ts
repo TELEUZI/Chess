@@ -24,7 +24,7 @@ export const BEST_VALUE_MOVE_FOR_BLACK = -9999;
 export const TIMER_DELAY = 0;
 export const SERVER_ENDPOINT = '/rooms/';
 export const baseURL =
-  process.env.NODE_ENV === 'production' ? 'teleuzi-chess.herokuapp.com' : 'localhost:5000';
+  process.env.NODE_ENV === 'production' ? window.location.host : 'localhost:5000';
 
 export const httpProtocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
 
