@@ -146,17 +146,19 @@ export class FieldModel {
       return;
     }
     await this.makeMove(fromX, fromY, toX, toY);
+    const from = new Coordinate(fromX, fromY);
+    const to = new Coordinate(toX, toY);
     if (this.gameMode === GameMode.SINGLE) {
       this.onSinglePlayerMove();
     } else if (this.gameMode === GameMode.BOT) {
       this.onBotMove();
     } else if (this.gameMode === GameMode.MULTIPLAYER) {
       await socketService.move(getFenFromStringBoard(this.state.getPlainState()), {
-        from: new Coordinate(fromX, fromY),
-        to: new Coordinate(toX, toY),
+        from,
+        to,
       });
     }
-    const cell = this.getCellAt(new Coordinate(toX, toY));
+    const cell = this.getCellAt(to);
     if (cell) {
       this.onCheckPromotion(cell);
     }
@@ -165,14 +167,16 @@ export class FieldModel {
   }
 
   public async makeMove(fromX: number, fromY: number, toX: number, toY: number): Promise<void> {
-    exchangePositions(this.state, new Coordinate(fromX, fromY), new Coordinate(toX, toY));
+    const from = new Coordinate(fromX, fromY);
+    const to = new Coordinate(toX, toY);
+    exchangePositions(this.state, from, to);
     this.setState(this.state);
     this.onNextTurn.notify();
     const fenState = getFenFromStringBoard(this.state.getPlainState());
     const isOpening = getOpeningName(await openings, fenState);
     const move: TurnInfo = {
       figure: this.state.getCellAt(toX, toY)?.getFigureExternalInfo(),
-      move: { from: new Coordinate(fromX, fromY), to: new Coordinate(toX, toY) },
+      move: { from, to },
       ...(isOpening && { comment: isOpening }),
     };
     this.checkGameSituation();
