@@ -48,7 +48,7 @@ export default class FieldView extends BaseComponent {
   }
 
   public refresh(field: FieldState): void {
-    forEachCell<CellView>(this.cells, (cell, pos) => {
+    forEachCell(this.cells, (cell, pos) => {
       const cellTo = field.getCellAt(pos.x, pos.y);
       const figureType = cellTo?.getFigureType();
       const figureColor = cellTo?.getFigureColor();
@@ -69,12 +69,12 @@ export default class FieldView extends BaseComponent {
 
   public setCheck(selection: Coordinate | null): void {
     if (!selection) {
-      forEachCell<CellView>(this.cells, (cell) => {
+      forEachCell(this.cells, (cell) => {
         cell.highlightCheck(false);
       });
       return;
     }
-    forEachCell<CellView>(this.cells, (cell, pos) => {
+    forEachCell(this.cells, (cell, pos) => {
       const isAllowed = pos.equals(selection);
       cell.highlightCheck(isAllowed);
     });
@@ -82,19 +82,19 @@ export default class FieldView extends BaseComponent {
 
   public setMate(selection: Coordinate | null): void {
     if (!selection) {
-      forEachCell<CellView>(this.cells, (cell) => {
+      forEachCell(this.cells, (cell) => {
         cell.highlightMate(false);
       });
       return;
     }
-    forEachCell<CellView>(this.cells, (cell, pos) => {
+    forEachCell(this.cells, (cell, pos) => {
       const isAllowed = pos.equals(selection);
       cell.highlightMate(isAllowed);
     });
   }
 
   public setAllowedMoves(selection: Coordinate[]): void {
-    forEachCell<CellView>(this.cells, (cell, pos) => {
+    forEachCell(this.cells, (cell, pos) => {
       const isAllowed = selection.findIndex((move) => move.equals(pos)) !== -1;
       cell.highlightAllowedMoves(isAllowed);
     });
