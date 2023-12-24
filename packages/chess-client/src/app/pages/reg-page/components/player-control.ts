@@ -1,15 +1,21 @@
-import BaseComponent from '@components/base-component';
+import { BaseLitComponent } from '@components/base-component';
 import Button from '@components/button/button';
+import type { TemplateResult } from 'lit-html';
+import { html } from 'lit-html';
+import { when } from 'lit-html/directives/when.js';
+import { effect, signal, batch } from '@preact/signals-core';
 import PlayerView from './player';
 
-export default class PlayerContainer extends BaseComponent {
+export default class PlayerContainer extends BaseLitComponent {
   private readonly player: PlayerView;
 
-  private updateButton: Button;
+  private readonly updateButton = new Button('Update', this.edit.bind(this), ['button_update']);
 
-  private readonly name: string;
+  private readonly submitButton = new Button('Submit', this.submit.bind(this), ['button_edit']);
 
-  private image: BaseComponent;
+  private readonly isUpdateMode = signal(false);
+
+  private readonly name = signal('');
 
   constructor(
     name: string,
@@ -17,37 +23,41 @@ export default class PlayerContainer extends BaseComponent {
     private readonly onSubmit?: (name: string) => void,
   ) {
     super({ className: 'player-container' });
-    this.name = name;
-    this.player = new PlayerView(name);
-    this.updateButton = new Button('Update', this.edit.bind(this), ['button_update']);
-    this.image = new BaseComponent({ className: 'avatar', content: this.name[0].toUpperCase() });
-    this.appendChildren([this.image, this.player]);
-    if (isUpdatable) {
-      this.append(this.updateButton);
-    }
+    this.name.value = name;
+    this.player = new PlayerView(this.name, this.isUpdateMode);
+    effect(() => {
+      this.render(this.getTemplate(isUpdatable));
+    });
   }
 
   public edit(): void {
-    this.player.setUpdateMode();
-    this.updateButton.getNode().remove();
-    this.updateButton = new Button('Submit', this.submit.bind(this), ['button_edit']);
-    this.node.append(this.updateButton.getNode());
+    this.isUpdateMode.value = !this.isUpdateMode.value;
   }
 
   public submit(): void {
     const updatedName = this.player.getValue();
+    batch(() => {
+      this.isUpdateMode.value = !this.isUpdateMode.value;
+      this.name.value = updatedName;
+    });
     this.onSubmit?.(updatedName);
-    this.player.setUpdateMode();
-    this.image.destroy();
-    this.image = new BaseComponent({ className: 'avatar', content: updatedName[0].toUpperCase() });
-    this.prepend(this.image);
-    this.player.setName(updatedName);
-    this.updateButton.getNode().remove();
-    this.updateButton = new Button('Update', this.edit.bind(this), ['button_update']);
-    this.node.append(this.updateButton.getNode());
   }
 
   public getUserName(): string {
-    return this.player.getName();
+    return this.name.value;
+  }
+
+  public getTemplate(isUpdatable: boolean): TemplateResult {
+    return html`
+      <div class="avatar">${this.name.value[0].toUpperCase()} ${this.player.getNode()}</div>
+      ${this.player.getNode()}
+      ${when(isUpdatable, () =>
+        when(
+          !this.isUpdateMode.value,
+          () => this.updateButton.getNode(),
+          () => this.submitButton.getNode(),
+        ),
+      )}
+    `;
   }
 }

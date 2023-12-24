@@ -5,7 +5,7 @@ import { FigureColor } from '@chess/game-common';
 import { FigureColorLetter } from '@chess/game-engine';
 
 import BaseComponent from '@client/app/components/base-component';
-import FigureView from '../views/figure-view';
+import { FigureView } from '../views/figure-view';
 
 export const boardCoordsY = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 export const boardCoordsX = ['8', '7', '6', '5', '4', '3', '2', '1'];
@@ -35,12 +35,13 @@ export class ChessHistory extends BaseComponent {
     }
     this.lastTurn = coords;
     const { move, figure } = coords;
-    const figureView = new FigureView(this.node, [
+    const figureView = new FigureView();
+    figureView.classList.add(
       'chess__figure',
       `chess-field__${
         figure.color === FigureColor.BLACK ? FigureColorLetter.BLACK : FigureColorLetter.WHITE
-      }${figure.type ?? ''}`,
-    ]);
+      }${figure.type}`,
+    );
     const { comment } = coords;
     const historyItem = new BaseComponent({
       className: 'chess__history_item',

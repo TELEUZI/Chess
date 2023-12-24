@@ -1,3 +1,8 @@
+/* eslint-disable max-classes-per-file */
+
+import type { RenderOptions, TemplateResult } from 'lit-html';
+import { render } from 'lit-html';
+
 import './style.scss';
 import './normalize.scss';
 
@@ -36,12 +41,17 @@ export default class BaseComponent<T extends keyof HTMLElementTagNameMap = 'div'
     }
   }
 
-  public prepend(child: BaseComponent): void {
-    this.node.prepend(child.getNode());
+  public prepend(child: BaseComponent<keyof HTMLElementTagNameMap> | HTMLElement): void {
+    if (child instanceof BaseComponent) {
+      this.children.push(child);
+      this.node.prepend(child.getNode());
+    } else {
+      this.node.prepend(child);
+    }
   }
 
   public appendChildren(
-    children: BaseComponent<keyof HTMLElementTagNameMap>[] | HTMLElement[],
+    children: (BaseComponent<keyof HTMLElementTagNameMap> | HTMLElement)[],
   ): void {
     children.forEach((el) => {
       this.append(el);
@@ -111,6 +121,85 @@ export default class BaseComponent<T extends keyof HTMLElementTagNameMap = 'div'
 
   public destroy(): void {
     this.destroyChildren();
+    this.node.remove();
+  }
+}
+
+export class BaseLitComponent<T extends keyof HTMLElementTagNameMap = 'div'> {
+  protected node: HTMLElementTagNameMap[T];
+
+  protected template?: TemplateResult;
+
+  constructor({
+    tag,
+    className,
+    content,
+    template,
+  }: Omit<Component<T, 'div'>, 'children'> & { template?: TemplateResult }) {
+    const node = document.createElement(tag ?? ('div' as T));
+    node.className = className ?? '';
+    node.textContent = content ?? '';
+    this.node = node;
+    if (template) {
+      this.render(template);
+    }
+  }
+
+  public render(template: TemplateResult, options?: RenderOptions | undefined): void {
+    render(template, this.node, options);
+  }
+
+  public addClass(className: string): void {
+    this.node.classList.add(className);
+  }
+
+  public setContent(content: string): void {
+    this.node.textContent = content;
+  }
+
+  public setAttribute(attribute: string, value: string): void {
+    this.node.setAttribute(attribute, value);
+  }
+
+  public removeAttribute(attribute: string): void {
+    this.node.removeAttribute(attribute);
+  }
+
+  public toggleClass(className: string): void {
+    this.node.classList.toggle(className);
+  }
+
+  public setClasses(className: string): void {
+    className.split(' ').forEach((name) => {
+      this.addClass(name);
+    });
+  }
+
+  public getTemplateHtml(): string {
+    return this.node.innerHTML;
+  }
+
+  public setClassname(className: string): void {
+    this.node.className = className;
+  }
+
+  public removeClass(className: string): void {
+    this.node.classList.remove(className);
+  }
+
+  public getNode(): HTMLElementTagNameMap[T] {
+    return this.node;
+  }
+
+  public addListener(
+    event: string,
+    listener: (e?: Event) => void,
+    options: AddEventListenerOptions | boolean = false,
+  ): void {
+    this.node.addEventListener(event, listener, options);
+  }
+
+  public destroy(): void {
     this.node.remove();
   }
 }

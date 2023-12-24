@@ -2,17 +2,17 @@ import BaseComponent from '@client/app/components/base-component';
 import type { FigureType } from '@chess/game-common';
 import { FigureColor } from '@chess/game-common';
 import { FigureColorLetter } from '@chess/game-engine';
-import Figure from './figure-view';
+import { FigureView } from './figure-view';
 
 export default class CellView extends BaseComponent {
-  private figure: Figure;
+  private figure: FigureView;
 
   constructor(
     className: string,
     private readonly onClick: () => void,
   ) {
     super({ className: `cell ${className}` });
-    this.figure = new Figure(this.node, []);
+    this.figure = new FigureView();
     this.node.onclick = this.onClick;
   }
 
@@ -64,17 +64,18 @@ export default class CellView extends BaseComponent {
   }
 
   public destroyFigure(): void {
-    this.figure.destroy();
+    this.figure.remove();
   }
 
   private setFigure(type: FigureType, color: FigureColor): void {
-    this.figure.destroy();
-    this.figure = new Figure(this.node, [
-      'chess__figure',
+    this.figure.remove();
+    this.figure = new FigureView();
+    this.figure.classList.add(
       `chess-field__${
         color === FigureColor.BLACK ? FigureColorLetter.BLACK : FigureColorLetter.WHITE
       }${type}`,
-    ]);
+    );
     this.figure.setAttribute('draggable', 'true');
+    this.append(this.figure);
   }
 }

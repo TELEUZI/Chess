@@ -74,7 +74,7 @@ class Chess extends BaseComponent {
       },
     });
     this.playerOne.toggleClass('current');
-    chessHead.appendChildren([this.playerOne, this.playerTwo]);
+    chessHead.appendChildren([this.playerOne.getNode(), this.playerTwo.getNode()]);
     this.unsubscribes.push(
       socketService.playerLeave$.subscribe(() => {
         this.setPlayerLeave();
