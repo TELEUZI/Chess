@@ -3,7 +3,6 @@
   "files": [],
   "compilerOptions": {
     "target": "ESNext",
-    "useDefineForClassFields": true,
     "module": "ESNext",
     "lib": ["ESNext", "DOM"],
     "moduleResolution": "Node",
@@ -18,7 +17,9 @@
     "noImplicitReturns": true,
     "skipLibCheck": true,
     "types": ["vite/client", "vitest"],
-    "useUnknownInCatchVariables": false
+    "useUnknownInCatchVariables": false,
+    "experimentalDecorators": true, // If using decorators
+    "useDefineForClassFields": false
   },
   "include": ["src", "./vite.config.ts"],
   "references": [
