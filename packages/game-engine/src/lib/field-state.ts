@@ -1,7 +1,7 @@
 import { TABLE_SIZE } from '@chess/config';
 import { FigureColor } from '@chess/game-common';
 import type { FigureModel } from '@chess/game-engine';
-import { createFigureFromString } from '@chess/game-engine';
+import { createFigureFromString, getFenFromStringBoard } from '@chess/game-engine';
 import { CellModel } from './models';
 
 export function isInField(x: number, y: number): boolean {
@@ -49,19 +49,8 @@ export class FieldState {
     return null;
   }
 
-  public getPlainState(): string[][] {
-    const state = emptyBoard();
-    for (let i = 0; i < TABLE_SIZE; i += 1) {
-      for (let j = 0; j < TABLE_SIZE; j += 1) {
-        state[i][j] = this.state[i][j]?.getFigureType() ?? ' ';
-        if (state[i][j])
-          state[i][j] =
-            this.state[i][j]?.getFigureColor() === FigureColor.WHITE
-              ? state[i][j].toUpperCase()
-              : state[i][j];
-      }
-    }
-    return state;
+  public getFenFromState(): string {
+    return getFenFromStringBoard(this.getPlainState());
   }
 
   public clone(): FieldState {
@@ -76,5 +65,20 @@ export class FieldState {
       });
     });
     return new FieldState(newState);
+  }
+
+  private getPlainState(): string[][] {
+    const state = emptyBoard();
+    for (let i = 0; i < TABLE_SIZE; i += 1) {
+      for (let j = 0; j < TABLE_SIZE; j += 1) {
+        state[i][j] = this.state[i][j]?.getFigureType() ?? ' ';
+        if (state[i][j])
+          state[i][j] =
+            this.state[i][j]?.getFigureColor() === FigureColor.WHITE
+              ? state[i][j].toUpperCase()
+              : state[i][j];
+      }
+    }
+    return state;
   }
 }

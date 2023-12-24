@@ -6,7 +6,6 @@ import {
   exchangePositions,
   forEachPlayerFigure,
   getBoardFromFen,
-  getFenFromStringBoard,
   getFigureFromState,
   getKingPosition,
   getMoves,
@@ -152,7 +151,7 @@ export class FieldModel {
     } else if (this.gameMode === GameMode.BOT) {
       this.onBotMove();
     } else if (this.gameMode === GameMode.MULTIPLAYER) {
-      await socketService.move(getFenFromStringBoard(this.state.getPlainState()), {
+      await socketService.move(this.state.getFenFromState(), {
         from,
         to,
       });
@@ -171,7 +170,7 @@ export class FieldModel {
     exchangePositions(this.state, from, to);
     this.setState(this.state);
     this.onNextTurn.notify();
-    const fenState = getFenFromStringBoard(this.state.getPlainState());
+    const fenState = this.state.getFenFromState();
     const isOpening = getOpeningName(await openings, fenState);
     const move: TurnInfo = {
       figure: this.state.getCellAt(toX, toY)?.getFigureExternalInfo(),
