@@ -56,12 +56,12 @@ class Chess extends BaseComponent {
       },
       onMate: () => {
         storeService.setWinner(storeService.getOpponentColor());
-        this.setWinner(storeService.getWinnerColor());
+        this.setWinner(storeService.getWinnerColor() ?? 'draw');
         this.showMateModal();
       },
       onStalemate: () => {
         this.showStalemateModal();
-        this.setWinner(storeService.getWinnerColor());
+        this.setWinner(storeService.getWinnerColor() ?? 'draw');
       },
       onFieldUpdate: (turnInfo: TurnInfo) => {
         this.chessHistory.setHistoryMove(turnInfo, this.timer.getTime());

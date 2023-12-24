@@ -1,5 +1,6 @@
 import type { FigureColor, GameMode } from '@chess/game-common';
 import type { FieldState } from '@chess/game-engine';
+import { createAction } from '@reduxjs/toolkit';
 import {
   CHANGE_USERNAME,
   MOVE,
@@ -10,72 +11,16 @@ import {
   SET_WINNER,
 } from './types';
 
-export function setUserColor(color: number): {
-  type: string;
-  payload: { color: number };
-} {
-  return {
-    type: SET_USER_COLOR,
-    payload: { color },
-  };
-}
+export const setUserColor = createAction<number>(SET_USER_COLOR);
 
-export function setCurrentUserColor(color: number): {
-  type: string;
-  payload: { currentUserColor: number };
-} {
-  return {
-    type: SET_CURRENT_USER_COLOR,
-    payload: { currentUserColor: color },
-  };
-}
+export const setCurrentUserColor = createAction<number>(SET_CURRENT_USER_COLOR);
 
-export function setGameMode(currentGameMode: GameMode): {
-  type: string;
-  payload: { currentGameMode: GameMode };
-} {
-  return {
-    type: SET_GAME_MODE,
-    payload: { currentGameMode },
-  };
-}
+export const setGameMode = createAction<GameMode>(SET_GAME_MODE);
 
-export function setReplayState(replayDate: number): {
-  type: string;
-  payload: { replayDate: number };
-} {
-  return {
-    type: SET_REPLAY_STATE,
-    payload: { replayDate },
-  };
-}
+export const setReplayState = createAction<number>(SET_REPLAY_STATE);
 
-export function makeMove(array: FieldState): {
-  type: string;
-  payload: FieldState;
-} {
-  return {
-    type: MOVE,
-    payload: array,
-  };
-}
+export const makeMove = createAction<FieldState>(MOVE);
 
-export function changeName(names: { playerOne: string; playerTwo: string }): {
-  type: string;
-  payload: { playerOne: string; playerTwo: string };
-} {
-  return {
-    type: CHANGE_USERNAME,
-    payload: names,
-  };
-}
+export const changeName = createAction<{ playerOne: string; playerTwo: string }>(CHANGE_USERNAME);
 
-export function setWinner(winnerColor: FigureColor | null): {
-  type: string;
-  payload: { winnerColor: FigureColor | null };
-} {
-  return {
-    type: SET_WINNER,
-    payload: { winnerColor },
-  };
-}
+export const setWinner = createAction<FigureColor | null>(SET_WINNER);

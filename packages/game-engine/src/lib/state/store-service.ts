@@ -19,7 +19,7 @@ class StoreService {
     return this.store.getState().gameMode.currentGameMode;
   }
 
-  public getWinnerColor(): FigureColor {
+  public getWinnerColor(): FigureColor | null {
     return this.store.getState().winner.winnerColor;
   }
 
