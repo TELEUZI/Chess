@@ -4,9 +4,9 @@
   "license": "MIT",
   "scripts": {
     "start-client": "nx run chess-client:serve",
-    "build-client": "nx run chess-client:build",
+    "build-client": "nx run chess-client:build --emptyOutDir",
     "start-server": "nx run chess-server:serve",
-    "build-server": "nx run chess-server:build",
+    "build-server": "nx run chess-server:build --emptyOutDir",
     "lint-client": "nx run chess-client:lint --fix",
     "client-source-map": "npx source-map-explorer dist/packages/chess-client/assets/*.js --no-border-checks",
     "lint-server": "nx run chess-server:lint --fix",
