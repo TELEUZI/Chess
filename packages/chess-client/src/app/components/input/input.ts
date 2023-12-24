@@ -1,57 +1,130 @@
-import BaseComponent from '../base-component';
+import type { TemplateResult } from 'lit-html';
+/* eslint-disable @typescript-eslint/explicit-member-accessibility */
 import './input.scss';
+import { html, css, LitElement } from 'lit';
+import { classMap } from 'lit/directives/class-map.js';
+import { createRef, ref } from 'lit/directives/ref.js';
+import { customElement, property } from 'lit/decorators.js';
 
-enum ValidType {
+const enum ValidType {
   valid = 'valid',
   invalid = 'invalid',
 }
-export default class Input extends BaseComponent<'input'> {
-  public onInput?: (input: HTMLInputElement) => boolean;
+export type InputType =
+  | 'button'
+  | 'checkbox'
+  | 'color'
+  | 'date'
+  | 'datetime-local'
+  | 'datetime'
+  | 'email'
+  | 'file'
+  | 'hidden'
+  | 'image'
+  | 'month'
+  | 'number'
+  | 'password'
+  | 'radio'
+  | 'range'
+  | 'reset'
+  | 'search'
+  | 'submit'
+  | 'tel'
+  | 'text'
+  | 'time'
+  | 'url'
+  | 'week';
 
-  public isValid = true;
+@customElement('c-input')
+export default class Input extends LitElement {
+  static styles = css`
+    * {
+      box-sizing: border-box;
+    }
 
-  protected input: HTMLInputElement;
+    :host {
+      display: inline-block;
+      position: relative;
+    }
+    .invalid {
+      border: 2px solid red;
+    }
 
-  constructor(type: string, classlist: string[], placeholder = '', value?: number | string) {
-    super({ tag: 'input', className: ['input', ...classlist].join(' ') });
-    this.input = this.node;
-    this.setAttributes(type, placeholder, value);
-    this.createListeners();
+    .valid {
+      border: 2px solid green;
+    }
+  `;
+
+  @property({ type: String }) value = '';
+
+  @property({ type: Boolean })
+  isValid = true;
+
+  @property()
+  classes: Record<string, boolean>;
+
+  @property({ type: Boolean })
+  disabled = false;
+
+  onInput?: (input: HTMLInputElement) => boolean;
+
+  input = createRef<HTMLInputElement>();
+
+  constructor(
+    private readonly type: InputType,
+    classlist: string[],
+    private readonly placeholder = '',
+    defaultValue = '',
+  ) {
+    super();
+    this.classes = {
+      [ValidType.valid]: this.isValid,
+      [ValidType.invalid]: !this.isValid,
+      input: true,
+      ...classlist.reduce((acc, className) => ({ ...acc, [className]: true }), {}),
+    };
+    this.value = defaultValue;
   }
 
-  public setHandler(handler: (input: HTMLInputElement) => boolean): void {
+  setHandler(handler: (input: HTMLInputElement) => boolean): void {
     this.onInput = handler;
   }
 
-  public checkValidation(): void {
-    if (this.onInput) {
-      this.input.reportValidity();
-      this.isValid = this.onInput(this.input);
-      this.input.classList.add(this.isValid ? ValidType.valid : ValidType.invalid);
-      this.input.classList.remove(this.isValid ? ValidType.invalid : ValidType.valid);
+  checkValidation(): void {
+    if (this.onInput && this.input.value != null) {
+      this.input.value.reportValidity();
+      this.isValid = this.onInput(this.input.value);
+      console.log(this.isValid, this.input.value.value);
     }
   }
 
-  public setAttributes(type: string, placeholder: string, value?: number | string): void {
-    this.setAttribute('type', type);
-    this.setAttribute('placeholder', placeholder);
-    if (value != null) {
-      this.setAttribute('value', value.toString());
-    }
+  getValue(): string {
+    return this.input.value?.value ?? '';
   }
 
-  public createListeners(): void {
-    this.input.addEventListener('input', () => {
-      this.checkValidation();
-    });
-    this.input.addEventListener('invalid', () => {}, false);
+  setValue(value: string): void {
+    this.value = value;
   }
 
-  public getValue(): string {
-    return this.input.value;
-  }
-
-  public setValue(value: string): void {
-    this.input.value = value;
+  render(): TemplateResult {
+    const inputClasses = {
+      ...this.classes,
+      [ValidType.valid]: this.isValid,
+      [ValidType.invalid]: !this.isValid,
+    };
+    return html`
+      <input
+        class=${classMap(inputClasses)}
+        type="${this.type}"
+        placeholder="${this.placeholder}"
+        .disabled="${this.disabled}"
+        .value="${this.value}"
+        ${ref(this.input)}
+        @input="${() => {
+          this.checkValidation();
+        }}"
+        @invalid="${() => {}}"
+      />
+    `;
   }
 }
