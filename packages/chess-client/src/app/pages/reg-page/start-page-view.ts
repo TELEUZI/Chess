@@ -5,45 +5,39 @@ import PlayerContainer from '@client/app/pages/reg-page/components/player-contro
 export default class StartPageView extends BaseComponent {
   public readonly playerOne: PlayerContainer;
 
-  public readonly playerTwo: PlayerContainer;
-
-  public readonly startGameWithBot: Button;
-
-  public readonly startButton: Button;
-
-  public readonly gameModeButton: Button;
-
-  public readonly gameControlButtons: BaseComponent;
-
   constructor(
-    private readonly onStartSingleGame: () => void,
+    onStartSingleGame: () => void,
 
-    private readonly onStartGameWithBot: () => void,
+    onStartGameWithBot: () => void,
 
-    private readonly onStartMultiplayerGame: () => void,
+    onStartMultiplayerGame: () => void,
 
-    private readonly onUserNameChanged: (firstUserName: string, secondUserName: string) => void,
+    onUserNameChanged: (firstUserName: string, secondUserName: string) => void,
   ) {
     super({ className: 'reg-page' });
-    this.startButton = new Button('Play offline', () => {
-      this.onStartSingleGame();
+    const startButton = new Button('Play offline', () => {
+      onStartSingleGame();
     });
-    this.gameModeButton = new Button('Play online', () => {
-      this.onStartMultiplayerGame();
+    const gameModeButton = new Button('Play online', () => {
+      onStartMultiplayerGame();
     });
-    this.startGameWithBot = new Button('Play with computer', () => {
-      this.onStartGameWithBot();
+    const startGameWithBot = new Button('Play with computer', () => {
+      onStartGameWithBot();
     });
-    this.gameControlButtons = new BaseComponent({
+    const gameControlButtons = new BaseComponent({
       className: 'game-control',
-      children: [this.startButton, this.gameModeButton, this.startGameWithBot],
+      children: [startButton, gameModeButton, startGameWithBot],
     });
     this.playerOne = new PlayerContainer('Player 1', true, (name: string) => {
-      this.onUserNameChanged(name, this.playerOne.getUserName());
+      onUserNameChanged(name, this.playerOne.getUserName());
     });
-    this.playerTwo = new PlayerContainer('Player 2', true, (name: string) => {
-      this.onUserNameChanged(this.playerTwo.getUserName(), name);
+    const playerTwo = new PlayerContainer('Player 2', true, (name: string) => {
+      onUserNameChanged(playerTwo.getUserName(), name);
     });
-    this.appendChildren([this.playerOne, this.gameControlButtons, this.playerTwo]);
+    this.appendChildren([this.playerOne.getNode(), gameControlButtons, playerTwo.getNode()]);
+  }
+
+  public getCurrentPlayerName(): string {
+    return this.playerOne.getUserName();
   }
 }

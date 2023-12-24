@@ -22,7 +22,7 @@ export default class StartPage implements PageController {
       () => {
         redirectToGameWithMode(GameMode.BOT);
       },
-      () => addUserToGame(this.view.playerOne.getUserName()),
+      () => addUserToGame(this.view.getCurrentPlayerName()),
       onUserNameChanged,
     );
   }
