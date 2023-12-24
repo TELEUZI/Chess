@@ -12,3 +12,9 @@ export default class FileInput extends Input {
     return this.input.value?.files?.[0] ?? null;
   }
 }
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'c-file-input': FileInput;
+  }
+}

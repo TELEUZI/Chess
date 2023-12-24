@@ -1,47 +1,39 @@
 import { BaseLitComponent } from '@client/app/components/base-component';
-import Input from '@client/app/components/input/input';
+import type Input from '@client/app/components/input/input';
 import type { ReadonlySignal } from '@preact/signals-core';
 import { effect } from '@preact/signals-core';
 import type { TemplateResult } from 'lit-html';
 import { html } from 'lit-html';
+import { createRef, ref } from 'lit-html/directives/ref.js';
 
 export default class PlayerView extends BaseLitComponent {
-  private readonly userNameUpdate: Input;
+  private readonly userNameInput = createRef<Input>();
 
   constructor(
     private readonly name: ReadonlySignal<string>,
     private readonly isUpdateMode: ReadonlySignal<boolean>,
   ) {
     super({ className: 'user' });
-    this.userNameUpdate = new Input('text', ['user__name-input'], name.value, name.value);
     effect(() => {
-      if (this.isUpdateMode.value) {
-        this.userNameUpdate.classList.remove('hidden');
-      } else {
-        this.userNameUpdate.classList.add('hidden');
-      }
       this.render(this.getTemplate());
     });
   }
 
   public getTemplate(): TemplateResult {
     return html`<div class="user__info">
-      <label
-        @click="${() => {
-          this.increment();
-        }}"
-        class="user__name ${this.isUpdateMode.value ? 'hidden' : ''}"
+      <label class="user__name ${this.isUpdateMode.value ? 'hidden' : ''}"
         >${this.name.value}</label
       >
-      ${this.userNameUpdate}
+      <c-input
+        ${ref(this.userNameInput)}
+        .value="${this.name.value}"
+        type="text"
+        class="user__name-input ${this.isUpdateMode.value ? '' : 'hidden'}"
+      ></c-input>
     </div>`;
   }
 
   public getValue(): string {
-    return this.userNameUpdate.getValue();
-  }
-
-  private increment(): void {
-    console.log('click', this.name);
+    return this.userNameInput.value?.getValue() ?? '';
   }
 }

@@ -60,6 +60,15 @@ export default class Input extends LitElement {
   @property({ type: Boolean })
   isValid = true;
 
+  @property({ type: String })
+  placeholder = '';
+
+  @property({ type: String })
+  type: InputType;
+
+  @property({ type: String })
+  defaultValue = '';
+
   @property()
   classes: Record<string, boolean>;
 
@@ -70,13 +79,11 @@ export default class Input extends LitElement {
 
   input = createRef<HTMLInputElement>();
 
-  constructor(
-    private readonly type: InputType,
-    classlist: string[],
-    private readonly placeholder = '',
-    defaultValue = '',
-  ) {
+  constructor(type: InputType, classlist: string[] = [], placeholder = '', defaultValue = '') {
     super();
+    this.type = type;
+    this.placeholder = placeholder;
+    this.defaultValue = defaultValue;
     this.classes = {
       [ValidType.valid]: this.isValid,
       [ValidType.invalid]: !this.isValid,
@@ -118,7 +125,7 @@ export default class Input extends LitElement {
         type="${this.type}"
         placeholder="${this.placeholder}"
         .disabled="${this.disabled}"
-        .value="${this.value}"
+        value="${this.value}"
         ${ref(this.input)}
         @input="${() => {
           this.checkValidation();
@@ -126,5 +133,11 @@ export default class Input extends LitElement {
         @invalid="${() => {}}"
       />
     `;
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'c-input': Input;
   }
 }
