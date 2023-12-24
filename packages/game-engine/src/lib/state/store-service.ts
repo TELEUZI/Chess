@@ -1,10 +1,8 @@
 import type { FigureColor, GameMode } from '@chess/game-common';
-import type { FieldState } from '@chess/game-engine';
 import { getNextFigureColor } from '@chess/utils';
 import { store as rootStore } from './redux/store';
 import {
   changeName,
-  makeMove,
   setCurrentUserColor,
   setGameMode,
   setReplayState,
@@ -35,10 +33,6 @@ class StoreService {
     return this.store.getState().user.color;
   }
 
-  public getFieldState(): FieldState {
-    return this.store.getState().field;
-  }
-
   public getFirstPlayerName(): string {
     return this.store.getState().players.playerOne;
   }
@@ -51,22 +45,12 @@ class StoreService {
     return this.store.getState().replayDate.currentReplayDate;
   }
 
-  public subscribeToFieldState(callback: (state: FieldState) => void): () => void {
-    return this.store.subscribe(() => {
-      callback(this.store.getState().field);
-    });
-  }
-
   public setWinner(winnerColor: FigureColor | null): void {
     this.store.dispatch(setWinner(winnerColor));
   }
 
   public setGameMode(gameMode: GameMode): void {
     this.store.dispatch(setGameMode(gameMode));
-  }
-
-  public makeMove(state: FieldState): void {
-    this.store.dispatch(makeMove(state));
   }
 
   public updateUserNames(firstUserName: string, secondUserName: string): void {

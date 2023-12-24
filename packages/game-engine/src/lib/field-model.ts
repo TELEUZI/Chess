@@ -29,11 +29,10 @@ interface FieldModelProps {
   onReset: () => void;
   onCheckPromotion: (cell: CellModel) => void;
 }
-function getMovesAtPoint(fromX: number, fromY: number, state?: FieldState): Coordinate[] {
+function getMovesAtPoint(fromX: number, fromY: number, state: FieldState): Coordinate[] {
   return getMoves(
-    state ?? storeService.getFieldState(),
-    state?.getFigure(fromX, fromY) ??
-      getFigureFromState(storeService.getFieldState(), fromX, fromY),
+    state,
+    state.getFigure(fromX, fromY) ?? getFigureFromState(state, fromX, fromY),
     fromX,
     fromY,
   );
@@ -90,7 +89,7 @@ export class FieldModel {
     this.onReset = onReset;
     this.onCheckPromotion = onCheckPromotion;
     const initState = createFieldFromStrings(INIT_FIELD_STATE);
-    this.state = storeService.getFieldState();
+    this.state = initState;
     this.setState(initState);
     this.gameMode = storeService.getGameMode();
     socketService.move$.subscribe(({ fieldState, currentColor, lastMove }) => {
@@ -117,7 +116,7 @@ export class FieldModel {
       i,
       j,
     );
-    storeService.makeMove(this.state);
+    // TODO: check if this.onChange.notify(newState); needed
   }
 
   public checkGameSituation(): void {
@@ -217,7 +216,7 @@ export class FieldModel {
       (this.gameMode === GameMode.SINGLE ||
         storeService.getCurrentPlayerColor() === storeService.getUserColor())
     ) {
-      let moves: Coordinate[] = getMovesAtPoint(fromX, fromY);
+      let moves: Coordinate[] = getMovesAtPoint(fromX, fromY, this.state);
       moves = moves.filter((move) => {
         const nextState = getStateAfterMove({
           state: this.state,
@@ -278,6 +277,5 @@ export class FieldModel {
   private setState(newState: FieldState): void {
     this.state = newState;
     this.onChange.notify(newState);
-    storeService.makeMove(newState);
   }
 }

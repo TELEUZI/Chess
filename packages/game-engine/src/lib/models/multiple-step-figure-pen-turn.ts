@@ -1,5 +1,5 @@
 import { Coordinate } from '@chess/coordinate';
-import { storeService, type FieldState, type FigureModel } from '@chess/game-engine';
+import type { FieldState, FigureModel } from '@chess/game-engine';
 import { isMultipleStepRightMove } from './multiple-step-figure';
 
 export function getMultipleStepPerTurnMoves(
@@ -28,7 +28,7 @@ export function getMultipleStepPerTurnMoves(
       }
     } while (
       isMultipleStepRightMove(state, figure, posX, posY) &&
-      !storeService.getFieldState().getCellAt(posX, posY)?.getFigure()
+      !state.getCellAt(posX, posY)?.getFigure()
     );
   });
   return moves;

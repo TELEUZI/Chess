@@ -1,24 +1,16 @@
 import { combineReducers } from 'redux';
-import { INIT_FIELD_STATE } from '@chess/config';
 import { FigureColor, GameMode } from '@chess/game-common';
 
-import { createFieldFromStrings } from '@chess/game-engine';
 import { createReducer } from '@reduxjs/toolkit';
 
 import {
   changeName,
-  makeMove,
   setCurrentUserColor,
   setGameMode,
+  setReplayState,
   setUserColor,
   setWinner,
 } from './action-creators';
-
-const fieldReducer = createReducer(createFieldFromStrings(INIT_FIELD_STATE), (builder) => {
-  builder.addCase(makeMove, (_, action) => {
-    return action.payload;
-  });
-});
 
 const playerReducer = createReducer(
   {
@@ -77,7 +69,7 @@ const gameModeReducer = createReducer<{ currentGameMode: GameMode }>(
 const replayStateReducer = createReducer<{ currentReplayDate: number }>(
   { currentReplayDate: 0 },
   (builder) => {
-    builder.addCase(setGameMode, (_, action) => {
+    builder.addCase(setReplayState, (_, action) => {
       return {
         currentReplayDate: action.payload,
       };
@@ -86,7 +78,6 @@ const replayStateReducer = createReducer<{ currentReplayDate: number }>(
 );
 
 export const rootReducer = combineReducers({
-  field: fieldReducer,
   players: playerReducer,
   user: playerColorReducer,
   currentPlayer: currentPlayerColorReducer,

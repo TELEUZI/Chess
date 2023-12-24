@@ -95,12 +95,9 @@ export default class ChessField {
     this.view = new FieldView(parentNode, async (cell: CellView, i: number, j: number) => {
       await this.cellClickHandler(cell, i, j);
     });
-    this.view.refresh(storeService.getFieldState());
+    this.view.refresh(this.model.state);
 
     this.unsubscribes.push(
-      storeService.subscribeToFieldState(() => {
-        this.view.refresh(storeService.getFieldState());
-      }),
       socketService.start$.subscribe(() => {
         if (storeService.getUserColor() === FigureColor.BLACK) {
           this.view.rotate();
