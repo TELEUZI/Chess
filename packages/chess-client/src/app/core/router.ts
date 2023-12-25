@@ -1,4 +1,6 @@
+import { AppRoutes } from '@chess/game-common';
 import type { PageController } from '@chess/game-common';
+import type GamePage from '../pages/game-page';
 
 export interface RouteNames {
   name: string;
@@ -7,7 +9,7 @@ export interface RouteNames {
 
 const INDEX_OF_SECOND_ITEM_IN_ITERABLE = 1;
 
-export default class Router {
+export class Router {
   private readonly routes: RouteNames[];
 
   private readonly onHashChange: (routeName: PageController) => void;
@@ -37,4 +39,38 @@ export default class Router {
       });
     }
   };
+}
+
+export function createAppRoutes(
+  root: HTMLElement,
+  gamePage: Promise<GamePage>,
+): { name: AppRoutes; controller: Promise<PageController> }[] {
+  return [
+    {
+      name: AppRoutes.DEFAULT,
+      controller: import('../pages/reg-page').then(({ default: AboutPage }) => new AboutPage(root)),
+    },
+    {
+      name: AppRoutes.SETTINGS,
+      controller: import('../pages/settings-page').then(
+        ({ default: SettingsPage }) => new SettingsPage(root),
+      ),
+    },
+    {
+      name: AppRoutes.REPLAY,
+      controller: import('../pages/best-score-page').then(
+        ({ default: BestScorePage }) => new BestScorePage(root),
+      ),
+    },
+    {
+      name: AppRoutes.GAME,
+      controller: gamePage,
+    },
+    {
+      name: AppRoutes.WATCH,
+      controller: import('../pages/replay-page').then(
+        ({ default: ReplayPage }) => new ReplayPage(root),
+      ),
+    },
+  ];
 }

@@ -1,9 +1,15 @@
+/* eslint-disable no-nested-ternary */
+import type { TemplateResult } from 'lit-html';
+import { html } from 'lit-html';
+import { map } from 'lit-html/directives/map.js';
+import type { Signal } from '@preact/signals-core';
+import { effect, signal } from '@preact/signals-core';
 import BASE_LOGO from '../../../assets/icons/ava.png';
 import s from './header.module.scss';
-import BaseComponent from '../base-component';
+import { BaseLitComponent } from '../base-component';
 import Button from '../button/button';
 import Menu from '../menu/menu';
-import type State from './header-states/state';
+import Logo from '../menu/logo/logo';
 
 const createAvatar = (): HTMLImageElement => {
   const avatar = new Image();
@@ -12,55 +18,53 @@ const createAvatar = (): HTMLImageElement => {
   return avatar;
 };
 
-export default class Header extends BaseComponent<'header'> {
-  public firstControlButton?: Button;
-
-  public secondControlButton: Button;
-
-  private state: State<Header>;
-
+export default class Header extends BaseLitComponent<'header'> {
   private readonly menu: Menu;
 
   private readonly avatar: HTMLImageElement;
 
-  constructor(state: State<Header>, onButtonClick?: () => void) {
+  private readonly logo = new Logo(['logo']);
+
+  private readonly state: Signal<{ isRegistered: boolean; isGameActive: boolean }> = signal({
+    isRegistered: false,
+    isGameActive: false,
+  });
+
+  constructor(
+    private readonly onStartGame: () => void,
+    private readonly onLoosed: () => void,
+    private readonly onDraw: () => void,
+    private readonly onRegister: () => void,
+  ) {
     super({ tag: 'header', className: s.header });
-    this.state = state;
-    this.transitionTo(this.state);
-    this.createButton({ onFirstButtonClick: onButtonClick });
     this.menu = new Menu();
     this.avatar = createAvatar();
-    this.node.append(this.avatar);
-    this.append(this.menu);
-    if (this.firstControlButton) {
-      this.append(this.firstControlButton);
-    }
-    this.secondControlButton = new Button('', onButtonClick);
+    effect(() => {
+      this.render(this.getTemplate());
+    });
   }
 
-  public transitionTo(state: State<Header>): void {
-    this.state = state;
-    this.state.setContext(this);
+  public getTemplate(): TemplateResult {
+    return html`
+      ${this.logo.getNode()} ${this.menu.getNode()}
+      ${this.state.value.isRegistered
+        ? this.state.value.isGameActive
+          ? map(
+              [new Button('Admit Loose', this.onLoosed), new Button('Offer a draw', this.onDraw)],
+              (i) => html`${i.getNode()}`,
+            )
+          : new Button('Start Game', this.onStartGame).getNode()
+        : new Button('Register', this.onRegister).getNode()}
+      ${this.state.value.isRegistered ? this.avatar : null}
+    `;
   }
 
-  public createButton({
-    onFirstButtonClick,
-    onSecondButtonClick,
-    avatar,
-  }: {
-    onFirstButtonClick?: () => void;
-    onSecondButtonClick?: () => void;
-    avatar?: ArrayBuffer | string;
-  }): void {
-    this.state.createButton({ onFirstButtonClick, onSecondButtonClick, avatar });
+  public setAvatarSrc(src: ArrayBuffer | string): void {
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string
+    this.avatar.src = src.toString();
   }
 
-  public setAvatarSrc(src: string): void {
-    this.avatar.src = src;
-  }
-
-  public removeButtons(): void {
-    this.firstControlButton?.destroy();
-    this.secondControlButton.destroy();
+  public setState(state: { isRegistered: boolean; isGameActive: boolean }): void {
+    this.state.value = state;
   }
 }
