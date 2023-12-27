@@ -6,8 +6,11 @@ import helmet from 'helmet';
 import * as path from 'path';
 
 import express from 'express';
+import session from 'express-session';
 import buildWsRouting from './routes/index/ws';
 import { router } from './routes/index/http';
+import { connectToMongo } from './db';
+import { sessionOptions } from './middlewares/session';
 
 const host = 'localhost';
 const DEFAULT_PORT = 5000;
@@ -22,6 +25,7 @@ export async function setUpServer(): Promise<ServerItems> {
   const app = express();
   app.use(cors());
   app.use(helmet());
+  app.use(session(sessionOptions));
 
   app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
@@ -46,6 +50,7 @@ export async function setUpServer(): Promise<ServerItems> {
   app.get('*', (req, res) => {
     res.sendFile(path.join(appBuildPath, 'index.html'));
   });
+  await connectToMongo();
   await new Promise<void>((resolve) => {
     server.listen(PORT, () => {
       if (process.env.NODE_ENV !== 'test') console.debug(`listening on ${host}:${PORT}`);
