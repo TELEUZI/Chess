@@ -36,7 +36,13 @@
         "@typescript-eslint/prefer-readonly-parameter-types": 0,
         "@typescript-eslint/no-magic-numbers": 0,
         "max-params": ["error", 4],
-        "@typescript-eslint/max-params": 0
+        "@typescript-eslint/max-params": 0,
+        "@typescript-eslint/explicit-function-return-type": [
+          2,
+          {
+            "allowExpressions": true
+          }
+        ]
       }
     },
     {
