@@ -1,11 +1,11 @@
 import { getModelForClass, prop } from '@typegoose/typegoose';
 
-class User {
-  @prop()
-  public name!: string;
+export class UserEntity {
+  @prop({ required: true })
+  public username!: string;
 
-  @prop({ type: () => String })
-  public email!: string;
+  @prop({ required: true })
+  public password!: string;
 }
 
-export const UserModel = getModelForClass(User);
+export const UserModel = getModelForClass(UserEntity);

@@ -1,7 +1,7 @@
 import MongoStore from 'connect-mongo';
 
 const sessionStore = MongoStore.create({
-  mongoUrl: process.env.URI,
+  mongoUrl: process.env.DEV_URL,
   ttl: 20000,
 });
 

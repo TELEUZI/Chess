@@ -1,14 +1,7 @@
 import type { Request, Response } from 'express';
 
-import { z } from 'zod';
 import { UserModel } from '../../entities/user/User';
-
-const userSchema = z.object({
-  name: z.string(),
-  email: z.string().email(),
-});
-
-export type UserSchema = z.infer<typeof userSchema>;
+import { userSchema } from '../../shemas/user';
 
 export async function getUsers(req: Request, res: Response): Promise<void> {
   try {
